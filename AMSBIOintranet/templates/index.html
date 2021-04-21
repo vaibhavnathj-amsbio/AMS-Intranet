@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>AMSBIO - IntraNet</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="{% static 'assets/img/favicon.JPG' %}" rel="icon">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/venobox/venobox.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo"><a href=" ">amsbio</a></h1>
+
+      <nav class="nav-menu d-none d-lg-block">
+
+        <ul>
+          <li><a href="#">Home</a></li>
+
+          <li class="drop-down"><a href=" ">Database</a>
+            <ul>
+              <li><a href="myDatabase/AddNewSupplier">Add New Supplier</a></li>
+              <li><a href="myDatabase/Search">Search Products</a></li>
+              <li><a href="myDatabase/EditSingleProduct">Edit Single Product</a></li>
+              <li><a href="myDatabase/CurrencyValues">Currency Values</a></li>
+            </ul>
+          </li>
+          <li class="drop-down"><a href="#">Courier</a>
+            <ul>
+              <li class="drop-down"><a href="#">FedEx</a>
+                <ul>
+                  <li><a href="../Courier/OrderDetails">FedEx UK</a></li>
+                  <li><a href="../Courier/OrderDetails">FedEx USA</a></li>
+                </ul>
+              </li>
+              <li class="drop-down"><a href="#">DHL</a></li>
+            </ul>
+          </li>
+        </ul>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+
+    <section id="about" class="about">
+      <div class="container text-center" style="margin: auto;">
+        <br><br>
+        <div class="row">
+          <div class="col-md-6">
+            <form action="myDatabase/Search" style="margin-bottom: 20px;" method="POST" id="form1">
+              {% csrf_token %}
+              <label for="Prod" style="margin-right: 15px;">Search by Product Code: </label>
+              <input type="text" id="Prod" name="Prod" placeholder="Search">
+            </form>
+          </div>
+          <div class="col-md-6">
+            <label for="Prod" style="margin-right: 15px;">Search by Description: </label>
+            <input type="text" id="Desc" name="Desc" form="form1" placeholder="Search">
+            <button class="btn" style="margin-left: 50px; background-color: #f1594a; color: #fff;" form="form1"><strong>Go</strong></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/venobox/venobox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
+
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

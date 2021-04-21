@@ -1,0 +1,4 @@
+Run this first: python manage.py makemigrations <appname>
+Then run: python manage.py migrate --database <second_db_name> --fake-initial <appname>
+
+Note: The command "python manage.py migrate" will only migrate changes made to the default db

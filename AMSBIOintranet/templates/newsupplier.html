@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Add New Suppliers</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="{% static 'assets/img/favicon.JPG' %}" rel="icon">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/venobox/venobox.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+  <header id="header" class="fixed-top header-inner-pages">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo"><a href="index">amsbio</a></h1>
+
+
+      <nav class="nav-menu d-none d-lg-block">
+
+        <ul>
+          <li><a href="index">Home</a></li>
+
+          <li class="drop-down"><a href=" ">Database</a>
+            <ul>
+              <li><a href="AddNewSupplier">Add New Supplier</a></li>
+              <li><a href="Search">Search Products</a></li>
+              <li><a href="EditSingleProduct">Edit Single Product</a></li>
+              <li><a href="CurrencyValues">Currency Values</a></li>
+            </ul>
+          </li>
+          <li class="drop-down"><a href="#">Courier</a>
+            <ul>
+              <li class="drop-down"><a href="#">FedEx</a>
+                <ul>
+                  <li><a href="../Courier/OrderDetails">FedEx UK</a></li>
+                  <li><a href="../Courier/OrderDetails">FedEx USA</a></li>
+                </ul>
+              </li>
+              <li class="drop-down"><a href="#">DHL</a></li>
+            </ul>
+          </li>
+        </ul>
+
+      </nav>
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+    
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Add New Supplier</h2>
+          <ol>
+            <li><a href="index">Home</a></li>
+            <li>Add New Supplier</li>
+          </ol>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+      <div class="container text-left" style="margin: auto;">
+        <h3>Add new Supplier to the main MySql Database.</h3><br><br><br>
+          <form action="AddNewSupplier" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <h4><label for="comp_name" style="padding-right: 146px; text-align:left;">Company Name:</label><input name="comp_name" id="comp_name"><br></h4>
+            <h4><label for="acc_code" style="padding-right: 168px; text-align:left;">Account Code:</label><input name="acc_code" id="acc_code"><br></h4>
+            <h4><label for="curr_code" style="padding-right: 10px; text-align:left;">Supplier Purchase Currency:</label>
+              <select name="curr_code" id="curr_code">
+                <option value="EUR" selected>EUR</option>
+                <option value="CHF">CHF</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="USD">USD</option>
+              </select></h4><br>
+              <button class="btn btn-danger">Create New Supplier</button>
+          </form><br><br>
+          <h3>{{name}}<br>{{code}}<br>{{curr}}</h3>
+      </div>
+    </section>
+>
+  </main>
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/venobox/venobox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
+
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>
