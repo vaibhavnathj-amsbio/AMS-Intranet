@@ -7,5 +7,5 @@ urlpatterns = [
     path('EditSingleProduct', views.editSingleProduct, name='EditSingleProduct'),
     path('CurrencyValues', views.currencyValue, name='CurrencyValues'),
     path('Search', views.search, name='Search'),
-    path('techrecords',views.techRecords,name = 'techrecords'),
+    path('techrecords',views.techRecords, name = 'techrecords'),
 ]

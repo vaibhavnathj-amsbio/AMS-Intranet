@@ -80,7 +80,7 @@ def editProductRecords(pk):
     ProdForm = EditProductForm(instance=Product)
     ProdForm.fields['product_code'].widget.attrs['readonly'] = True
     ProdForm.fields['supplier_product_code'].widget.attrs['readonly'] = True
-    return ProdForm
+    return [ProdForm, Product]
 
 
 def editTechDetails(pk):
@@ -88,7 +88,7 @@ def editTechDetails(pk):
     TechDetails = ProductRecordsTech.objects.get(pk=pk)
     TechForm = EditTechDetailsForm(instance=TechDetails)
     TechForm.fields['product_code'].widget.attrs['readonly'] = True
-    return TechForm
+    return [TechForm, TechDetails]
 
 
 def editSingleProduct(request):
@@ -98,7 +98,9 @@ def editSingleProduct(request):
         code = request.POST["ProdCode"]
         try:
             if ProductRecords.objects.get(pk=code).category_1 == 0: # Case where no categories are defined.
-                ProdForm = editProductRecords(code)
+                ProdForm_data = editProductRecords(code)
+                ProdForm = ProdForm_data[0]
+                Product = ProdForm_data[1]
                 noTechCategory = "No Categories defined!"
                 nocategory = True
                 context = {'ProdForm':ProdForm,'NoTechCategory': noTechCategory, 'nocategory' : nocategory}
@@ -106,8 +108,12 @@ def editSingleProduct(request):
             else:
                 cat = loadCategory(code) # generating level 1 category
                 attributes = ['id_' + ele for ele in list(cat[0].values())[0]]
-                ProdForm = editProductRecords(code)
-                TechForm = editTechDetails(code)
+                ProdForm_data = editProductRecords(code)
+                ProdForm = ProdForm_data[0]
+                Product = ProdForm_data[1]
+                TechForm_data = editTechDetails(code)
+                TechForm = TechForm_data[0]
+                TechRecord = TechForm_data[1]
                 flag = False
                 TwoCategories = True
                 if len(cat) > 1: # check if 2 categories exists

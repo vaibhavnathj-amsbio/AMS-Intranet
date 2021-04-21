@@ -101,15 +101,16 @@
       {% else %}
         {% if nocategory %} <!--Output if no categories are defined-->
           <div class="row" style="padding-top: 10px; border-radius: 5px; background-color: #fafafa; margin: 20px;">
-            <div class="col-md-6" style="padding-left: 10%;"> <!--Output only the Edit Product form-->
-              <form action="">
+            <div id="div_container" class="col-md-6" style="padding-left: 10%;"> <!--Output only the Edit Product form-->
+              <form action="" method="POST">
+                {% csrf_token %}
                 <table class="table-responsive" style="padding-bottom: 10px;">
                   <thead>
-                    <th colspan="2" style="text-align: center; padding-bottom: 10px;">Product Details</th>
+                    <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>Product Details</button></th>
                   </thead>
                     {{ ProdForm }}
                 </table>
-               <button type="submit" class="btn btn-success" name="btnOnlyProdForm" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
+               <button type="submit" class="btn btn-success" id="btnProdForm" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
               </form>
             </div>
             <div class="col-md-6" style="padding-left: 20%; padding-right: 5px; padding-top: 10%;"> <!--Display message for no categories-->
@@ -122,7 +123,7 @@
               <form action="">
                 <table class="table-responsive" style="padding-bottom: 10px;">
                   <thead>
-                    <th colspan="2" style="text-align: center; padding-bottom: 10px;">Product Details</th>
+                    <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>Product Details</button></th>
                   </thead>
                     {{ ProdForm }}
                 </table>
@@ -131,10 +132,11 @@
             </div>
             <div class="col-md-6" style="padding-left: 10%; padding-right: 5px;">
               {% if catflag %} <!--Output if 2 categories are defined-->
-              <button id="Techrecords1" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseRecords" aria-expanded="false" aria-controls="collapseRecords" style="margin-left: 20%;">{{button1}}, {{button2}}</button>
-              <div class="collapse" id="collapseRecords" style="margin-top: 10px;">
                 <form action="">
                   <table class="table-responsive">
+                    <thead>
+                      <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>{{button1}}, {{button2}}</button></th>
+                    </thead>
                     <tbody>
                       {% for field in TechForm %}
                         {% if field.id_for_label in attrs %}
@@ -148,12 +150,12 @@
                   </table>
                  <button type="submit" class="btn btn-success" name="btn2categories" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
                 </form>
-              </div>
               {% else %} <!--Output if only 1 category is defined-->
-              <button id="TechrecordsSingle" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseRecords1" aria-expanded="false" aria-controls="collapseRecords1" style="margin-left: 35%;">{{button1}}</button>
-              <div class="collapse" id="collapseRecords1" style="margin-top: 10px;">
                 <form action="">
                   <table class="table-responsive">
+                    <thead>
+                      <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>{{button1}}</button></th>
+                    </thead>
                     <tbody>
                     {% for field in TechForm %}
                       {% if field.id_for_label in attrs %}
@@ -167,7 +169,6 @@
                   </table>
                  <button type="submit" class="btn btn-success" name="btn1category" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
                 </form>
-              </div>
               {% endif %}
             </div>
           </div>
@@ -190,6 +191,29 @@
   <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
 
   <script src="{% static 'assets/js/main.js' %}"></script>
+<!-- 
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+      $('button[id^="btnProdForm"]').one('click', function() {
+        console.log("Hello");
+        var csrf = $("input[name=csrfmiddlewaretoken]").val();
+        var div_body = document.querySelector('#div_container');
+        console.log(div_body);
+        $.ajax({
+          url: 'formsubmit',
+          type: 'post',
+          data:{
+            csrfmiddlewaretoken: csrf
+          },
+          success: function(response){
+            div_body.remove();
+            div_body.innerHTML = `${response.msg}`;
+        }
+        });
+      });
+    });
+  </script> -->
 
 </body>
 
