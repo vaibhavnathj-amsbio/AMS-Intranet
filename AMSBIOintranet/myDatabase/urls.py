@@ -8,4 +8,5 @@ urlpatterns = [
     path('CurrencyValues', views.currencyValue, name='CurrencyValues'),
     path('Search', views.search, name='Search'),
     path('techrecords',views.techRecords, name = 'techrecords'),
+    path('formsubmit',views.FormSubmit, name = 'formsubmit'),
 ]
