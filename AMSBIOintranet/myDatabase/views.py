@@ -7,7 +7,9 @@ from .models import (MasterCurrencies,
                      ProductRecords,
                      ProductRecordsTech,
                      NwCategoryIds,
-                     NwCategoryLowestNodes)
+                     NwCategoryLowestNodes,
+                     DataOwners,
+                     Currencies)
 
 from django.http import JsonResponse
 from django.core import serializers
@@ -27,7 +29,18 @@ def addNewSupplier(request):
         name = request.POST['comp_name']
         code = request.POST['acc_code'].upper()
         curr = request.POST['curr_code']
-        return render(request, 'newsupplier.html', {'name': name, 'code': code, 'curr': curr})
+        if curr == 'USD':
+            cur_id = 2    
+        else:
+            cur_id = Currencies.objects.get(descriptive=curr).currencyid
+        DataOwners.objects.create(
+            currencyid= cur_id,
+            owner= name,
+            supplierpurchasecurrency= curr,
+            dimmensionssuppliercode= code
+        )
+        context = {'c_name': name, 'c_code':code, 'cur': curr , 'msg': 'Supplier successfully added!'}
+        return JsonResponse(context)
     else:
         return render(request, 'newsupplier.html')
 

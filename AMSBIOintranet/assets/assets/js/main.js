@@ -251,4 +251,36 @@
     });
   });
 
+  $(document).on('submit', '#NewSupplier', function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: 'AddNewSupplier',
+      type: 'post',
+      data:{
+        comp_name: $('#comp_name').val(),
+        acc_code: $('#acc_code').val(),
+        curr_code: $('#curr_code').val(),
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(json){
+        document.getElementById('NewSupplier').reset();
+        if (json.c_name == "" && json.c_code == ""){
+          alert("Please enter the details!")
+        }
+        else {
+          var card = document.querySelector("#SuccessCard");
+          card.innerHTML = `<div class="card" style="margin-right: 20%; width: 20em;">
+                              <div style="margin: 5%; margin-bottom: 2%;">    
+                                <h4><strong>${json.c_name}</strong></h4>
+                                <h6 class="text-muted">${json.c_code}</h6>
+                                <h6 class="text-muted">${json.cur}</h6>
+                                <br>
+                                <p class="text-success" style="text-align:center;">${json.msg}</p>
+                              </div>
+                            </div>`;
+        }
+      }
+    });
+  });
+
 })(jQuery);

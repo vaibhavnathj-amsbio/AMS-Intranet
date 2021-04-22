@@ -82,13 +82,13 @@
     </section>
 
     <section id="testimonials" class="testimonials">
-      <div class="container text-left" style="margin: auto;">
-        <h3>Add new Supplier to the main MySql Database.</h3><br><br><br>
-          <form action="AddNewSupplier" method="POST" autocomplete="off">
+      <div class="row" style="margin-left: 20%; margin-top: 5%;">
+        <div id='supplier_container' class="col-md-6">
+          <form method="POST" autocomplete="off" id='NewSupplier'>
             {% csrf_token %}
-            <h4><label for="comp_name" style="padding-right: 146px; text-align:left;">Company Name:</label><input name="comp_name" id="comp_name"><br></h4>
-            <h4><label for="acc_code" style="padding-right: 168px; text-align:left;">Account Code:</label><input name="acc_code" id="acc_code"><br></h4>
-            <h4><label for="curr_code" style="padding-right: 10px; text-align:left;">Supplier Purchase Currency:</label>
+            <h4><label for="comp_name" style="padding-right: 146px;">Company Name:</label><input name="comp_name" id="comp_name"><br></h4>
+            <h4><label for="acc_code" style="padding-right: 168px;">Account Code:</label><input name="acc_code" id="acc_code"><br></h4>
+            <h4><label for="curr_code" style="padding-right: 10px;">Supplier Purchase Currency:</label>
               <select name="curr_code" id="curr_code">
                 <option value="EUR" selected>EUR</option>
                 <option value="CHF">CHF</option>
@@ -96,9 +96,12 @@
                 <option value="JPY">JPY</option>
                 <option value="USD">USD</option>
               </select></h4><br>
-              <button class="btn btn-danger">Create New Supplier</button>
-          </form><br><br>
-          <h3>{{name}}<br>{{code}}<br>{{curr}}</h3>
+              <button type="submit" class="btn btn-danger">Create New Supplier</button>
+          </form>
+        </div>
+        <div id="SuccessCard" class="col-md-6" style="text-align: left">
+          <!--Data comes from Ajax-->
+        </div>
       </div>
     </section>
 >
