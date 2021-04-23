@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+currency.txt
+migration_commands.txt
+myfile.json
+regex.text

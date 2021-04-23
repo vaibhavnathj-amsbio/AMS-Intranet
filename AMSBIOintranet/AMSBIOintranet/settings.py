@@ -92,6 +92,9 @@ DATABASES = {
         'PASSWORD': 'G4rageC4r',
         'PORT': '3309',
         'HOST': 'development.amsbio.com',
+        'TEST': {
+            'NAME': 'test_ams',
+        }
     }
 }
 
