@@ -1,4 +1,5 @@
 import json
+import getpass
 from datetime import datetime
 
 from .forms import EditProductForm, EditTechDetailsForm
@@ -117,6 +118,8 @@ def FormSubmit(request):
         form_data[temp[0]] = temp[1]
     form_data.pop('csrfmiddlewaretoken')
     if 'supplier_product_code' in form_data.keys():
+        form_data['last_updated_user'] = getpass.getuser().upper()
+        form_data['last_change_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         Product = ProductRecords.objects.get(pk=form_data['product_code'])
         ProdForm = EditProductForm(form_data,instance=Product)
         if ProdForm.is_valid():

@@ -36,27 +36,27 @@ class DataOwners(models.Model):
     supplierpurchasecurrency = models.CharField(
         db_column='SupplierPurchaseCurrency', max_length=4, blank=True, null=True)
     productpurchasebrand = models.PositiveIntegerField(
-        db_column='ProductPurchaseBrand', blank=True, null=True)  # Field name made lowercase.
+        db_column='ProductPurchaseBrand', blank=True, null=True, default=1)  # Field name made lowercase.
     productsellingbrand = models.PositiveIntegerField(
-        db_column='ProductSellingBrand', blank=True, null=True)  # Field name made lowercase.
+        db_column='ProductSellingBrand', blank=True, null=True, default=1)  # Field name made lowercase.
     # Field name made lowercase.
     dimmensionssuppliercode = models.CharField(
         db_column='DimmensionsSupplierCode', max_length=10, blank=True, null=True)
     dimmensionsproductgroup = models.PositiveIntegerField(
-        db_column='DimmensionsProductGroup', blank=True, null=True)  # Field name made lowercase.
+        db_column='DimmensionsProductGroup', blank=True, null=True, default=1)  # Field name made lowercase.
     # Field name made lowercase.
     msaccessdatid = models.PositiveIntegerField(
-        db_column='MsAccessDatId', blank=True, null=True)
+        db_column='MsAccessDatId', blank=True, null=True, default=1)
     # Field name made lowercase.
     datasheetsuffix = models.CharField(
-        db_column='DatasheetSuffix', max_length=4, blank=True, null=True)
-    logo_url = models.CharField(max_length=128, blank=True, null=True)
-    web_site_sql_id = models.PositiveIntegerField(blank=True, null=True)
-    precedence_listing = models.PositiveIntegerField(blank=True, null=True)
-    web_site_url = models.CharField(max_length=45, blank=True, null=True)
-    ik_flag_id = models.PositiveIntegerField(blank=True, null=True)
+        db_column='DatasheetSuffix', max_length=4, blank=True, null=True, default=1)
+    logo_url = models.CharField(max_length=128, blank=True, null=True, default=1)
+    web_site_sql_id = models.PositiveIntegerField(blank=True, null=True, default=1)
+    precedence_listing = models.PositiveIntegerField(blank=True, null=True, default=1)
+    web_site_url = models.CharField(max_length=45, blank=True, null=True, default=1)
+    ik_flag_id = models.PositiveIntegerField(blank=True, null=True, default=1)
     currencyid = models.PositiveIntegerField(blank=True, null=True)
-    usa_market_flag_id = models.PositiveIntegerField(blank=True, null=True)
+    usa_market_flag_id = models.PositiveIntegerField(blank=True, null=True, default=1)
 
     def __str__(self):
         return self.owner
