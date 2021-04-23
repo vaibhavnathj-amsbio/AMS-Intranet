@@ -133,3 +133,5 @@ currency.txt
 migration_commands.txt
 myfile.json
 regex.text
+chromedriver.exe
+.vscode
