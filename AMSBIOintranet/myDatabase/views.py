@@ -57,7 +57,7 @@ def search(request):
         desc = request.POST['Desc']
         if len(code) == 0 and len(desc) == 0:
             msg = False
-            obj = "Please enter a search term!"
+            obj = "*Please enter a search term!"
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         elif len(code) == 0 and len(desc) > 0:
             # instance limit set to 100
