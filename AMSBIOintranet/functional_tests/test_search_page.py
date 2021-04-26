@@ -7,9 +7,7 @@ from selenium.webdriver.support.select import Select
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 
-from mixer.backend.django import mixer
-
-from myDatabase.models import ProductRecords, NwCategoryIds
+from myDatabase.models import ProductRecords
 
 
 class TestmyDatabasePage(StaticLiveServerTestCase):
@@ -17,7 +15,7 @@ class TestmyDatabasePage(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome('./chromedriver.exe',)
-        mixer.blend(ProductRecords, product_code='RANDOM.AMS-value001')
+        ProductRecords.objects.create(product_code='RANDOM.AMS-value001', category_1=121, category_2=116)
         
     def tearDown(self):
         self.browser.close()
@@ -42,10 +40,8 @@ class TestmyDatabasePage(StaticLiveServerTestCase):
 
         button_tech_properties = self.browser.find_element_by_id("getrecordRANDOM.AMS-value001")
         button_tech_properties.click()
-        time.sleep(2)
+        time.sleep(1)
 
-        # cat1 = self.browser.find_element_by_xpath('//*[@id="techRecordBodyAMS.MBS-K002-10mg Beads"]/tbody[1]/tr/td/label').text
-        # cat2 = self.browser.find_element_by_xpath('//*[@id="techRecordBodyAMS.MBS-K002-10mg Beads"]/tbody[3]/tr/td/label').text
+        code = self.browser.find_element_by_xpath('//*[@id="testimonials"]/div[2]/div/div/table/tbody/tr/td[2]').text
 
-        # self.assertEquals(cat1, "Proteins & Peptides")
-        # self.assertEquals(cat2, "Molecular Biology")
+        self.assertEquals(code, 'RANDOM.AMS-value001')
