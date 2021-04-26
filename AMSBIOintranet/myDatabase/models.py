@@ -23,7 +23,6 @@ class Currencies(models.Model):
         
 
     class Meta:
-        managed = False
         db_table = 'currencies'
         verbose_name_plural = "Currencies"
     
@@ -100,7 +99,6 @@ class MasterCurrencies(models.Model):
         return round(self.liverate() - self.exchange_rate,3)
            
     class Meta:
-        managed = False
         db_table = 'master_currencies'
         verbose_name_plural = "Master Currencies"
 
@@ -147,7 +145,6 @@ class ProductRecords(models.Model):
     special_shipping = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'product_records'
 
     def suppliername(self):
@@ -265,7 +262,6 @@ class ProductRecordsTech(models.Model):
     inter_assay_cv = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'product_records_tech'
 
 
@@ -285,7 +281,6 @@ class NwCategoryLowestNodes(models.Model):
     level3 = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'nw_category_lowest_nodes'
 
 

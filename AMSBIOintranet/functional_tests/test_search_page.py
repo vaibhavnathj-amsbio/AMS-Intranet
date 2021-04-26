@@ -7,9 +7,9 @@ from selenium.webdriver.support.select import Select
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 
-# from mixer.backend.django import mixer
+from mixer.backend.django import mixer
 
-from myDatabase.models import ProductRecords
+from myDatabase.models import ProductRecords, NwCategoryIds
 
 
 class TestmyDatabasePage(StaticLiveServerTestCase):
@@ -17,8 +17,8 @@ class TestmyDatabasePage(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome('./chromedriver.exe',)
-        # ProductRecords.objects.create(product_code='RANDOM.AMS-value001')
-
+        mixer.blend(ProductRecords, product_code='RANDOM.AMS-value001')
+        
     def tearDown(self):
         self.browser.close()
 
@@ -34,13 +34,11 @@ class TestmyDatabasePage(StaticLiveServerTestCase):
         action.move_to_element(secondLevelMenu).perform()
         secondLevelMenu.click()
 
-        time.sleep(50)
         product_code = self.browser.find_element_by_id("Prod")
         product_code.send_keys("RANDOM.AMS-value001")
 
         button_go = self.browser.find_element_by_id("btn_search_db")
         button_go.click()
-        time.sleep(5)
 
         button_tech_properties = self.browser.find_element_by_id("getrecordRANDOM.AMS-value001")
         button_tech_properties.click()
