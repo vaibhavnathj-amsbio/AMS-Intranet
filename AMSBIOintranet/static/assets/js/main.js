@@ -139,6 +139,10 @@
           else {
             loadTwoCategories(response.data1, response.data2, response.cat_1, response.cat_2)
           }
+        },
+        error: function (e){
+          alert('Categories do not exist');
+          console.log(e);
         }
       });
       function loadOneCategory(json1, json2) { // function to load the technical properties when only 1 category exists.
