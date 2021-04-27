@@ -11,7 +11,7 @@
 9. <strong>Testing_Procedure.txt</strong>: Guide to run the included functional tests
 10. <strong>manage.py</strong>: Main file for interacting with django thru terminal, MUST NOT BE DELETED
 
-<strong>app</strong> directory:
+Any <strong>app</strong> directory:
 1. __init__.py : file for informing the python interpreter an app is here
 2. admin.py: file for controlling the admin panel in django-admin view
 3. apps.py: file for maintaing the particular app
