@@ -10,3 +10,13 @@
 8. <strong>templates</strong>: Directory containing all the html file responsible for front-end
 9. <strong>Testing_Procedure.txt</strong>: Guide to run the included functional tests
 10. <strong>manage.py</strong>: Main file for interacting with django thru terminal, MUST NOT BE DELETED
+
+<strong>app</strong> directory:
+1. __init__.py : file for informing the python interpreter an app is here
+2. admin.py: file for controlling the admin panel in django-admin view
+3. apps.py: file for maintaing the particular app
+4. forms.py<i>(optional)</i>: file for generating forms for considered model
+5. models.py: file for creating and updating database tables as models for django
+6. tables.py<i>(optional)</i>: for generating tables for a particular model
+7. urls.py: for controlling the URL for the considered APP
+8. views.py: for rendering html templates for the particular app
