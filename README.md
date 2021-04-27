@@ -12,7 +12,7 @@
 10. <strong>manage.py</strong>: Main file for interacting with django thru terminal, MUST NOT BE DELETED
 
 Any <strong>app</strong> directory:
-1. __init__.py : file for informing the python interpreter an app is here
+1. __init.py__ : file for informing the python interpreter an app is here
 2. admin.py: file for controlling the admin panel in django-admin view
 3. apps.py: file for maintaing the particular app
 4. forms.py<i>(optional)</i>: file for generating forms for considered model
