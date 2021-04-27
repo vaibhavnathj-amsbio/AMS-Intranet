@@ -1,12 +1,16 @@
 from .models import ProductRecords, ProductRecordsTech
 from django import forms
 
-class EditProductForm(forms.ModelForm):
+
+# Django class for generating model form for 'ProductRecords' table
+class EditProductForm(forms.ModelForm): 
 
     class Meta:
         model = ProductRecords
         fields = '__all__'
 
+
+# Django class for generating model form for 'ProductRecordsTech' table
 class EditTechDetailsForm(forms.ModelForm):
 
     class Meta:

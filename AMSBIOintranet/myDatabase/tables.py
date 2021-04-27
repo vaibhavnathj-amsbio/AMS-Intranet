@@ -3,6 +3,7 @@ import django_tables2 as tables
 from django_tables2.utils import A 
 
 
+# Django class for generating table for 'Currency value' page
 class CurrencyTable(tables.Table):
     From_col = tables.Column(accessor='symbolfrom',verbose_name='From', order_by='from_currency_id')
     To_col = tables.Column(accessor='symbolto',verbose_name='To',order_by='to_currency_id')
@@ -17,6 +18,7 @@ class CurrencyTable(tables.Table):
         attrs = {"thead": {"position": "fixed;"}}
     
 
+# Django class for generating table for 'search database' page
 class ProductRecordsTable(tables.Table):
     sup_col = tables.Column(accessor='suppliername',verbose_name='Supplier')
     cat_1 = tables.Column(accessor='cat1', verbose_name='Category 1')

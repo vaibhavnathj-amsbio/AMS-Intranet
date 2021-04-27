@@ -111,7 +111,7 @@
     return false;
   });
 
-  //Loading Technical Records data
+  //js for loading Technical Records data on button.html
   $(document).ready(function () {
 
     $('button[id^="getrecord"]').one('click', function () {
@@ -141,7 +141,7 @@
           }
         }
       });
-      function loadOneCategory(json1, json2) {
+      function loadOneCategory(json1, json2) { // function to load the technical properties when only 1 category exists.
         console.log(json1, json2);
         const tbody = document.createElement("tbody");
         tbody.className = "labels";
@@ -166,7 +166,7 @@
         }
       }
 
-      function loadTwoCategories(json1, json2, cat1, cat2) {
+      function loadTwoCategories(json1, json2, cat1, cat2) { // function to load the technical properties when 2 categories exists.
         console.log(json1, json2);
         var cat = [cat1, cat2];
         var jsonlist = [json1, json2];
@@ -203,7 +203,7 @@
     });
   });
 
-  // Edit Product Form submission
+  // js for form submission at 'edit single product' page for product records table
   $(document).on('submit', '#ProdForm', function (e) {
     e.preventDefault();
     var csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -227,7 +227,7 @@
     });
   });
 
-  // Edit Technical Details Form submission
+  // js for form submission at 'edit single product' page for technical records table
   $(document).on('submit', '#TechForm', function (e) {
     e.preventDefault();
     var csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -251,6 +251,7 @@
     });
   });
 
+  // js for form submission at 'add new supplier' page
   $(document).on('submit', '#NewSupplier', function (e) {
     e.preventDefault();
     $.ajax({
