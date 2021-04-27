@@ -1,7 +1,4 @@
 {% load static %}
-{% load render_table from django_tables2 %}
-{% load querystring from django_tables2 %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,15 +6,13 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Currency Values</title>
+  <title>Track Orders</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <link href="{% static 'assets/img/favicon.JPG' %}" rel="icon">
 
-  <link
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
@@ -45,10 +40,10 @@
 
           <li class="drop-down"><a href=" ">Database</a>
             <ul>
-              <li><a href="AddNewSupplier">Add New Supplier</a></li>
-              <li><a href="Search">Search Products</a></li>
-              <li><a href="EditSingleProduct">Edit Single Product</a></li>
-              <li><a href="CurrencyValues">Currency Values</a></li>
+              <li><a href="../myDatabase/AddNewSupplier">Add New Supplier</a></li>
+              <li><a href="../myDatabase/Search">Search Products</a></li>
+              <li><a href="../myDatabase/EditSingleProduct">Edit Single Product</a></li>
+              <li><a href="../myDatabase/CurrencyValues">Currency Values</a></li>
             </ul>
           </li>
           <li class="drop-down"><a href="#">Courier</a>
@@ -75,26 +70,20 @@
       <div class="container">
 
         <div class="d-flex justify-content-between align-items-center">
-          <h2>Currency Values</h2>
+          <h2>FedEx UK</h2>
           <ol>
             <li><a href="index">Home</a></li>
-            <li>Currency Values</li>
+            <li>FedEx</li>
+            <li>FedEx UK</li>
           </ol>
         </div>
 
       </div>
     </section>
-
+ 
     <section id="testimonials" class="testimonials">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 border border-secondary rounded">
-            {% render_table obj %}
-          </div>
-        </div>
-        <div style="text-align:right; margin-top: 5px;">
-          <a href="{% querystring '_export'='csv' %}">Download CSV</a>
-        </div>
+      <div class="container text-center" style="margin: auto;">
+          <h2>Content</h2>
       </div>
     </section>
 
