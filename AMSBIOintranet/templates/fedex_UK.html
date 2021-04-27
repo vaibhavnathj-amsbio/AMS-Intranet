@@ -82,8 +82,20 @@
     </section>
  
     <section id="testimonials" class="testimonials">
-      <div class="container text-center" style="margin: auto;">
-          <h2>Content</h2>
+      <div class="container" style="margin: auto; display: block;">
+        <div class="row text-center">
+        <form action="" method="POST">
+          {% csrf_token %}
+            <label for="track_num">Enter Tracking Number: </label>
+            <input type="text" id='track_num' name='track_num'>
+            <button type="submit" class="btn btn-danger">Go</button>
+        </form>
+        </div>
+        <div class="row">
+          {% for key, val in response.items %}
+            {{key}} : {{val}} <br>
+          {% endfor %}
+        </div>
       </div>
     </section>
 

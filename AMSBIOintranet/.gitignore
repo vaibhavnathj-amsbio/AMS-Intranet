@@ -137,3 +137,4 @@ chromedriver.exe
 .vscode
 temp_files/
 testing commands.txt
+tracking_info.json
