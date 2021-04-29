@@ -47,7 +47,6 @@ def track_request(track_id, api_key, api_pass):
 
 def fedex(request):
     flag = True
-    page_name = request.path[14:]
     
     try:
         if request.method == "POST":
@@ -57,12 +56,16 @@ def fedex(request):
             latest_status.pop('scanLocation')
             weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
             shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
-            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'page': page_name}
+            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref}
             return render(request, 'fedex.html', context)
 
     except:
         flag = False
-        context = {'msg' : '*Please enter valid tracking number', 'flag': flag, 'page': page_name}
+        context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
         return render(request, 'fedex.html', context)
 
-    return render(request, 'fedex.html', {'page': page_name})
+    return render(request, 'fedex.html',)
+
+
+def dhl(request):
+    return render(request, 'dhl.html', {'msg': 'Coming Soon!'})
