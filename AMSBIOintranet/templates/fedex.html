@@ -70,11 +70,11 @@
       <div class="container">
 
         <div class="d-flex justify-content-between align-items-center">
-          <h2>FedEx USA</h2>
+          <h2>FedEx {{page}}</h2>
           <ol>
             <li><a href="index">Home</a></li>
             <li>FedEx</li>
-            <li>FedEx USA</li>
+            <li>FedEx {{page}}</li>
           </ol>
         </div>
 
@@ -82,9 +82,62 @@
     </section>
  
     <section id="testimonials" class="testimonials">
-      <div class="container text-center" style="margin: auto;">
-          <h2>Content</h2>
+      <div class="container text-center" style="margin: auto; display: block;">
+        <form action="" method="POST">
+          {% csrf_token %}
+            <label for="track_num">Enter Tracking Number: </label>
+            <input type="text" id='track_num' name='track_num'>
+            <button type="submit" class="btn btn-danger" style="margin-left: 2%;">Go</button>
+        </form>
       </div>
+      {% if not flag %}
+      <div class="container text-center" style="margin-top: 5%;">
+        {{msg}}
+      </div>
+      {% else %}
+      <div class="container" style="margin-top: 5%; font-size:larger; box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); border-radius: 5px 5px 0 0; padding:2%; min-width: 700px;">
+        <div class="row" style= "text-align: center; margin-bottom: 20px;">
+          <div class="col-md-12">
+            Tracking Number: <strong>{{ track_num }}</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <h4><u>Current Status</u></h4>
+            {% for key, val in status.items %}
+              {% if val == 'Delivered' %}
+                <strong style="margin-right: 1%;">{{key}}:</strong><span style="color:green; font-size:x-large;">{{val}}</span>
+              {% else %}
+                <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
+              {% endif %}
+              <br>
+            {% endfor %}
+          </div>
+          <div class="col-md-6" style="padding-left: 10%;">
+            <h4><u>Weight</u></h4>
+            {% for key, val in weight.items %}
+                <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
+                <br>
+            {% endfor %}
+          </div>
+
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <h4><u>Location</u></h4>
+            {% for key, val in location.items %}
+              <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
+              <br>
+            {% endfor %}
+          </div>
+          <div class="col-md-6" style="padding-left: 10%;">
+            <h4><u>Package Info</u></h4>
+            <strong style="margin-right: 1%;">Shipper Reference:</strong>{{ref}}
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </section>
 
   </main>

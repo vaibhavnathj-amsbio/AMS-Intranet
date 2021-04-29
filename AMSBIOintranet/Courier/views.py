@@ -4,10 +4,13 @@ import json
 from django.shortcuts import render, redirect
 
 
-# 'api_key': 'l76c7f058eed374645b8b860b19d778b07',
-# 'password': 'be880a5f2a20429ebdb7c54afcc1acd3',
-def oAuth():    
-    token = 'grant_type=client_credentials&client_id=l76c7f058eed374645b8b860b19d778b07&client_secret=be880a5f2a20429ebdb7c54afcc1acd3'
+def index(request):
+    return redirect('/')
+
+
+FedEx = {'api_key': 'l76c7f058eed374645b8b860b19d778b07', 'api_pass': 'be880a5f2a20429ebdb7c54afcc1acd3'}
+def oAuth(api_key, api_pass):    
+    token = 'grant_type=client_credentials&client_id=' + api_key + '&client_secret=' + api_pass 
     headers = {
         'Content-Type': "application/x-www-form-urlencoded"
         }
@@ -16,7 +19,7 @@ def oAuth():
     return json_response
 
 
-def track_request(track_id):
+def track_request(track_id, api_key, api_pass):
     url = "https://apis-sandbox.fedex.com/track/v1/trackingnumbers"
 
     payload = json.dumps({"trackingInfo": [
@@ -32,30 +35,34 @@ def track_request(track_id):
     tracking_headers = {
         'Content-Type': "application/json",
         'X-locale': "en_US",
-        'Authorization': "Bearer " + oAuth()['access_token'] 
+        'Authorization': "Bearer " + oAuth(api_key, api_pass)['access_token'] 
         }
 
     response = requests.request("POST", url, data=payload, headers=tracking_headers).text
-    # with open('tracking_info.json','w') as f:
+    # with open('temp_files/tracking_info_new_ship.json','w') as f:
     #     f.write(response)
     json_response = json.loads(response)
     return json_response
 
 
-def index(request):
-    return redirect('/')
+def fedex(request):
+    flag = True
+    page_name = request.path[14:]
+    
+    try:
+        if request.method == "POST":
+            track_response = track_request(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
+            latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
+            location = latest_status['scanLocation']
+            latest_status.pop('scanLocation')
+            weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
+            shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
+            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'page': page_name}
+            return render(request, 'fedex.html', context)
 
+    except:
+        flag = False
+        context = {'msg' : '*Please enter valid tracking number', 'flag': flag, 'page': page_name}
+        return render(request, 'fedex.html', context)
 
-def fedexUK(request):     
-    if request.method == "POST":
-        track_response = track_request(request.POST['track_num'])
-        latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
-        context = {'response' : latest_status}
-        return render(request, 'fedex_UK.html', context)
-
-    return render(request, 'fedex_UK.html',)
-
-
-def fedexUSA(request):
-    return render(request, 'fedex_USA.html')
-
+    return render(request, 'fedex.html', {'page': page_name})
