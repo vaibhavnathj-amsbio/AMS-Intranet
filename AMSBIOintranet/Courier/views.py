@@ -44,6 +44,21 @@ def track_request(track_id, api_key, api_pass):
     json_response = json.loads(response)
     return json_response
 
+def scanEvents(data1, data2):
+    data_list = []
+    for ele in data1:
+        data_dict = {}
+        for key, val in ele.items():
+            if key in ["date", "derivedStatus", "eventDescription"]:
+                data_dict[key.upper()] = val
+            elif key == "scanLocation":
+                data_dict["CITY"] = val["city"]
+                data_dict["COUNTRY"] = val["countryName"]
+            else:
+                pass
+        data_list.append(data_dict)
+    return data_list
+          
 
 def fedex(request):
     flag = True
@@ -56,7 +71,10 @@ def fedex(request):
             latest_status.pop('scanLocation')
             weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
             shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
-            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref}
+            scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
+            scan_events = scan_events[:-1]
+            history = scanEvents(scan_events, location)
+            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
             return render(request, 'fedex.html', context)
 
     except:
