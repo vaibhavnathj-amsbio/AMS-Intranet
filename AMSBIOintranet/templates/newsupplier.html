@@ -49,8 +49,13 @@
           </li>
           <li class="drop-down"><a href="#">Courier</a>
             <ul>
-              <li><a href="../Courier/fedex">FedEx UK/USA</a></li>
-              <li><a href="../Courier/dhl">DHL</a></li>
+              <li class="drop-down"><a href="#">FedEx</a>
+                <ul>
+                  <li><a href="../Courier/FedexUK">FedEx UK</a></li>
+                  <li><a href="../Courier/FedexUSA">FedEx USA</a></li>
+                </ul>
+              </li>
+              <li><a href="../Courier/DHL">DHL</a></li>
             </ul>
           </li>
         </ul>
@@ -81,16 +86,16 @@
         <div id='supplier_container' class="col-md-6">
           <form method="POST" autocomplete="off" id='NewSupplier'>
             {% csrf_token %}
-            <h4><label for="comp_name" style="padding-right: 146px;">Company Name:</label><input name="comp_name" id="comp_name"><br></h4>
-            <h4><label for="acc_code" style="padding-right: 168px;">Account Code:</label><input name="acc_code" id="acc_code"><br></h4>
-            <h4><label for="curr_code" style="padding-right: 10px;">Supplier Purchase Currency:</label>
+            <h5><label for="comp_name" style="padding-right: 125px;">Company Name:</label><input name="comp_name" id="comp_name"><br></h5>
+            <h5><label for="acc_code" style="padding-right: 143px;">Account Code:</label><input name="acc_code" id="acc_code"><br></h5>
+            <h5><label for="curr_code" style="padding-right: 10px;">Supplier Purchase Currency:</label>
               <select name="curr_code" id="curr_code">
                 <option value="EUR" selected>EUR</option>
                 <option value="CHF">CHF</option>
                 <option value="GBP">GBP</option>
                 <option value="JPY">JPY</option>
                 <option value="USD">USD</option>
-              </select></h4><br>
+              </select></h5><br>
               <button type="submit" class="btn btn-danger" id="btn_submit">Create New Supplier</button>
           </form>
         </div>

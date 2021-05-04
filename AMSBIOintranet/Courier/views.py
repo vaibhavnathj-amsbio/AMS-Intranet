@@ -44,6 +44,7 @@ def track_request(track_id, api_key, api_pass):
     json_response = json.loads(response)
     return json_response
 
+
 def scanEvents(data1, data2):
     data_list = []
     for ele in data1:
@@ -62,7 +63,8 @@ def scanEvents(data1, data2):
 
 def fedex(request):
     flag = True
-    
+    path = request.path
+    page = list(path.split("/"))[2] + '.html'
     try:
         if request.method == "POST":
             track_response = track_request(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
@@ -75,14 +77,14 @@ def fedex(request):
             scan_events = scan_events[:-1]
             history = scanEvents(scan_events, location)
             context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
-            return render(request, 'fedex.html', context)
+            return render(request, page, context)
 
     except:
         flag = False
         context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
-        return render(request, 'fedex.html', context)
+        return render(request, page, context)
 
-    return render(request, 'fedex.html',)
+    return render(request, page,)
 
 
 def dhl(request):

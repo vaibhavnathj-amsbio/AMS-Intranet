@@ -26,7 +26,7 @@ def index(request):
 
 def addNewSupplier(request):
     """ Main function for rendering the Add new Supplier page! """
-    if request.method == "POST":
+    if request.method == "POST" and len(request.POST['comp_name']) > 0:
         name = request.POST['comp_name']
         code = request.POST['acc_code'].upper()
         curr = request.POST['curr_code']
