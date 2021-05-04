@@ -296,16 +296,5 @@
       v.style.display = "none";
     }
   });
-
-  $(document).ready(function () {
-    var div_body = document.getElementById("OrdersInfo");
-    $.ajax({
-      url: 'loadtable',
-      type: 'get',
-      success: function (response) {
-        div_body.innerHTML = `${response.table}`;
-      }
-    });
-  });
-
+  
 })(jQuery);
