@@ -1,5 +1,7 @@
 import requests
 import json
+import pandas as pd
+from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
 
@@ -59,12 +61,18 @@ def scanEvents(data1, data2):
                 pass
         data_list.append(data_dict)
     return data_list
-          
+
+
+def loadCSVtoHTML(request):
+    data = pd.read_csv('temp_files/DataExport.csv', header=0, index_col=0)
+    data.drop(columns=data.columns[-1],  axis=1, inplace=True)
+    parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
+    return JsonResponse({'table':parse_string})
+
 
 def fedex(request):
     flag = True
-    path = request.path
-    page = list(path.split("/"))[2] + '.html'
+    page = list(request.path.split("/"))[2] + '.html'
     try:
         if request.method == "POST":
             track_response = track_request(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
@@ -84,7 +92,7 @@ def fedex(request):
         context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
         return render(request, page, context)
 
-    return render(request, page,)
+    return render(request, page)
 
 
 def dhl(request):

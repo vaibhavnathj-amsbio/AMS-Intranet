@@ -6,4 +6,5 @@ urlpatterns = [
     path('FedexUK',views.fedex, name='fedex' ),
     path('FedexUSA',views.fedex, name='fedex' ),
     path('DHL',views.dhl, name='dhl' ),
+    path('loadtable',views.loadCSVtoHTML, name='loadtable'),
 ]

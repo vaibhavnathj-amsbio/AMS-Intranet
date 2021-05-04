@@ -288,4 +288,24 @@
     });
   });
 
+  $('button[id^="closeInfo"]').on('click', function () {
+    var v = document.getElementById("showOrHide");
+    if (v.style.display === "none") {
+      v.style.display = "block";
+    } else {
+      v.style.display = "none";
+    }
+  });
+
+  $(document).ready(function () {
+    var div_body = document.getElementById("OrdersInfo");
+    $.ajax({
+      url: 'loadtable',
+      type: 'get',
+      success: function (response) {
+        div_body.innerHTML = `${response.table}`;
+      }
+    });
+  });
+
 })(jQuery);
