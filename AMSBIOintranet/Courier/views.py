@@ -6,12 +6,15 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 
+FedEx = {'api_key': 'l76c7f058eed374645b8b860b19d778b07', 'api_pass': 'be880a5f2a20429ebdb7c54afcc1acd3'}
+DHL = {'api_key': '8C9yOAvIXeYK6xGhTLx8SmsSPISMFy5V', 'api_pass': 'UX1WCKfQaa98xSNl'}
+
+
 def index(request):
     return redirect('/')
 
 
-FedEx = {'api_key': 'l76c7f058eed374645b8b860b19d778b07', 'api_pass': 'be880a5f2a20429ebdb7c54afcc1acd3'}
-def oAuth(api_key, api_pass):    
+def oAuth_fedex(api_key, api_pass):    
     token = 'grant_type=client_credentials&client_id=' + api_key + '&client_secret=' + api_pass 
     headers = {
         'Content-Type': "application/x-www-form-urlencoded"
@@ -21,7 +24,7 @@ def oAuth(api_key, api_pass):
     return json_response
 
 
-def track_request(track_id, api_key, api_pass):
+def track_request_fedex(track_id, api_key, api_pass):
     url = "https://apis-sandbox.fedex.com/track/v1/trackingnumbers"
 
     payload = json.dumps({"trackingInfo": [
@@ -37,7 +40,7 @@ def track_request(track_id, api_key, api_pass):
     tracking_headers = {
         'Content-Type': "application/json",
         'X-locale': "en_US",
-        'Authorization': "Bearer " + oAuth(api_key, api_pass)['access_token'] 
+        'Authorization': "Bearer " + oAuth_fedex(api_key, api_pass)['access_token'] 
         }
 
     response = requests.request("POST", url, data=payload, headers=tracking_headers).text
@@ -47,7 +50,7 @@ def track_request(track_id, api_key, api_pass):
     return json_response
 
 
-def scanEvents(data1, data2):
+def scanEvents_fedex(data1):
     data_list = []
     for ele in data1:
         data_dict = {}
@@ -63,8 +66,15 @@ def scanEvents(data1, data2):
     return data_list
 
 
-def loadCSVtoHTML(request):
-    data = pd.read_csv('temp_files/DataExport.csv', header=0, index_col=0)
+def loadCSVtoHTML_UK(request):
+    data = pd.read_csv('temp_files/UK.csv', header=0, index_col=0)
+    data.drop(columns=data.columns[-1],  axis=1, inplace=True)
+    parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
+    return JsonResponse({'table':parse_string})
+
+
+def loadCSVtoHTML_USA(request):
+    data = pd.read_csv('temp_files/USA.csv', header=0, index_col=0)
     data.drop(columns=data.columns[-1],  axis=1, inplace=True)
     parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
     return JsonResponse({'table':parse_string})
@@ -75,7 +85,7 @@ def fedex(request):
     page = list(request.path.split("/"))[2] + '.html'
     try:
         if request.method == "POST":
-            track_response = track_request(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
+            track_response = track_request_fedex(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
             latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
             location = latest_status['scanLocation']
             latest_status.pop('scanLocation')
@@ -83,7 +93,7 @@ def fedex(request):
             shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
             scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
             scan_events = scan_events[:-1]
-            history = scanEvents(scan_events, location)
+            history = scanEvents_fedex(scan_events)
             context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
             return render(request, page, context)
 
@@ -95,5 +105,51 @@ def fedex(request):
     return render(request, page)
 
 
+def track_request_dhl(api_key, track_num):
+    url = "https://api-eu.dhl.com/track/shipments"
+    headers = {"DHL-API-Key": api_key}
+
+    querystring = {"trackingNumber":  track_num}
+
+    response = requests.request("GET", url, headers=headers, params=querystring).text
+    # with open('temp_files/tracking_info_dhl.json','w') as f:
+    #     f.write(response)
+    json_response = json.loads(response)
+    return json_response
+
+
+def scanEvents_DHL(data):
+    data_list = []
+    for ele in data:
+        data_dict = {}
+        for key, val in ele.items():
+            if key in ["timestamp", "description"]:
+                data_dict[key.upper()] = val
+            elif key == "location":
+                data_dict["LOCATION"] = val["address"]["addressLocality"]
+            else:
+                pass
+        data_list.append(data_dict)
+    return data_list
+
+
 def dhl(request):
-    return render(request, 'dhl.html', {'msg': 'Coming Soon!'})
+    flag = True
+    try:
+        if request.method == "POST":
+            tracking_number = request.POST['track_num']
+            track_response = track_request_dhl(DHL['api_key'], tracking_number)
+            status = track_response["shipments"][0]["status"]
+            location = status["location"]["address"]
+            status.pop("location")
+            events = track_response["shipments"][0]["events"]
+            history = scanEvents_DHL(events)
+            context = {'status': status, 'flag': flag, 'track_num': tracking_number, "location": location, 'history': history}
+            return render(request, 'dhl.html', context)
+    
+    except:
+        flag = False
+        context = {'msg': '*Please enter valid tracking number', 'flag': flag}
+        return render(request, 'dhl.html', context)
+    
+    return render(request, 'dhl.html')

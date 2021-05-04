@@ -205,7 +205,7 @@
     $(document).ready(function () {
       var div_body = document.getElementById("OrdersInfo");
       $.ajax({
-        url: 'loadtable',
+        url: 'loadtable_uk',
         type: 'get',
         success: function (response) {
           div_body.innerHTML = `${response.table}`;
