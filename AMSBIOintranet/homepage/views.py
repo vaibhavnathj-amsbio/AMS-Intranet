@@ -10,20 +10,32 @@ def index(request):
     else:
         return render(request, 'index.html')
 
-consumer_key = '4nudd11rnxipa8mhzmqydc2dpz5rnvop'
-consumer_secret = 'zbwy1j2m6p6d1gfly78o01o8rur99igj'
-access_token = 'nxztkazoekstc80zv8pkx82iu4ai678s'
-secret = 'y16al5mphh9scxi8ua7enz2280hcb13j'
+
+def oAuth_magento(api_key, api_pass): 
+
+    payload = {'username': api_key, 'password': api_pass}    
+    
+    headers = {
+        'Content-Type': 'multipart/form-data',
+        'Connection': 'keep-alive',
+        'Cookie': 'PHPSESSID=umef23v1foqhsmnb45ov1dbgme',
+     }
+
+    response_auth = requests.request("POST", "https://stage.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
+    return response_auth
 
 
 def track_request():
-    url = "https://www.amsbio.com/rest/default/V1/integration/sales/token"
 
-    tracking_headers = {
+    token = oAuth_magento("amsBioAPI", "dY0K9wAWxA4U5LjEea")
+
+    url = "https://stage.amsbio.com/index.php/rest/V1/orders/?searchCriteria[filterGroups][0][filters][0][field]=status&searchCriteria[filterGroups][0][filters][0][value]=pending&searchCriteria[filterGroups][0][filters][0][conditionType]=eq"
+
+    headers = {
         'Content-Type': "application/json",
-        'Authorization': "Bearer nxztkazoekstc80zv8pkx82iu4ai678s"
+        'Authorization': "Bearer " + token,
         }
-    response = requests.request("POST", url, headers=tracking_headers).text
+    response = requests.request("POST", url, headers=headers).text
     # with open('temp_files/tracking_info_new_ship.json','w') as f:
     #     f.write(response)
     json_response = json.loads(response)
