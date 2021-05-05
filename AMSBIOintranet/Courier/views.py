@@ -66,16 +66,11 @@ def scanEvents_fedex(data1):
     return data_list
 
 
-def loadCSVtoHTML_UK(request):
-    data = pd.read_csv('temp_files/UK.csv', header=0, index_col=0)
+def loadCSVtoHTML(request):
+    page = list(request.path.split("_"))[1] + '.csv'
+    data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
     data.drop(columns=data.columns[-1],  axis=1, inplace=True)
-    parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
-    return JsonResponse({'table':parse_string})
-
-
-def loadCSVtoHTML_USA(request):
-    data = pd.read_csv('temp_files/USA.csv', header=0, index_col=0)
-    data.drop(columns=data.columns[-1],  axis=1, inplace=True)
+    data.index.name = None
     parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
     return JsonResponse({'table':parse_string})
 

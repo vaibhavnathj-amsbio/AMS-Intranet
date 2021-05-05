@@ -120,8 +120,11 @@
             {% for key, val in location.items %}
               <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
               <br>
-            {% endfor %}
-            <br>
+            {% endfor %}            
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="text-align: right;">
             <button id="loadHistory" type="button" class="btn btn-primary" data-toggle="modal" data-target="#moreInfo" style="margin-top: 10px;">Track Parcel History</button>
             <!-- Modal -->
             <div class="modal fade" id="moreInfo" tabindex="-1" role="dialog" aria-labelledby="moreInfoLabel" aria-hidden="true" style="text-align:center;">
@@ -137,8 +140,8 @@
                     <table class="table table-striped table-bordered rounded" id="data" style="font-size: smaller;">
                       <thead style="background-color: #f1594a; color:#fff;">
                           <th>DATE</th>
-                          <th>DISCRIPTION</th>
                           <th>LOCATION</th>
+                          <th>DISCRIPTION</th>
                       </thead>
                       <tbody id="databody">
                         {% for ele in history %}

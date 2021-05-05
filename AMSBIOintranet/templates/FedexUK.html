@@ -23,6 +23,17 @@
 
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
+  <style>
+    thead th{
+      background-color: #dc3545;
+      color: #fff;
+      text-align: center !important;
+    }
+    table{
+      border-collapse: collapse;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -136,8 +147,11 @@
           <div class="col-md-6" style="padding-left: 10%;">
             <h4><u>Package Info</u></h4>
             <strong style="margin-right: 1%;">Shipper Reference:</strong>{{ref}}
-            <!-- Trigger the modal with a button -->
-            <br>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Trigger the modal with a button -->
+          <div class="col-md-12" style="text-align: right;">             
             <button id="loadHistory" type="button" class="btn btn-primary" data-toggle="modal" data-target="#moreInfo" style="margin-top: 10px;">Track Parcel History</button>
             <!-- Modal -->
             <div class="modal fade" id="moreInfo" tabindex="-1" role="dialog" aria-labelledby="moreInfoLabel" aria-hidden="true" style="text-align:center;">
@@ -205,7 +219,7 @@
     $(document).ready(function () {
       var div_body = document.getElementById("OrdersInfo");
       $.ajax({
-        url: 'loadtable_uk',
+        url: 'loadtable_UK',
         type: 'get',
         success: function (response) {
           div_body.innerHTML = `${response.table}`;
