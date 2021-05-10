@@ -7,7 +7,7 @@ import json
 # Create your views here.
 def index(request):
     response = track_request()
-    context = {'response': response}
+    context = {'response': response[0], 'headers': response[1]}
     if request.method == "POST":
         return redirect(request, 'index.html', context)
     else:
@@ -40,15 +40,26 @@ def track_request():
         'Accept': 'application/json',
         }
 
-    # payload = json.dumps({"searchCriteria[filterGroups][0][filters][0][field]": "status",
-    #                         "searchCriteria[filterGroups][0][filters][0][value]": "pending",
-    #                         "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
-    #                     })
+    payload = json.dumps({"searchCriteria[filterGroups][0][filters][0][field]": "status",
+                            "searchCriteria[filterGroups][0][filters][0][value]": "pending",
+                            "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
+                        })
 
     response = requests.request("GET", url, headers=headers).text
     # with open('temp_files/magento_orders.json','w') as f:
     #     f.write(response)
-    return json.loads(response)
+    json_response = json.loads(response)
+    headers = list((json_response['items'][10]).keys())[:58]
+    data_list = []
+    for ele in json_response['items']:
+        data_dict = {}
+        for key,val in ele.items():
+            if key in ["items","billing_address","payment", "extension_attributes", "status_histories"]:
+                pass
+            else:
+                data_dict[key] = val
+        data_list.append(data_dict)
+    return data_list[1:], headers
     
     
     
