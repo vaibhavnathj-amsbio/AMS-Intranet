@@ -31,12 +31,12 @@
       border-collapse: collapse;
     }
   
-    .roundedTable th:first-child 
+    .roundedTable tr:first-child th:first-child 
     {
       border-top-left-radius: 5px;
     }
     
-    .roundedTable th:last-child
+    .roundedTable tr:first-child th:last-child
     {
       border-top-right-radius: 5px;
     }
@@ -50,6 +50,21 @@
     {
       border-bottom-right-radius: 5px;
     }
+
+    #mySidenav button {
+      position: absolute;
+      left: -180px;
+      transition: 0.2s;
+      width: fit-content;
+      text-decoration: none;
+      color: white;
+      border-radius: 0 5px 5px 0;
+    }
+    
+    #mySidenav button:hover {
+      left: -5px;
+    }
+    
   </style>
 
 </head>
@@ -112,6 +127,29 @@
           </div>
         </div>
       </div>
+      <div id="mySidenav">
+        <button class="btn btn-primary" id="filter" data-toggle="modal" data-target="#filterData"><span style="padding-right: 25px;">Filter by creation date</span></button>
+        <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header" style="border-bottom: 0 none;">
+                <p class="modal-title" id="filterDataLabel"><strong>Filter by 'Order Creation' date</strong></p>
+              </div>
+              <div class="modal-body">
+                <form method="POST">
+                  {% csrf_token %}
+                  <label for="from_date">From:</label>
+                  <input type="text" placeholder="YYYY-MM-DD" id="from_date" name="from_date">&nbsp;-
+                  <label for="to_date">To:</label>
+                  <input type="text" placeholder="YYYY-MM-DD" id="to_date" name="to_date">
+                  <input type="submit" class="btn btn-danger justify-content-center;">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
       <div class="content" style="width:90%; margin:auto;">
         <div class="row" style="margin-top: 2%;">
           <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap; border-radius:5px;">
