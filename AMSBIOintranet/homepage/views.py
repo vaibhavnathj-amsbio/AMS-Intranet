@@ -1,17 +1,17 @@
-from django.shortcuts import render, redirect
-from django.core.paginator import Paginator
-import oauth2 as oauth
 import requests
 import json
+import time
+
+from django.shortcuts import render
 
 
 # Create your views here.
 def index(request):
-    response = track_request()
-    paginator = Paginator(response[0], 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'response': page_obj, 'headers': response[1]}
+    start = time.time()
+    response = track_request(number_of_orders="50")
+    end = time.time()
+    print("Response time: ", end-start, "secs")
+    context = {'response': response[0], 'col_headers': format_cols(response[1]), 'headers': response[1]}
     return render(request, 'index.html', context)
 
 
@@ -28,23 +28,11 @@ def oAuth_magento(api_key, api_pass):
     return json.loads(response_auth)
 
 
-def payload_mgmt(data):
-    payload_str = ""
-    for key,val in data.items():
-        payload_str += key + "=" + val + "&"
-    return payload_str[:-1]
-
-
-def track_request():
+def track_request(number_of_orders):
 
     token = oAuth_magento("amsBioAPI", "dY0K9wAWxA4U5LjEea")
 
-    payload = {"searchCriteria[filterGroups][0][filters][0][field]": "status",
-            "searchCriteria[filterGroups][0][filters][0][value]": "pending",
-            "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
-        }
-
-    url = "https://stage.amsbio.com/index.php/rest/V1/orders/?" + payload_mgmt(payload)
+    url = "https://stage.amsbio.com/index.php/rest/V1/orders/"
 
     headers = {
         'Content-Type': "application/json",
@@ -52,21 +40,36 @@ def track_request():
         'Accept': 'application/json',
         }
 
-    response = requests.request("GET", url, headers=headers).text
+    payload = {"searchCriteria[filterGroups][0][filters][0][field]": "status",
+                "searchCriteria[filterGroups][0][filters][0][value]": "pending",
+                "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
+                "searchCriteria[pageSize]": number_of_orders,
+                "searchCriteria[sortOrders][0][field]":"created_at",
+                "fields": "items[increment_id,base_currency_code,base_grand_total,grand_total,store_name,created_at,customer_email,customer_firstname,customer_lastname,status]",
+            }
+
+    response = requests.request("GET", url, headers=headers, params=payload)
     # with open('temp_files/magento_orders.json','w') as f:
-    #     f.write(response)
-    json_response = json.loads(response)
-    headers = list((json_response['items'][10]).keys())[:58]
-    data_list = []
-    for ele in json_response['items']:
-        data_dict = {}
-        for key,val in ele.items():
-            if key in ["items","billing_address","payment", "extension_attributes", "status_histories"]:
-                pass
-            else:
-                data_dict[key] = val
-        data_list.append(data_dict)
-    return data_list[1:], headers
+    #     f.write(response.text)
+    json_response = json.loads(response.text)
+    col_headers = list((json_response['items'][1]).keys())
+    # data_list = []
+    # for ele in json_response['items']:
+    #     data_dict = {}
+    #     for key,val in ele.items():
+    #         if key in ["items","billing_address","payment", "extension_attributes", "status_histories"]:
+    #             pass
+    #         else:
+    #             data_dict[key] = val
+    #     data_list.append(data_dict)
+    return json_response['items'][1:], col_headers
     
     
-    
+def format_cols(data):
+    col_list = []
+    for elem in data:
+        new_str = ""
+        for string in elem.split('_'):
+            new_str += string.capitalize() + " "
+        col_list.append(new_str[:-1])
+    return col_list

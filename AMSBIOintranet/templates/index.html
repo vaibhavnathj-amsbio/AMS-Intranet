@@ -23,6 +23,35 @@
 
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
+  <style>
+    .roundedTable
+    {
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); 
+      border-radius: 6px;
+      border-collapse: collapse;
+    }
+  
+    .roundedTable th:first-child 
+    {
+      border-top-left-radius: 5px;
+    }
+    
+    .roundedTable th:last-child
+    {
+      border-top-right-radius: 5px;
+    }
+    
+    .roundedTable tr:last-child td:first-child 
+    {
+      border-bottom-left-radius: 5px;
+    }
+    
+    .roundedTable tr:last-child td:last-child 
+    {
+      border-bottom-right-radius: 5px;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -84,12 +113,12 @@
         </div>
       </div>
       <div class="content" style="width:90%; margin:auto;">
-        <div class="row" style="margin-top: 2%; font-size:larger; box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); border-radius: 5px; padding:0.5%;">
-          <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap;">
-            <table class="table table-striped table-bordered rounded" style="font-size: smaller;">
+        <div class="row" style="margin-top: 2%;">
+          <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap; border-radius:5px;">
+            <table class="table table-striped roundedTable">
               <thead style="background-color: #f1594a; color:#fff;">
                 <th>#</th>                
-                {% for ele in headers %}
+                {% for ele in col_headers %}
                   <th>{{ele}}</th>
                 {% endfor %}
               </thead>
@@ -104,24 +133,6 @@
                 {% endfor %}
               </tbody>
             </table>
-            <nav>
-              <ul class="pagination justify-content-center">
-                <span class="step-links">
-                    {% if response.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ response.previous_page_number }}">previous</a>
-                    {% endif %}
-            
-                    <span class="current">
-                        Page {{ response.number }} of {{ response.paginator.num_pages }}
-                    </span>
-            
-                    {% if response.has_next %}
-                        <a href="?page={{ response.next_page_number }}">next &raquo;</a>
-                    {% endif %}
-                </span>
-              </ul>
-            </nav>
           </div>
         </div>
       </div>
