@@ -30,7 +30,7 @@
   <header id="header" class="fixed-top ">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo"><a href=" ">amsbio</a></h1>
+      <h1 class="logo">amsbio</h1>
 
       <nav class="nav-menu d-none d-lg-block">
 
@@ -104,6 +104,24 @@
                 {% endfor %}
               </tbody>
             </table>
+            <nav>
+              <ul class="pagination justify-content-center">
+                <span class="step-links">
+                    {% if response.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ response.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ response.number }} of {{ response.paginator.num_pages }}
+                    </span>
+            
+                    {% if response.has_next %}
+                        <a href="?page={{ response.next_page_number }}">next &raquo;</a>
+                    {% endif %}
+                </span>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>

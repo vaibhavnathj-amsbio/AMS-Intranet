@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 import oauth2 as oauth
 import requests
 import json
@@ -7,11 +8,11 @@ import json
 # Create your views here.
 def index(request):
     response = track_request()
-    context = {'response': response[0], 'headers': response[1]}
-    if request.method == "POST":
-        return redirect(request, 'index.html', context)
-    else:
-        return render(request, 'index.html', context)
+    paginator = Paginator(response[0], 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'response': page_obj, 'headers': response[1]}
+    return render(request, 'index.html', context)
 
 
 def oAuth_magento(api_key, api_pass): 
@@ -25,25 +26,31 @@ def oAuth_magento(api_key, api_pass):
 
     response_auth = requests.request("POST", "https://stage.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
     return json.loads(response_auth)
-    
+
+
+def payload_mgmt(data):
+    payload_str = ""
+    for key,val in data.items():
+        payload_str += key + "=" + val + "&"
+    return payload_str[:-1]
 
 
 def track_request():
 
     token = oAuth_magento("amsBioAPI", "dY0K9wAWxA4U5LjEea")
 
-    url = "https://stage.amsbio.com/index.php/rest/V1/orders/?searchCriteria[filterGroups][0][filters][0][field]=status&searchCriteria[filterGroups][0][filters][0][value]=pending&searchCriteria[filterGroups][0][filters][0][conditionType]=eq"
+    payload = {"searchCriteria[filterGroups][0][filters][0][field]": "status",
+            "searchCriteria[filterGroups][0][filters][0][value]": "pending",
+            "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
+        }
+
+    url = "https://stage.amsbio.com/index.php/rest/V1/orders/?" + payload_mgmt(payload)
 
     headers = {
         'Content-Type': "application/json",
         'Authorization': "Bearer " + token,
         'Accept': 'application/json',
         }
-
-    payload = json.dumps({"searchCriteria[filterGroups][0][filters][0][field]": "status",
-                            "searchCriteria[filterGroups][0][filters][0][value]": "pending",
-                            "searchCriteria[filterGroups][0][filters][0][conditionType]": "eq",
-                        })
 
     response = requests.request("GET", url, headers=headers).text
     # with open('temp_files/magento_orders.json','w') as f:
