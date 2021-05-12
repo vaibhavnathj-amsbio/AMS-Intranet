@@ -11,9 +11,10 @@ def index(request):
 
         from_date = request.POST['from_date']
         to_date = request.POST['to_date']
+        number_of_orders = request.POST['number_of_orders']
 
         start = time.time()
-        params = {'from_date': from_date, 'to_date': to_date}
+        params = {'from_date': from_date, 'to_date': to_date, 'number_of_orders': number_of_orders}
         response = track_request(params)
         end = time.time()
 
@@ -65,7 +66,7 @@ def track_request(params):
         to_date = None
         condition_2 = None
     else:
-        number_of_orders = params['number_of_orders'] if 'number_of_orders' in params.keys() else "100"
+        number_of_orders = params['number_of_orders'] if len(params['number_of_orders']) != 0 else "50"
         field = params['field'] if 'field' in params.keys() else "created_at"
         from_date = params['from_date'] + " 00:00:00" if len(params['from_date']) != 0 else "2100-12-31 00:00:00" 
         condition_1 = params['condition_1'] if 'condition_1' in params.keys() else "lteq"
@@ -93,14 +94,14 @@ def track_request(params):
                 "searchCriteria[filter_groups][2][filters][0][condition_type]": condition_2,
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
-                "fields": "items[increment_id,base_currency_code,base_grand_total,grand_total,store_name,created_at,customer_email,customer_firstname,customer_lastname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,store_name,created_at,customer_email,customer_firstname,customer_lastname,status]",
             }
 
     response = requests.request("GET", url, headers=headers, params=payload)
     # with open('temp_files/magento_orders_test.json','w') as f:
     #     f.write(response.text)
     json_response = json.loads(response.text)
-    col_headers = list((json_response['items'][1]).keys())
+    col_headers = list((json_response['items'][0]).keys())
 
     return json_response['items'], col_headers
     

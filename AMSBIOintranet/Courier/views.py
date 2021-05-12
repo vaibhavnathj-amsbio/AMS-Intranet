@@ -71,8 +71,13 @@ def loadCSVtoHTML(request):
     data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
     data.drop(columns=data.columns[-1],  axis=1, inplace=True)
     data.index.name = None
-    parse_string = data.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable")
-    return JsonResponse({'table':parse_string})
+    data_inb = data.drop(data[data['Direction '] == 'Outbo'].index)
+    data_outb = data.drop(data[data['Direction '] == 'Inbou'].index)
+    data_inb.drop(columns=['Direction '], axis=1, inplace=True)
+    data_outb.drop(columns=['Direction '], axis=1, inplace=True)
+    parse_string_inb = data_inb.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable1")
+    parse_string_outb = data_outb.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable2")
+    return JsonResponse({'table_in':parse_string_inb, 'table_out': parse_string_outb})
 
 
 def fedex(request):

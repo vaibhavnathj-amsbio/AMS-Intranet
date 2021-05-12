@@ -197,8 +197,21 @@
         </div>
       </div>
       {% endif %}
-      <div class="content text-center" id="OrdersInfo" style="margin-top: 5%!important; overflow-x:scroll; width: 95%; margin:0 auto; height: 700px; overflow-y:auto;">
-        <!--Data comes from Ajax request-->
+      <div class="container text-center" style="margin-top: 5%!important; margin: auto; display: block;">
+        <h4>Inbound Orders</h4>
+      </div>
+      <div class="row text-center" style="overflow-x:scroll; margin:0 auto; height: 700px; overflow-y:auto; width: 90%;">
+        <div class="col-md-12" id="Orders_inb" >
+          <!--Data comes from Ajax request-->
+        </div>
+      </div>
+      <div class="container text-center" style="margin-top: 5%!important; margin: auto; display: block;">
+        <h4>Outbound Orders</h4>
+      </div>
+      <div class="row text-center" style="overflow-x:scroll; margin:0 auto; height: 700px; overflow-y:auto; width: 90%;">
+        <div class=" col-md-12" id="Orders_outb">
+          <!--Data comes from Ajax request-->
+        </div>
       </div>
     </section>
 
@@ -217,12 +230,18 @@
 
   <script>
     $(document).ready(function () {
-      var div_body = document.getElementById("OrdersInfo");
+      var div_body_in = document.getElementById("Orders_inb");
+      var div_body_out = document.getElementById("Orders_outb");
       $.ajax({
         url: 'loadtable_UK',
         type: 'get',
         success: function (response) {
-          div_body.innerHTML = `${response.table}`;
+          div_body_in.innerHTML = `${response.table_in}`;
+          div_body_out.innerHTML = `${response.table_out}`;
+          var title1 = document.querySelector("#Ordertable1 > thead > tr > th:nth-child(1)")
+          title1.innerHTML = `Order ID`;
+          var title2 = document.querySelector("#Ordertable2 > thead > tr > th:nth-child(1)")
+          title2.innerHTML = `Order ID`;
         }
       });
     });

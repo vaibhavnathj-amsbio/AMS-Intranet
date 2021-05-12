@@ -147,8 +147,12 @@
                     </form>
                   </div>
                 </div>
-                <div class="row" style="text-align: center; margin-top:5px;">
-                  <div class="col-md-12">
+                <div class="row" style="margin-top:5px;">
+                  <div class="col-md-6">
+                    <label for="number_of_orders">Num of orders: </label>
+                    <input type="number" id="number_of_orders" name="number_of_orders" placeholder="#" form="form2" style="width: 50px;">
+                  </div>
+                  <div class="col-md-6" style="text-align: right;">
                     <input type="submit" class="btn btn-danger" form="form2">
                   </div>
                 </div>
@@ -162,22 +166,20 @@
         <div class="row" style="margin-top: 2%;">
           <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap; border-radius:5px;">
             <table class="table table-striped roundedTable">
-              <thead style="background-color: #f1594a; color:#fff;">
+              <tr style="background-color: #f1594a; color:#fff;">
                 <th>#</th>                
                 {% for ele in col_headers %}
                   <th>{{ele}}</th>
                 {% endfor %}
-              </thead>
-              <tbody >
-                {% for ele in response %}
-                <tr>
-                  <td><strong>{{ forloop.counter }}</strong></td>
-                  {% for key, val in ele.items %}
-                    <td>{{val}}</td>
-                  {% endfor %}
-                </tr>
+              </tr>
+              {% for ele in response %}
+              <tr>
+                <td><strong>{{ forloop.counter }}</strong></td>
+                {% for key, val in ele.items %}
+                  <td>{{val}}</td>
                 {% endfor %}
-              </tbody>
+              </tr>
+              {% endfor %}
             </table>
           </div>
         </div>
@@ -196,6 +198,20 @@
   <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
 
   <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script type="text/javascript">
+    jQuery.moveColumn = function (table, from, to) {
+      var rows = jQuery('tr', table);
+      var cols;
+      rows.each(function() {
+          cols = jQuery(this).children('th, td');
+          cols.eq(from).detach().insertBefore(cols.eq(to));
+      });
+  }
+    var tbl = jQuery('table');
+    jQuery.moveColumn(tbl, 7, 1);
+    jQuery.moveColumn(tbl, 8, 2);
+  </script>
 
 </body>
 
