@@ -117,12 +117,12 @@
             <form action="myDatabase/Search" style="margin-bottom: 20px;" method="POST" id="form1">
               {% csrf_token %}
               <label for="Prod" style="margin-right: 15px;">Search by Product Code: </label>
-              <input type="text" id="Prod" name="Prod" placeholder="Search">
+              <input type="text" id="Prod" name="Prod" placeholder="Database Search">
             </form>
           </div>
           <div class="col-md-6">
             <label for="Prod" style="margin-right: 15px;">Search by Description: </label>
-            <input type="text" id="Desc" name="Desc" form="form1" placeholder="Search">
+            <input type="text" id="Desc" name="Desc" form="form1" placeholder="Database Search">
             <button id="btn_search_db" class="btn" style="margin-left: 50px; background-color: #f1594a; color: #fff;" form="form1"><strong>Go</strong></button>
           </div>
         </div>
@@ -162,8 +162,11 @@
         </div>
       </div>
       <br>
+      <div class="container text-center" style="margin: auto; display: block;">
+        <h4>Magento Sales Orders</h4>
+      </div>
       <div class="content" style="width:90%; margin:auto;">
-        <div class="row" style="margin-top: 2%;">
+        <div class="row" style="margin-top: 1%;">
           <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap; border-radius:5px;">
             <table class="table table-striped roundedTable">
               <tr style="background-color: #f1594a; color:#fff;">
