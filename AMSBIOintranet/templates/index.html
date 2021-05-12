@@ -136,14 +136,22 @@
                 <p class="modal-title" id="filterDataLabel"><strong>Filter by 'Order Creation' date</strong></p>
               </div>
               <div class="modal-body">
-                <form method="POST">
-                  {% csrf_token %}
-                  <label for="from_date">From:</label>
-                  <input type="text" placeholder="YYYY-MM-DD" id="from_date" name="from_date">&nbsp;-
-                  <label for="to_date">To:</label>
-                  <input type="text" placeholder="YYYY-MM-DD" id="to_date" name="to_date">
-                  <input type="submit" class="btn btn-danger justify-content-center;">
-                </form>
+                <div class="row">
+                  <div class="col-md-12">
+                    <form method="POST" id="form2">
+                      {% csrf_token %}
+                      <label for="from_date">From:</label>
+                      <input type="text" placeholder="YYYY-MM-DD" id="from_date" name="from_date" >&nbsp;-
+                      <label for="to_date">To:</label>
+                      <input type="text" placeholder="YYYY-MM-DD" id="to_date" name="to_date">
+                    </form>
+                  </div>
+                </div>
+                <div class="row" style="text-align: center; margin-top:5px;">
+                  <div class="col-md-12">
+                    <input type="submit" class="btn btn-danger" form="form2">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
