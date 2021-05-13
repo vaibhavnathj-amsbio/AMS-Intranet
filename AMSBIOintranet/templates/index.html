@@ -23,50 +23,6 @@
 
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
-  <style>
-    .roundedTable
-    {
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); 
-      border-radius: 6px;
-      border-collapse: collapse;
-    }
-  
-    .roundedTable tr:first-child th:first-child 
-    {
-      border-top-left-radius: 5px;
-    }
-    
-    .roundedTable tr:first-child th:last-child
-    {
-      border-top-right-radius: 5px;
-    }
-    
-    .roundedTable tr:last-child td:first-child 
-    {
-      border-bottom-left-radius: 5px;
-    }
-    
-    .roundedTable tr:last-child td:last-child 
-    {
-      border-bottom-right-radius: 5px;
-    }
-
-    #mySidenav button {
-      position: absolute;
-      left: -180px;
-      transition: 0.2s;
-      width: fit-content;
-      text-decoration: none;
-      color: white;
-      border-radius: 0 5px 5px 0;
-    }
-    
-    #mySidenav button:hover {
-      left: -5px;
-    }
-    
-  </style>
-
 </head>
 
 <body>
@@ -123,7 +79,7 @@
           <div class="col-md-6">
             <label for="Prod" style="margin-right: 15px;">Search by Description: </label>
             <input type="text" id="Desc" name="Desc" form="form1" placeholder="Database Search">
-            <button id="btn_search_db" class="btn" style="margin-left: 50px; background-color: #f1594a; color: #fff;" form="form1"><strong>Go</strong></button>
+            <button id="btn_search_db" class="btn btn-danger" style="margin-left: 50px;" form="form1"><strong>Go</strong></button>
           </div>
         </div>
       </div>

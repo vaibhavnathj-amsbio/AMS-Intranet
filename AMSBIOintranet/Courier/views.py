@@ -75,8 +75,8 @@ def loadCSVtoHTML(request):
     data_outb = data.drop(data[data['Direction '] == 'Inbou'].index)
     data_inb.drop(columns=['Direction '], axis=1, inplace=True)
     data_outb.drop(columns=['Direction '], axis=1, inplace=True)
-    parse_string_inb = data_inb.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable1")
-    parse_string_outb = data_outb.to_html(classes="table table-bordered rounded table-hover", table_id="Ordertable2")
+    parse_string_inb = data_inb.to_html(classes="table table-striped roundedTable", table_id="Ordertable1", border=0)
+    parse_string_outb = data_outb.to_html(classes="table table-striped roundedTable", table_id="Ordertable2", border=0)
     return JsonResponse({'table_in':parse_string_inb, 'table_out': parse_string_outb})
 
 
