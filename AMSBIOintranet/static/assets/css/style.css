@@ -968,12 +968,14 @@ input[id='id_supplier_product_code']{
 --------------------------------------------------------------*/
 #mySidenav button {
   position: absolute;
-  left: -180px;
-  transition: 0.2s;
-  width: fit-content;
+  left: -200px;
+  width: 220px;
+  transition: 0.15s;
   text-decoration: none;
   color: white;
   border-radius: 0 5px 5px 0;
+  padding-right: 15px;
+  text-align: left;
 }
 
 #mySidenav button:hover {

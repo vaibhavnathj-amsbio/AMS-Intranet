@@ -94,7 +94,7 @@ def track_request(params):
                 "searchCriteria[filter_groups][2][filters][0][condition_type]": condition_2,
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
-                "fields": "items[increment_id,base_currency_code,grand_total,store_name,created_at,customer_email,customer_firstname,customer_lastname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,status]",
             }
 
     response = requests.request("GET", url, headers=headers, params=payload)

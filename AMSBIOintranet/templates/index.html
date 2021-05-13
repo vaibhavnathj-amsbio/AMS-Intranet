@@ -30,12 +30,12 @@
   <header id="header" class="fixed-top ">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo">amsbio</h1>
+      <h1 class="logo"><a href=" ">amsbio</h1></a>
 
       <nav class="nav-menu d-none d-lg-block">
 
         <ul>
-          <li><a id="home" href="#">Home</a></li>
+          <li><a id="home" href=" ">Home</a></li>
 
           <li id="database_drop_down" class="drop-down"><a href=" ">Database</a>
             <ul>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <div id="mySidenav">
-        <button class="btn btn-primary" id="filter" data-toggle="modal" data-target="#filterData"><span style="padding-right: 25px;">Filter by creation date</span></button>
+        <button class="btn btn-primary" id="filter" data-toggle="modal" data-target="#filterData">Filter by creation date</button>
         <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -116,6 +116,29 @@
             </div>
           </div>
         </div>
+        <br>
+        <button class="btn btn-primary" id="Search" data-toggle="modal" data-target="#SearchData" style="margin-top: 25px;">Search by Order ID</button>
+        <div class="modal fade" id="SearchData" tabindex="-1" role="dialog" aria-labelledby="SearchDataLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header" style="border-bottom: 0 none;">
+                <p class="modal-title" id="SearchDataLabel"><strong>Search by 'Order ID'</strong></p>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <form method="POST" id="form3">
+                      {% csrf_token %}
+                      <label for="order_id">Enter ID:</label>
+                      <input type="text" placeholder="Order ID" id="order_id" name="order_id" >
+                      <input type="submit" class="btn btn-danger" form="form3">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <br>
       <div class="container text-center" style="margin: auto; display: block;">
@@ -128,7 +151,11 @@
               <tr style="background-color: #f1594a; color:#fff;">
                 <th>#</th>                
                 {% for ele in col_headers %}
-                  <th>{{ele}}</th>
+                  {% if ele == "Base Currency Code"%}
+                    <th>Base Curr</th>
+                  {% else %}
+                    <th>{{ele}}</th>
+                  {% endif %}
                 {% endfor %}
               </tr>
               {% for ele in response %}
@@ -168,8 +195,9 @@
       });
   }
     var tbl = jQuery('table');
-    jQuery.moveColumn(tbl, 7, 1);
-    jQuery.moveColumn(tbl, 8, 2);
+    jQuery.moveColumn(tbl, 5, 1);
+    jQuery.moveColumn(tbl, 6, 2);
+    jQuery.moveColumn(tbl, 6, 4);
   </script>
 
 </body>
