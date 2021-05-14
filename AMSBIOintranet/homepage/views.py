@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 import requests
 import json
 import time
@@ -9,7 +10,8 @@ from django.shortcuts import render
 def index(request):
     if request.method == "POST" and 'from_date' in request.POST:
         # start = time.time()
-        params = {'from_date': request.POST['from_date'], 'to_date': request.POST['to_date'], 'number_of_orders': request.POST['number_of_orders']}
+        print(request.POST)
+        params = {'from_date': request.POST['from_date'], 'to_date': request.POST['to_date'], 'number_of_orders': request.POST['number_of_orders'], 'status': request.POST['status']}
         response = track_request(params)
         # end = time.time()      
         # print("Response time: ", end-start, "secs")
@@ -24,6 +26,10 @@ def index(request):
         else:
             context = {'response': response['result'], 'col_headers': format_cols(response['col_headers']), 'flag': True }
             return render(request, 'index.html', context)
+    
+    elif request.method == "POST" and 'comment' in request.POST:
+        print(request.POST)
+        return render(request, 'index.html')
 
     else:
         # start = time.time()
@@ -58,12 +64,10 @@ def oAuth_magento():
 def track_request(params):
 
     """
-    params(dict):   'number_of_orders' : Number of orders to be fetched
-                    'field' : On which field the filter must be applied to, default "created_at"
-                    'from_date' : Select 'from'/start date
-                    'condition_1' : Select logical condition to be applied on 'from' date, default 'lteq'
-                    'to_date' : Select 'to'/end date
-                    'condition_2' : Select logical condition to be applied on 'to' date, default 'gteq'
+    params(dict):   'number_of_orders' : Number of orders to be fetched,
+                    'from_date' : Select 'from'/start date,
+                    'to_date' : Select 'to'/end date,
+                    'status': Status of the order,
 
     """
 
@@ -74,25 +78,34 @@ def track_request(params):
         condition_1 = None
         to_date = None
         condition_2 = None
+        status = None
+        value = None
+        condition_3 = None
     else:
         number_of_orders = params['number_of_orders'] if len(params['number_of_orders']) != 0 else "20"
-        field = params['field'] if 'field' in params.keys() else "created_at"
-        from_date = params['from_date'] + " 00:00:00" if len(params['from_date']) != 0 else "2100-12-31 00:00:00" 
-        condition_1 = params['condition_1'] if 'condition_1' in params.keys() else "lteq"
-        to_date = params['to_date'] + " 00:00:00" if len(params['to_date']) != 0 else "2000-01-01 00:00:00"
-        condition_2 = params['condition_2'] if 'condition_2' in params.keys() else "gteq"
+        field = "created_at"
+        from_date = params['from_date'] + " 00:00:00" if len(params['from_date']) != 0 else "2000-01-01 00:00:00" 
+        condition_1 = "gteq"
+        to_date = params['to_date'] + " 23:59:59" if len(params['to_date']) != 0 else "2100-12-31 23:59:59"
+        condition_2 = "lteq"
+        status = None if params['status'] == "None" else "status"
+        value = None if params['status'] == "None" else params['status']
+        condition_3 = None if params['status'] == "None" else "eq"
 
     generate_request = oAuth_magento()
 
-    payload = {"searchCriteria[filter_groups][0][filters][0][field]": "status",
-                "searchCriteria[filter_groups][0][filters][0][value]": "pending",
-                "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
+    payload = { "searchCriteria[filter_groups][0][filters][0][field]": field,
+                "searchCriteria[filter_groups][0][filters][0][value]": from_date,
+                "searchCriteria[filter_groups][0][filters][0][condition_type]": condition_1,
+
                 "searchCriteria[filter_groups][1][filters][0][field]": field,
-                "searchCriteria[filter_groups][1][filters][0][value]": from_date,
-                "searchCriteria[filter_groups][1][filters][0][condition_type]": condition_1,
-                "searchCriteria[filter_groups][2][filters][0][field]": field,
-                "searchCriteria[filter_groups][2][filters][0][value]": to_date,
-                "searchCriteria[filter_groups][2][filters][0][condition_type]": condition_2,
+                "searchCriteria[filter_groups][1][filters][0][value]": to_date,
+                "searchCriteria[filter_groups][1][filters][0][condition_type]": condition_2,
+
+                "searchCriteria[filter_groups][2][filters][0][field]": status,
+                "searchCriteria[filter_groups][2][filters][0][value]": value,
+                "searchCriteria[filter_groups][2][filters][0][condition_type]": condition_3,
+                
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
                 "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,status]",
