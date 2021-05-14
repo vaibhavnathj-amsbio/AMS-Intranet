@@ -138,3 +138,4 @@ chromedriver.exe
 temp_files/
 testing commands.txt
 tracking_info.json
+runserver.bat
