@@ -967,7 +967,7 @@ input[id='id_supplier_product_code']{
 # Side Nav
 --------------------------------------------------------------*/
 #mySidenav button {
-  position: absolute;
+  position: fixed;
   left: -200px;
   width: 220px;
   transition: 0.15s;
