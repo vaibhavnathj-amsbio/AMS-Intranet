@@ -1,16 +1,14 @@
 from django.http.response import JsonResponse
 import requests
 import json
-import time
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 
 # Create your views here.
 def index(request):
     if request.method == "POST" and 'from_date' in request.POST:
         # start = time.time()
-        print(request.POST)
         params = {'from_date': request.POST['from_date'], 'to_date': request.POST['to_date'], 'number_of_orders': request.POST['number_of_orders'], 'status': request.POST['status']}
         response = track_request(params)
         # end = time.time()      
@@ -26,10 +24,15 @@ def index(request):
         else:
             context = {'response': response['result'], 'col_headers': format_cols(response['col_headers']), 'flag': True }
             return render(request, 'index.html', context)
-    
+
     elif request.method == "POST" and 'comment' in request.POST:
-        print(request.POST)
-        return render(request, 'index.html')
+        order_id = request.POST['reference_id']
+        comment = request.POST['comment'] 
+        appendComment = "true" if len(request.POST['comment']) > 0 else "false"
+        editShipment(order_id=order_id, comment=comment, appendcomment=appendComment)
+        response = track_request(params = {})
+        context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
+        return render(request, 'index.html', context)
 
     else:
         # start = time.time()
@@ -43,16 +46,18 @@ def index(request):
 
 def oAuth_magento(): 
 
-    payload = json.dumps({'username': "amsBioAPI", 'password': "Tg5fTysjobQFlDvYUf7"})    
+    # stage : "dY0K9wAWxA4U5LjEea"
+    # production: "Tg5fTysjobQFlDvYUf7"
+    payload = json.dumps({'username': "amsBioAPI", 'password': "dY0K9wAWxA4U5LjEea"})    
     
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     }
 
-    response_auth = requests.request("POST", "https://www.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
+    response_auth = requests.request("POST", "https://stage.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
 
-    api_url = "https://www.amsbio.com/index.php/rest/V1/orders/"
+    api_url = "https://stage.amsbio.com/index.php/rest/V1/orders/"
     api_headers = {
         'Content-Type': "application/json",
         'Authorization': "Bearer " + json.loads(response_auth),
@@ -108,7 +113,7 @@ def track_request(params):
                 
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,customer_lastname,status]",
             }
 
     response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
@@ -141,13 +146,13 @@ def searchOrder(order_id):
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
                 "searchCriteria[filter_groups][0][filters][0][value]": order_id,
                 "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,customer_lastname,status]",
             }
 
     try:
         response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
-        with open('temp_files/magento_search_orders.json','w') as f:
-            f.write(response.text)
+        # with open('temp_files/magento_search_orders.json','w') as f:
+        #     f.write(response.text)
         json_response = json.loads(response.text)
         col_headers = list((json_response['items'][0]).keys())
         context = {'result': json_response['items'], 'col_headers': col_headers}
@@ -157,3 +162,37 @@ def searchOrder(order_id):
         flag = False
         context = {'msg': "*Please enter a valid Order ID!", 'flag': flag}
         return context
+
+
+def shipmentDetails(request):
+    order_id = request.GET.get('order_id')
+    generate_request = oAuth_magento()
+
+    payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
+                "searchCriteria[filter_groups][0][filters][0][value]": order_id,
+                "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
+                "fields": "items[extension_attributes[shipping_assignments[shipping[address[city,company,country_id,firstname,lastname,postcode,region]]]]]",
+            }
+    response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
+    # with open('temp_files/magento_get_order_select.json','w') as f:
+    #     f.write(response.text)
+    json_response = json.loads(response.text)
+    context = {'result': json_response['items'][0]['extension_attributes']['shipping_assignments'][0]['shipping']['address']}
+    return JsonResponse(context)
+
+
+def editShipment(order_id, comment, appendcomment):
+    generate_request = oAuth_magento()
+
+    if appendcomment == "true": 
+        payload = {'appendComment': appendcomment,
+                    'orderId': order_id,
+                    'comment': comment}
+    
+    else:
+        payload = {'orderId': order_id}
+
+    response = requests.request("POST", url="https://stage.amsbio.com/index.php/rest/V1/order/" + order_id + "/ship", headers=generate_request[1], params=payload)
+    json_response = json.loads(response.text)
+    print(json_response)
+    return json_response

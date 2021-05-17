@@ -288,6 +288,7 @@
     });
   });
 
+  // js to hide tracking details modal box
   $('button[id^="closeInfo"]').on('click', function () {
     var v = document.getElementById("showOrHide");
     if (v.style.display === "none") {
@@ -295,6 +296,38 @@
     } else {
       v.style.display = "none";
     }
+  });
+
+  // js for loading shipment details on index.html
+  $(document).ready(function () {
+    $('button[id^="viewOrder"]').one('click', function () {
+      var OID = $(this).val();
+      var shipping_div = document.querySelector("#shipping"+OID);
+      $.ajax({
+        url: 'shipment_details',
+        type: 'get',
+        data:{
+          order_id: OID
+        },
+        success: function(json){
+          const shipping_table = document.createElement('table');
+          shipping_table.className = 'table table-responsive';
+          for (const [key, value] of Object.entries(json.result)) {
+            const tr = document.createElement("tr");
+            const td1 = document.createElement("td");
+            td1.innerHTML = `<strong>${key}</strong>`;
+            const td2 = document.createElement("td");
+            td2.textContent = `${value}`;
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            shipping_table.append(tr);
+            shipping_div.append(shipping_table);
+          }
+          var spinner = document.querySelector("#spinner"+ OID);
+          spinner.remove();
+        }
+      });
+    });
   });
   
 })(jQuery);
