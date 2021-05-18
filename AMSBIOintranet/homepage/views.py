@@ -26,10 +26,11 @@ def index(request):
             return render(request, 'index.html', context)
 
     elif request.method == "POST" and 'comment' in request.POST:
-        order_id = request.POST['reference_id']
-        comment = request.POST['comment'] 
-        appendComment = "true" if len(request.POST['comment']) > 0 else "false"
-        editShipment(order_id=order_id, comment=comment, appendcomment=appendComment)
+        print(request.POST)
+        # order_id = request.POST['reference_id']
+        # comment = request.POST['comment'] 
+        # appendComment = "true" if len(request.POST['comment']) > 0 else "false"
+        # editShipment(order_id=order_id, comment=comment, appendcomment=appendComment)
         response = track_request(params = {})
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
@@ -44,10 +45,10 @@ def index(request):
         return render(request, 'index.html', context)
 
 
+# stage : "dY0K9wAWxA4U5LjEea"
+# production: "Tg5fTysjobQFlDvYUf7"
 def oAuth_magento(): 
 
-    # stage : "dY0K9wAWxA4U5LjEea"
-    # production: "Tg5fTysjobQFlDvYUf7"
     payload = json.dumps({'username': "amsBioAPI", 'password': "dY0K9wAWxA4U5LjEea"})    
     
     headers = {
@@ -121,7 +122,6 @@ def track_request(params):
     #     f.write(response.text)
     json_response = json.loads(response.text)
     col_headers = list((json_response['items'][0]).keys())
-
     return json_response['items'], col_headers
     
     
@@ -171,13 +171,13 @@ def shipmentDetails(request):
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
                 "searchCriteria[filter_groups][0][filters][0][value]": order_id,
                 "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
-                "fields": "items[extension_attributes[shipping_assignments[shipping[address[city,company,country_id,firstname,lastname,postcode,region]]]]]",
+                "fields": "items[status,extension_attributes[shipping_assignments[shipping[address[city,company,country_id,firstname,lastname,postcode,region,telephone]]]]]",
             }
     response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
     # with open('temp_files/magento_get_order_select.json','w') as f:
     #     f.write(response.text)
     json_response = json.loads(response.text)
-    context = {'result': json_response['items'][0]['extension_attributes']['shipping_assignments'][0]['shipping']['address']}
+    context = {'result': json_response['items'][0]['extension_attributes']['shipping_assignments'][0]['shipping']['address'], 'status': json_response['items'][0]['status']}
     return JsonResponse(context)
 
 

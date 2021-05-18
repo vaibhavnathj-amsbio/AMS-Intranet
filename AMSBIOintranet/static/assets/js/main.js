@@ -310,18 +310,19 @@
           order_id: OID
         },
         success: function(json){
-          const shipping_table = document.createElement('table');
-          shipping_table.className = 'table table-responsive';
+          var form = document.querySelector("#form4" + OID);
+          var form_div = document.querySelector("#orderprocessing" + OID);
+          if (json.status != "pending"){
+            form.remove();
+            form_div.style.cssText = 'text-align: center;'
+            var div_inside_form_div = document.createElement("div");
+            div_inside_form_div.innerHTML = `Order Status: <strong>${json.status}</strong>`;
+            form_div.append(div_inside_form_div);
+          }
           for (const [key, value] of Object.entries(json.result)) {
-            const tr = document.createElement("tr");
-            const td1 = document.createElement("td");
-            td1.innerHTML = `<strong>${key}</strong>`;
-            const td2 = document.createElement("td");
-            td2.textContent = `${value}`;
-            tr.appendChild(td1);
-            tr.appendChild(td2);
-            shipping_table.append(tr);
-            shipping_div.append(shipping_table);
+            const div = document.createElement("div");
+            div.innerHTML = `<strong>${key}: </strong>${value}`;
+            shipping_div.append(div);
           }
           var spinner = document.querySelector("#spinner"+ OID);
           spinner.remove();

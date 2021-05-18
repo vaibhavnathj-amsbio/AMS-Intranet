@@ -229,7 +229,7 @@
       full_name.innerHTML = 'Customer Name';
       row.cells[1].innerHTML = `<button style="border: none; background: none; padding: 0; color: #dc3545;" data-toggle="modal" data-target='#viewData${i}' id='viewOrder${i}' value='${id}'>${id}</button>
       <div class="modal fade" id="viewData${i}" tabindex="-1" role="dialog" aria-labelledby="viewData${i}Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="width: 400px;">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="wdith: fit-content;">
           <div class="modal-content" id="modal${id}">
             <div class="modal-header">
               <p class="modal-title"><strong>Update Shipment</strong></p>
@@ -239,22 +239,22 @@
             </div>
             <div class="modal-body" id="modalbody${id}">
               <div class="row">
-                <div class="col-md-12" id="shipping${id}">
-                  <em>Shipping Details</em><br>
+                <div class="col-md-12" id="shipping${id}" style="margin-bottom: 2px;">
+                  <em><h5>Shipping Details</h5></em>
                   <div class="spinner-border m-5 text-info" role="status" id="spinner${id}">
                     <span class="sr-only">Loading...</span>
                   </div>
                   <!-- Data comes from Ajax call -->
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <form method="POST" id="form4">
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-md-12" id="orderprocessing${id}">
+                  <form method="POST" id="form4${id}">
                     {% csrf_token %}
-                    <label for="comment"><em>Add comment:</em></label><br>
+                    <em><h5>Add comment:</h5></em>
                     <input type="hidden" name="reference_id" value="${id}">
-                    <textarea type="text" id="comment" name="comment" style="width: 350px;" ></textarea><br>
-                    <button class="btn btn-danger" type="submit" form="form4">Process Order</button>
+                    <div><textarea type="text" id="comment" name="comment" style="width: 465px;" ></textarea></div>
+                    <div><button class="btn btn-danger" type="submit">Process Order</button></div>
                   </form>
                 </div>
               </div>
