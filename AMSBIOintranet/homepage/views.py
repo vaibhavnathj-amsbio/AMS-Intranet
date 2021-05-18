@@ -26,11 +26,11 @@ def index(request):
             return render(request, 'index.html', context)
 
     elif request.method == "POST" and 'comment' in request.POST:
-        print(request.POST)
-        # order_id = request.POST['reference_id']
-        # comment = request.POST['comment'] 
-        # appendComment = "true" if len(request.POST['comment']) > 0 else "false"
-        # editShipment(order_id=order_id, comment=comment, appendcomment=appendComment)
+        # print(request.POST)
+        order_id = request.POST['reference_id']
+        comment = request.POST['comment'] 
+        appendComment = "true" if len(request.POST['comment']) > 0 else "false"
+        # editShipment(order_id=order_id, comment=comment, appendComment=appendComment)
         response = track_request(params = {})
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
@@ -49,16 +49,16 @@ def index(request):
 # production: "Tg5fTysjobQFlDvYUf7"
 def oAuth_magento(): 
 
-    payload = json.dumps({'username': "amsBioAPI", 'password': "Tg5fTysjobQFlDvYUf7"})    
+    payload = json.dumps({'username': "amsBioAPI", 'password': "dY0K9wAWxA4U5LjEea"})    
     
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     }
 
-    response_auth = requests.request("POST", "https://www.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
+    response_auth = requests.request("POST", "https://stage.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
 
-    api_url = "https://www.amsbio.com/index.php/rest/V1/orders/"
+    api_url = "https://stage.amsbio.com/index.php/rest/V1/orders/"
     api_headers = {
         'Content-Type': "application/json",
         'Authorization': "Bearer " + json.loads(response_auth),
@@ -184,18 +184,30 @@ def shipmentDetails(request):
     return JsonResponse(context)
 
 
-def editShipment(order_id, comment, appendcomment):
+def editShipment(order_id, comment, appendComment):
     generate_request = oAuth_magento()
 
-    if appendcomment == "true": 
-        payload = {'appendComment': appendcomment,
-                    'orderId': order_id,
-                    'comment': comment}
+    payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
+                "searchCriteria[filter_groups][0][filters][0][value]": order_id,
+                "searchCriteria[filter_groups][0][filters][0][condition_type]": "eq",
+                "fields": "items[entity_id]"}
+
+    response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
+    json_response = json.loads(response.text)
+    entity_id = json_response['items'][0]['entity_id']
+    if appendComment == "true": 
+        payload = {"appendComment": "true",
+                    "comment": {
+                        "extension_attributes": {},
+                        "comment": comment,
+                        "is_visible_on_front": 1
+                    }
+            }
     
     else:
-        payload = {'orderId': order_id}
+        payload = {}
 
-    response = requests.request("POST", url="https://stage.amsbio.com/index.php/rest/V1/order/" + order_id + "/ship", headers=generate_request[1], params=payload)
+    response = requests.request("POST", url="https://stage.amsbio.com/index.php/rest/V1/order/" + str(entity_id) + "/ship", headers=generate_request[1], data=json.dumps(payload))
     json_response = json.loads(response.text)
     print(json_response)
     return json_response
