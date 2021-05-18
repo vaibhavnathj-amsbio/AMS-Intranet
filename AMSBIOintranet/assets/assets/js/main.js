@@ -303,6 +303,7 @@
     $('button[id^="viewOrder"]').one('click', function () {
       var OID = $(this).val();
       var shipping_div = document.querySelector("#shipping"+OID);
+      var itemname_div = document.querySelector("#item_name"+OID);
       $.ajax({
         url: 'shipment_details',
         type: 'get',
@@ -321,11 +322,20 @@
           }
           for (const [key, value] of Object.entries(json.result)) {
             const div = document.createElement("div");
+            div.style.cssText = "white-space: pre-wrap;";
             div.innerHTML = `<strong>${key}: </strong>${value}`;
             shipping_div.append(div);
           }
-          var spinner = document.querySelector("#spinner"+ OID);
-          spinner.remove();
+          for (const [key, value] of Object.entries(json.item_name)) {
+            const item_div = document.createElement("div");
+            item_div.style.cssText = "white-space: pre-wrap;";
+            item_div.innerHTML = `<strong>Item: </strong>${value}`;
+            itemname_div.append(item_div);
+          }
+          var spinner1 = document.querySelector("#spinner"+ OID);
+          spinner1.remove();
+          var spinner2 = document.querySelector("#spinnerItem"+ OID);
+          spinner2.remove();
         }
       });
     });

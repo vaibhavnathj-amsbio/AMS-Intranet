@@ -49,16 +49,16 @@ def index(request):
 # production: "Tg5fTysjobQFlDvYUf7"
 def oAuth_magento(): 
 
-    payload = json.dumps({'username': "amsBioAPI", 'password': "dY0K9wAWxA4U5LjEea"})    
+    payload = json.dumps({'username': "amsBioAPI", 'password': "Tg5fTysjobQFlDvYUf7"})    
     
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     }
 
-    response_auth = requests.request("POST", "https://stage.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
+    response_auth = requests.request("POST", "https://www.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
 
-    api_url = "https://stage.amsbio.com/index.php/rest/V1/orders/"
+    api_url = "https://www.amsbio.com/index.php/rest/V1/orders/"
     api_headers = {
         'Content-Type': "application/json",
         'Authorization': "Bearer " + json.loads(response_auth),
@@ -171,13 +171,16 @@ def shipmentDetails(request):
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
                 "searchCriteria[filter_groups][0][filters][0][value]": order_id,
                 "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
-                "fields": "items[status,extension_attributes[shipping_assignments[shipping[address[city,company,country_id,firstname,lastname,postcode,region,telephone]]]]]",
+                "fields": "items[status,items[name],extension_attributes[shipping_assignments[shipping[address[city,company,country_id,firstname,lastname,postcode,region,telephone]]]]]",
             }
     response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
     # with open('temp_files/magento_get_order_select.json','w') as f:
     #     f.write(response.text)
     json_response = json.loads(response.text)
-    context = {'result': json_response['items'][0]['extension_attributes']['shipping_assignments'][0]['shipping']['address'], 'status': json_response['items'][0]['status']}
+    context = {'result': json_response['items'][0]['extension_attributes']['shipping_assignments'][0]['shipping']['address'], 
+                'status': json_response['items'][0]['status'],
+                'item_name': {'Item ' + val : val for ele in json_response['items'][0]['items'] for val in ele.values()}
+                }
     return JsonResponse(context)
 
 

@@ -229,7 +229,7 @@
       full_name.innerHTML = 'Customer Name';
       row.cells[1].innerHTML = `<button style="border: none; background: none; padding: 0; color: #dc3545;" data-toggle="modal" data-target='#viewData${i}' id='viewOrder${i}' value='${id}'>${id}</button>
       <div class="modal fade" id="viewData${i}" tabindex="-1" role="dialog" aria-labelledby="viewData${i}Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="wdith: fit-content;">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content" id="modal${id}">
             <div class="modal-header">
               <p class="modal-title"><strong>Update Shipment</strong></p>
@@ -239,9 +239,16 @@
             </div>
             <div class="modal-body" id="modalbody${id}">
               <div class="row">
-                <div class="col-md-12" id="shipping${id}" style="margin-bottom: 2px;">
+                <div class="col-md-6" id="shipping${id}" style="margin-bottom: 2px;">
                   <em><h5>Shipping Details</h5></em>
                   <div class="spinner-border m-5 text-info" role="status" id="spinner${id}">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <!-- Data comes from Ajax call -->
+                </div>
+                <div class="col-md-6" id="item_name${id}" style="margin-bottom: 2px;">
+                  <em><h5>Items Ordered</h5></em>
+                  <div class="spinner-border m-5 text-info" role="status" id="spinnerItem${id}">
                     <span class="sr-only">Loading...</span>
                   </div>
                   <!-- Data comes from Ajax call -->
@@ -253,8 +260,8 @@
                     {% csrf_token %}
                     <em><h5>Add comment:</h5></em>
                     <input type="hidden" name="reference_id" value="${id}">
-                    <div><textarea type="text" id="comment" name="comment" style="width: 465px;" ></textarea></div>
-                    <div><button class="btn btn-danger" type="submit">Process Order</button></div>
+                    <div><textarea type="text" id="comment" name="comment" style="width: 765px;" ></textarea></div>
+                    <div style="text-align: right;"><button class="btn btn-danger" type="submit">Process Order</button></div>
                   </form>
                 </div>
               </div>

@@ -8,13 +8,13 @@ class CurrencyTable(tables.Table):
     From_col = tables.Column(accessor='symbolfrom',verbose_name='From', order_by='from_currency_id')
     To_col = tables.Column(accessor='symbolto',verbose_name='To',order_by='to_currency_id')
     exchange_rate = tables.Column(verbose_name='Exchange Rate')
-    # live_rate = tables.Column(verbose_name='Live Rate', accessor='liverate', orderable=False) 
-    # diff = tables.Column(accessor='diff', verbose_name='Difference', orderable=False)
+    live_rate = tables.Column(verbose_name='Live Rate', accessor='liverate', orderable=False) 
+    diff = tables.Column(accessor='diff', verbose_name='Difference', orderable=False)
 
     class Meta:
         model = MasterCurrencies
         fields = ['From_col','To_col','exchange_rate']
-        # fields = fields + ['live_rate', 'diff']
+        fields = fields + ['live_rate', 'diff']
         attrs = {"thead": {"position": "fixed;"}}
     
 
