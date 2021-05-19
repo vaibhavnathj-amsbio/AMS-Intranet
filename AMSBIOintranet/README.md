@@ -15,3 +15,7 @@
 3.	In the command prompt, enter: “C:\ProgramData\Anaconda3\Scripts\activate intranetenv” to activate the python environment.
 4.	Once activated enter the command, “python manage.py test -n functional_tests” to run the tests.
 5.	The testing should take about 30-35 seconds to finish.
+
+## Required Libraries
+
+_requirements.txt_ contains all the essential libraries required in order to run the intranet.
