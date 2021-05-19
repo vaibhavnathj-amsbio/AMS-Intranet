@@ -95,8 +95,11 @@
       <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            <div class="modal-header" style="border-bottom: 0 none;">
+            <div class="modal-header">
               <p class="modal-title" id="filterDataLabel"><strong>Filter by 'Order Creation' date</strong></p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
             <div class="modal-body">
               <div class="row">
@@ -138,8 +141,11 @@
       <div class="modal fade" id="SearchData" tabindex="-1" role="dialog" aria-labelledby="SearchDataLabel" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 400px;">
           <div class="modal-content">
-            <div class="modal-header" style="border-bottom: 0 none;">
+            <div class="modal-header">
               <p class="modal-title" id="SearchDataLabel"><strong>Search by 'Order ID'</strong></p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
             <div class="modal-body">
               <div class="row">
@@ -156,6 +162,11 @@
           </div>
         </div>
       </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
       <!-- Modal Section ends-->
       {% if flag %}
       <div class="content" style="width:80%; margin:auto;">
@@ -261,7 +272,11 @@
                     <em><h5>Add comment:</h5></em>
                     <input type="hidden" name="reference_id" value="${id}">
                     <div><textarea type="text" id="comment" name="comment" style="width: 765px;" ></textarea></div>
-                    <div style="text-align: right;"><button class="btn btn-danger" type="submit">Process Order</button></div>
+                    <div>
+                      <input type="checkbox" id="notify" name="notify" value="true">
+                      <label for="notify">Notify Customer by Email?</label>
+                      <div style="text-align: right;"><button class="btn btn-danger" type="submit">Process Order</button></div>
+                    </div>
                   </form>
                 </div>
               </div>

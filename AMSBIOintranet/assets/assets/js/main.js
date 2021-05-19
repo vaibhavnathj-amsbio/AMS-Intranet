@@ -326,12 +326,21 @@
             div.innerHTML = `<strong>${key}: </strong>${value}`;
             shipping_div.append(div);
           }
-          for (const [key, value] of Object.entries(json.item_name)) {
-            const item_div = document.createElement("div");
-            item_div.style.cssText = "white-space: pre-wrap;";
-            item_div.innerHTML = `<strong>Item: </strong>${value}`;
-            itemname_div.append(item_div);
+          for (const [ele, dict] of Object.entries(json.item_name)) {
+            for (const [key, value] of Object.entries(dict)) {
+              const item_div = document.createElement("div");
+              item_div.style.cssText = "white-space: pre-wrap;";
+              item_div.innerHTML = `<strong>${key}: </strong>${value}`;
+              if (key == 'sku'){
+                item_div.style.cssText = "white-space: pre-wrap; margin-bottom: 5px;";
+              }
+              itemname_div.append(item_div);
+            }
           }
+          const price_div = document.createElement("div");
+          price_div.innerHTML = `<strong>Grand Total: </strong>${json.price}`;
+          itemname_div.append(price_div);
+          
           var spinner1 = document.querySelector("#spinner"+ OID);
           spinner1.remove();
           var spinner2 = document.querySelector("#spinnerItem"+ OID);
@@ -339,6 +348,12 @@
         }
       });
     });
+
+    var message_ele = document.getElementById("shipment_msg");
+    setTimeout(function(){
+      message_ele.style.display = "none"; 
+    }, 3500);
+
   });
   
 })(jQuery);
