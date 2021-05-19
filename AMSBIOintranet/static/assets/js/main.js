@@ -351,9 +351,11 @@
     });
 
     var message_ele = document.getElementById("shipment_msg");
-    setTimeout(function(){
-      message_ele.style.display = "none"; 
-    }, 3500);
+    if (message_ele) {
+      setTimeout(function(){
+        message_ele.style.display = "none"; 
+      }, 3500);
+    }
 
   });
   

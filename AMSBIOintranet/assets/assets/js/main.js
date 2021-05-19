@@ -338,6 +338,7 @@
             }
           }
           const price_div = document.createElement("div");
+          price_div.style.cssText = 'margin-top: 20px;';
           price_div.innerHTML = `<strong>Grand Total: </strong>${json.price}`;
           itemname_div.append(price_div);
           
@@ -350,9 +351,11 @@
     });
 
     var message_ele = document.getElementById("shipment_msg");
-    setTimeout(function(){
-      message_ele.style.display = "none"; 
-    }, 3500);
+    if (message_ele) {
+      setTimeout(function(){
+        message_ele.style.display = "none"; 
+      }, 3500);
+    }
 
   });
   
