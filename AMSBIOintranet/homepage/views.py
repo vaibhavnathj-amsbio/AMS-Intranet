@@ -28,7 +28,7 @@ def index(request):
         notify = "true" if 'notify' in request.POST else "false"
         appendComment = "true" if len(request.POST['comment']) > 0 else "false"
         # editShipment(order_id=order_id, comment=comment, appendComment=appendComment, notify=notify) # Uncomment to enable shipment creation feature 
-        # messages.success(request, 'Shipment Created!')
+        # messages.success(request, 'Shipment Created!') # display a message after shipment creation
         response = track_request(params = {})
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
