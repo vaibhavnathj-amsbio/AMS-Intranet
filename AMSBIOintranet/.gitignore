@@ -129,13 +129,7 @@ dmypy.json
 .pyre/
 
 
-currency.txt
-migration_commands.txt
-myfile.json
-regex.text
 chromedriver.exe
 .vscode
-temp_files/
-testing commands.txt
-tracking_info.json
 run_DevServer.bat
+helper_files/
