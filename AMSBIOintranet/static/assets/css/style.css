@@ -810,15 +810,7 @@ input[id='id_supplier_product_code']{
   border-bottom-right-radius: 5px;
 }
 
-.header_icon{
-  background-color: rgb(32,80,148);
-  width: 135px;
-  height: 45px;
-  color: #fff;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-content: center;
-  flex-direction: column;
-  border-radius: 10px;
+.header_img{
+  width: 175px;
+  border-radius: 5px;
 }
