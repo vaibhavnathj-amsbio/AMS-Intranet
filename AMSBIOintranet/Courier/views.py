@@ -4,6 +4,7 @@ import pandas as pd
 from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 
 FedEx = {'api_key': 'l76c7f058eed374645b8b860b19d778b07', 'api_pass': 'be880a5f2a20429ebdb7c54afcc1acd3'}
@@ -66,35 +67,26 @@ def scanEvents_fedex(data1):
     return data_list
 
 
-def loadCSVtoHTML(request):
-    page = list(request.path.split("_"))[1] + '.csv'
-    data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
-    data.drop(columns=data.columns[-1],  axis=1, inplace=True)
-    data.index.name = None
-    data_inb = data.drop(data[data['Direction '] == 'Outbo'].index)
-    data_outb = data.drop(data[data['Direction '] == 'Inbou'].index)
-    data_inb.drop(columns=['Direction '], axis=1, inplace=True)
-    data_outb.drop(columns=['Direction '], axis=1, inplace=True)
-    parse_string_inb = data_inb.to_html(classes="table table-striped roundedTable", table_id="Ordertable1", border=0)
-    parse_string_outb = data_outb.to_html(classes="table table-striped roundedTable", table_id="Ordertable2", border=0)
-    return JsonResponse({'table_in':parse_string_inb, 'table_out': parse_string_outb})
-
-
 def fedex(request):
     flag = True
     page = list(request.path.split("/"))[2] + '.html'
     try:
         if request.method == "POST":
             track_response = track_request_fedex(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
-            latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
-            location = latest_status['scanLocation']
-            latest_status.pop('scanLocation')
-            weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
-            shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
-            scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
-            scan_events = scan_events[:-1]
-            history = scanEvents_fedex(scan_events)
-            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
+            if 'message' in track_response['output']['completeTrackResults'][0]["trackResults"][0]['error'].keys():
+                messages.info(request, "Message from FedEx: " + track_response['output']['completeTrackResults'][0]["trackResults"][0]['error']['message'])
+                flag = False
+                context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
+            else:
+                latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
+                location = latest_status['scanLocation']
+                latest_status.pop('scanLocation')
+                weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
+                shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
+                scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
+                scan_events = scan_events[:-1]
+                history = scanEvents_fedex(scan_events)
+                context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
             return render(request, page, context)
 
     except:
@@ -153,3 +145,17 @@ def dhl(request):
         return render(request, 'dhl.html', context)
     
     return render(request, 'dhl.html')
+
+
+def loadCSVtoHTML(request):
+    page = list(request.path.split("_"))[1] + '.csv'
+    data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
+    data.drop(columns=data.columns[-1],  axis=1, inplace=True)
+    data.index.name = None
+    data_inb = data.drop(data[data['Direction '] == 'Outbo'].index)
+    data_outb = data.drop(data[data['Direction '] == 'Inbou'].index)
+    data_inb.drop(columns=['Direction '], axis=1, inplace=True)
+    data_outb.drop(columns=['Direction '], axis=1, inplace=True)
+    parse_string_inb = data_inb.to_html(classes="table table-striped roundedTable", table_id="Ordertable1", border=0)
+    parse_string_outb = data_outb.to_html(classes="table table-striped roundedTable", table_id="Ordertable2", border=0)
+    return JsonResponse({'table_in':parse_string_inb, 'table_out': parse_string_outb})
