@@ -21,6 +21,10 @@
 
 _requirements.txt_ contains all the essential libraries required in order to run the intranet.
 
+## FedExSelenium.py
+
+Python script for automatically downloading the FedEx shipment records for both UK and USA accounts.
+
 ## Deployment on IIS
 
 1.  Install Python(ver=3.7.5) for all users on Windows
