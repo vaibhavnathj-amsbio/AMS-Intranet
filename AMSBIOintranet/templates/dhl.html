@@ -89,11 +89,13 @@
             <button type="submit" class="btn btn-danger" style="margin-left: 1%;">Go</button>
         </form>
       </div>
-      {% if not flag %}
+      <!-- Renders a error message when entered tracking number is wrong -->
+      {% if not flag %} 
       <div class="container text-center" style="margin-top: 5%;">
         {{ msg }}
       </div>
       {% else %}
+      <!-- Handles the Tracking information for the requested parcel -->
       <div id="showOrHide" class="container" style="margin-top: 2%; font-size:larger; box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); border-radius: 5px 5px 0 0; padding:2%; min-width: 700px;">
         <button type="button" id="closeInfo" class="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -106,6 +108,7 @@
         <div class="row">
           <div class="col-md-6">
             <h4><u>Current Status</u></h4>
+            <!-- Generats the content as received from Courier/views.py/dhl() -->
             {% for key, val in status.items %}
               {% if val == 'Delivered' %}
                 <strong style="margin-right: 1%;">{{key}}:</strong><span style="color:green; font-size:x-large;">{{val}}</span>

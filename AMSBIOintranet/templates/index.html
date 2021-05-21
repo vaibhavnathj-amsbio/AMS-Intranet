@@ -93,6 +93,7 @@
       </div>
       <!-- Modal Section begins-->
       <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel" aria-hidden="true">
+        <!-- Renders Filter Button -->
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -139,6 +140,7 @@
         </div>
       </div>
       <div class="modal fade" id="SearchData" tabindex="-1" role="dialog" aria-labelledby="SearchDataLabel" aria-hidden="true">
+        <!-- Renders Search Button -->
         <div class="modal-dialog" role="document" style="width: 400px;">
           <div class="modal-content">
             <div class="modal-header">
@@ -162,7 +164,7 @@
           </div>
         </div>
       </div>
-      {% if messages %}
+      {% if messages %} <!-- Prints success message when a shipment is created -->
         {% for message in messages %}
           <div class="alert alert-success" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
         {% endfor %}
@@ -172,6 +174,7 @@
       <div class="content" style="width:80%; margin:auto;">
         <div class="row" style="margin-top: -0.2%;">
           <div class="col-md-12" style="text-align: left; overflow-x:auto; white-space:nowrap; border-radius:5px;">
+            <!-- Generated the main Magento Sales order table as received from homepage/views.py/index() -->
             <table class="table table-striped roundedTable" id="magento_orders">
               <tr style="background-color: #f1594a; color:#fff;">
                 <th>#</th>                
@@ -198,6 +201,7 @@
         </div>
       </div>
       {% else %}
+      <!-- Handles error if wrong Order ID is entered in Search feature -->
       <div class="container" style="margin-top: -0.2%; text-align:center;">
         {{msg}}
       </div>
@@ -218,6 +222,7 @@
   <script src="{% static 'assets/js/main.js' %}"></script>
 
   <script type="text/javascript">
+    // Moves column from one place to another, done in JS 'cause JS is faster than Python! :X
     jQuery.moveColumn = function (table, from, to) {
       var rows = jQuery('tr', table);
       var cols;
@@ -233,6 +238,7 @@
   </script>
 
   <script type="text/javascript">
+    // Makes the Order ID in the Magento table clickable and further provides options to create Shipments
     var table = document.getElementById("magento_orders");
     for (var i = 1, row; row = table.rows[i]; i++) {
       var id = row.cells[1].innerHTML;

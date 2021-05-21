@@ -97,12 +97,12 @@
             <button type="submit" class="btn btn-danger" style="margin-left: 1%;">Go</button>
         </form>
       </div>
-      {% if messages %}
+      {% if messages %} <!-- Handles errors if generated from FedEx side -->
         {% for message in messages %}
           <div class="alert alert-info" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
         {% endfor %}
       {% endif %}
-      {% if not flag %}
+      {% if not flag %} <!-- Renders a error message when entered tracking number is wrong -->
       <div class="container text-center" style="margin-top: 2%;">
         {{msg}}
       </div>
@@ -119,6 +119,7 @@
         <div class="row">
           <div class="col-md-6">
             <h4><u>Current Status</u></h4>
+            <!-- Generats the content as received from Courier/views.py/fedex() -->
             {% for key, val in status.items %}
               {% if val == 'Delivered' %}
                 <strong style="margin-right: 1%;">{{key}}:</strong><span style="color:green; font-size:x-large;">{{val}}</span>
@@ -204,7 +205,7 @@
       </div>
       <div class="row text-center" style="overflow-x:scroll; margin:0 auto; height: 700px; overflow-y:auto; width: 90%;">
         <div class=" col-md-12" id="Orders_outb">
-          <!--Data comes from Ajax request-->
+          <!--Data comes from Ajax request, Courier/views.py/LoadCSVtoHTML()-->
         </div>
       </div>
       <div class="container text-center" style="margin-top: 2.5%!important; margin: auto; display: block;">
@@ -212,7 +213,7 @@
       </div>
       <div class="row text-center" style="overflow-x:scroll; margin:0 auto; height: 700px; overflow-y:auto; width: 90%;">
         <div class="col-md-12" id="Orders_inb">
-          <!--Data comes from Ajax request-->
+          <!--Data comes from Ajax request, Courier/views.py/LoadCSVtoHTML()-->
         </div>
       </div>
     </section>
@@ -231,6 +232,7 @@
   <script src="{% static 'assets/js/main.js' %}"></script>
 
   <script>
+    // Makes the Ajax call for generating FedEX UK shipments
     $(document).ready(function () {
       var div_body_in = document.getElementById("Orders_inb");
       var div_body_out = document.getElementById("Orders_outb");

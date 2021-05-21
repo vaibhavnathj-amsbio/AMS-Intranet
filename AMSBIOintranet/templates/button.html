@@ -1,8 +1,10 @@
+<!-- template for rendering the attribute button on search.html page -->
 <button id="getrecord{{record.pk}}" type="button" class="btn btn-primary icofont-plus-circle" data-toggle="collapse"
   data-target="#collapse{{record.pk}}" aria-expanded="false" aria-controls="collapse{{record.pk}}"
   value="{{record.pk}}"></button>
 <div class="collapse" id="collapse{{record.pk}}" style="margin-top: 10px;">
   <div class="table-responsive" style="overflow-x: hidden;">
+    <!-- Generates the respective Technical attribute table for every product -->
     <table id="techRecord{{record.pk}}" style="text-align: left; width: 100%;">
       <thead></thead>
       <tbody id="techRecordBody{{record.pk}}" style="height: 400px; display:block;">

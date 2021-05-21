@@ -8,13 +8,14 @@ from django.contrib import messages
 
 # Create your views here.
 def index(request):
-    if request.method == "POST" and 'from_date' in request.POST:
+    """ Main function for rendering the homepage! """
+    if request.method == "POST" and 'from_date' in request.POST: # Controls the filter button
         params = {'from_date': request.POST['from_date'], 'to_date': request.POST['to_date'], 'number_of_orders': request.POST['number_of_orders'], 'status': request.POST['status']}
         response = track_request(params)
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag': True}
         return render(request, 'index.html', context)
     
-    elif request.method == "POST" and 'order_id' in request.POST:
+    elif request.method == "POST" and 'order_id' in request.POST: # Controls the search button
         response = searchOrder(request.POST['order_id'])
         if 'flag' in response.keys():    
             return render(request, 'index.html', response)
@@ -22,7 +23,7 @@ def index(request):
             context = {'response': response['result'], 'col_headers': format_cols(response['col_headers']), 'flag': True }
             return render(request, 'index.html', context)
 
-    elif request.method == "POST" and 'comment' in request.POST:
+    elif request.method == "POST" and 'comment' in request.POST: # Contrlols the edit shipment feature
         order_id = request.POST['reference_id']
         comment = request.POST['comment']
         notify = "true" if 'notify' in request.POST else "false"
@@ -33,7 +34,7 @@ def index(request):
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
 
-    else:
+    else: # renders the default view
         response = track_request(params = {})
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
@@ -42,7 +43,7 @@ def index(request):
 # stage : "dY0K9wAWxA4U5LjEea"
 # production: "Tg5fTysjobQFlDvYUf7"
 def oAuth_magento(): 
-
+    """ Helper function for authenticating every API call made to Magento! """
     payload = json.dumps({'username': "amsBioAPI", 'password': "Tg5fTysjobQFlDvYUf7"})    
     
     headers = {
@@ -64,6 +65,8 @@ def oAuth_magento():
 def track_request(params):
 
     """
+    Function for handling filter requests from the user
+
     params(dict):   'number_of_orders' : Number of orders to be fetched,
                     'from_date' : Select 'from'/start date,
                     'to_date' : Select 'to'/end date,
@@ -120,6 +123,7 @@ def track_request(params):
     
     
 def format_cols(data):
+    """ Helper function for getting the col headers to desired state """
     col_list = []
     for elem in data:
         new_str = ""
@@ -130,11 +134,12 @@ def format_cols(data):
 
 
 def searchOrder(order_id):
-    flag = True
-
     """
+    Function for controling search feature and request from the user
+
     params(dict):   'order_id': Increment - Id of Magento Order
     """
+    flag = True
     generate_request = oAuth_magento()
 
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
@@ -159,6 +164,7 @@ def searchOrder(order_id):
 
 
 def shipmentDetails(request):
+    """ Function for fetching shipment details from Magento sales """
     order_id = request.GET.get('order_id')
     generate_request = oAuth_magento()
 
@@ -180,6 +186,14 @@ def shipmentDetails(request):
 
 
 def editShipment(order_id, comment, appendComment, notify):
+    """ 
+    Function for creating new shipments
+    
+    Params: order_id - Increment ID for Magento orders
+            comment - if user wants to add a comment while creating the shipment
+            appendComment - (bool) flag if user wants to add comment or not
+            notify - (bool) flag if user wants to notify the customer by email or not 
+    """
     generate_request = oAuth_magento()
 
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",

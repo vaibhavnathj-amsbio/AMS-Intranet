@@ -96,12 +96,12 @@
           </div>
         </div>
       </div >
-      {% if msg %}
+      {% if msg %} <!-- Generates the main table-->
       <div class="content" style="width: 90%; margin:0 auto; margin-top: 20px;">
         <div style="overflow-x: auto;  white-space: nowrap; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); border-radius: 5px;">
           {% render_table obj %}
         </div>
-        {% else %}
+        {% else %} <!-- Handles error message if product ID is not entered at all -->
         <div class="container" style="text-align: center; margin:auto;">
           <br>
           {{ obj }}

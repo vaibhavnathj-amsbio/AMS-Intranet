@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 
+# API Credentials
 FedEx = {'api_key': 'l76c7f058eed374645b8b860b19d778b07', 'api_pass': 'be880a5f2a20429ebdb7c54afcc1acd3'}
 DHL = {'api_key': '8C9yOAvIXeYK6xGhTLx8SmsSPISMFy5V', 'api_pass': 'UX1WCKfQaa98xSNl'}
 
@@ -15,7 +16,13 @@ def index(request):
     return redirect('/')
 
 
-def oAuth_fedex(api_key, api_pass):    
+def oAuth_fedex(api_key, api_pass):
+    """ 
+    Function for authenticating API call to FedEx
+
+    params: api_key - API key as provided by FedEx
+            api_pass - API Password as provided by FedEx
+    """
     token = 'grant_type=client_credentials&client_id=' + api_key + '&client_secret=' + api_pass 
     headers = {
         'Content-Type': "application/x-www-form-urlencoded"
@@ -26,6 +33,13 @@ def oAuth_fedex(api_key, api_pass):
 
 
 def track_request_fedex(track_id, api_key, api_pass):
+    """ 
+    Function for handling API repquest from FedEX
+    
+    Params: track_id - Tracking ID of the parcel
+            api_key - API KEY
+            api_pass - API PASSWORD
+    """
     url = "https://apis-sandbox.fedex.com/track/v1/trackingnumbers"
 
     payload = json.dumps({"trackingInfo": [
@@ -52,6 +66,7 @@ def track_request_fedex(track_id, api_key, api_pass):
 
 
 def scanEvents_fedex(data1):
+    """ Helper function for formatting the API response from FedEx """
     data_list = []
     for ele in data1:
         data_dict = {}
@@ -68,6 +83,7 @@ def scanEvents_fedex(data1):
 
 
 def fedex(request):
+    """ Main function for rendering the FedEx UK/USA pages """
     flag = True
     page = list(request.path.split("/"))[2] + '.html'
     try:
@@ -98,6 +114,14 @@ def fedex(request):
 
 
 def track_request_dhl(api_key, track_num):
+    """ 
+    Function for handling API repquest from DHL
+    
+    Params: api_key - API KEY
+            track_num - Tracking number of the parcel
+                       
+    """
+
     url = "https://api-eu.dhl.com/track/shipments"
     headers = {"DHL-API-Key": api_key}
 
@@ -111,6 +135,7 @@ def track_request_dhl(api_key, track_num):
 
 
 def scanEvents_DHL(data):
+    """ Helper function for formatting the API response from DHL """
     data_list = []
     for ele in data:
         data_dict = {}
@@ -126,6 +151,7 @@ def scanEvents_DHL(data):
 
 
 def dhl(request):
+    """ Main function for rendering the FedEx UK/USA pages """
     flag = True
     try:
         if request.method == "POST":
@@ -148,6 +174,7 @@ def dhl(request):
 
 
 def loadCSVtoHTML(request):
+    """ Function for handling the Ajax call made to load the FedEx shipment tables  """
     page = list(request.path.split("_"))[1] + '.csv'
     data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
     data.drop(columns=data.columns[-1],  axis=1, inplace=True)
