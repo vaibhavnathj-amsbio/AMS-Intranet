@@ -1,6 +1,5 @@
 from .models import MasterCurrencies, ProductRecords
 import django_tables2 as tables
-from django_tables2.utils import A 
 
 
 # Django class for generating table for 'Currency value' page
