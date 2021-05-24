@@ -176,7 +176,7 @@ def dhl(request):
 def loadCSVtoHTML(request):
     """ Function for handling the Ajax call made to load the FedEx shipment tables  """
     page = list(request.path.split("_"))[1] + '.csv'
-    data = pd.read_csv('temp_files/'+ page, header=0, index_col=0)
+    data = pd.read_csv('helper_files/'+ page, header=0, index_col=0)
     data.drop(columns=data.columns[-1],  axis=1, inplace=True)
     data.index.name = None
     data_inb = data.drop(data[data['Direction '] == 'Outbo'].index)
