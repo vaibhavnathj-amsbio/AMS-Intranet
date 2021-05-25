@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 import requests
-import json
 
 class Currencies(models.Model):
     # Field name made lowercase.
@@ -24,6 +23,7 @@ class Currencies(models.Model):
 
     class Meta:
         db_table = 'currencies'
+        app_label = 'myDatabase'
         verbose_name_plural = "Currencies"
     
 
@@ -62,6 +62,7 @@ class DataOwners(models.Model):
 
     class Meta:
         db_table = 'data_owners'
+        app_label = 'myDatabase'
         verbose_name_plural = "Data Owners"
     
 
@@ -100,6 +101,7 @@ class MasterCurrencies(models.Model):
            
     class Meta:
         db_table = 'master_currencies'
+        app_label = 'myDatabase'
         verbose_name_plural = "Master Currencies"
 
 
@@ -146,6 +148,7 @@ class ProductRecords(models.Model):
 
     class Meta:
         db_table = 'product_records'
+        app_label = 'myDatabase'
 
     def suppliername(self):
         return DataOwners.objects.get(pk=self.ct_supplier_id).owner
@@ -263,6 +266,7 @@ class ProductRecordsTech(models.Model):
 
     class Meta:
         db_table = 'product_records_tech'
+        app_label = 'myDatabase'
 
 
 class NwCategoryIds(models.Model):
@@ -272,6 +276,7 @@ class NwCategoryIds(models.Model):
     class Meta:
         managed = False
         db_table = 'nw_category_ids'
+        app_label = 'myDatabase'
 
 
 class NwCategoryLowestNodes(models.Model):
@@ -282,6 +287,7 @@ class NwCategoryLowestNodes(models.Model):
 
     class Meta:
         db_table = 'nw_category_lowest_nodes'
+        app_label = 'myDatabase'
 
 
 class NwResearchAreaIds(models.Model):
@@ -291,3 +297,4 @@ class NwResearchAreaIds(models.Model):
     class Meta:
         managed = False
         db_table = 'nw_research_area_ids'
+        app_label = 'myDatabase'
