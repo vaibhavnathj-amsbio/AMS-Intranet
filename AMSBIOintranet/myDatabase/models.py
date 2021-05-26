@@ -89,7 +89,7 @@ class MasterCurrencies(models.Model):
         querystring = {"from": self.symbolfrom() , "to": self.symbolto()}
 
         headers = {
-            'x-rapidapi-key': "bbd68be6d5mshec3a954fdacc16fp100d26jsn431dde547552",
+            'x-rapidapi-key': "9b7191561emshf73238a9c9be76cp1eb370jsnc687d527eeee",
             'x-rapidapi-host': "currency-exchange.p.rapidapi.com"
             }
 
