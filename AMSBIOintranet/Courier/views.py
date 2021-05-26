@@ -90,7 +90,7 @@ def fedex(request):
         if request.method == "POST":
             track_response = track_request_fedex(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
             if 'message' in track_response['output']['completeTrackResults'][0]["trackResults"][0]['error'].keys():
-                messages.info(request, "Message from FedEx: " + track_response['output']['completeTrackResults'][0]["trackResults"][0]['error']['message'])
+                messages.info(request, track_response['output']['completeTrackResults'][0]["trackResults"][0]['error']['message'])
                 flag = False
                 context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
             else:
