@@ -88,7 +88,6 @@ def fedex(request):
     try:
         if request.method == "POST":
             track_response = track_request_fedex(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
-            print(json.dumps(track_response,indent=4))
             latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
             if "receivedByName" in track_response["output"]["completeTrackResults"][0]["trackResults"][0]["deliveryDetails"].keys():
                 latest_status['Signed for by'] = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["deliveryDetails"]["receivedByName"]
