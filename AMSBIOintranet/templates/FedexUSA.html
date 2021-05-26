@@ -97,11 +97,6 @@
             <button type="submit" class="btn btn-danger" style="margin-left: 1%;">Go</button>
         </form>
       </div>
-      {% if messages %} <!-- Handles errors if generated from FedEx side -->
-        {% for message in messages %}
-          <div class="alert alert-info" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
       {% if not flag %} <!-- Renders a error message when entered tracking number is wrong -->
       <div class="container text-center" style="margin-top: 2%;">
         {{msg}}
@@ -121,11 +116,7 @@
             <h4><u>Current Status</u></h4>
             <!-- Generats the content as received from Courier/views.py/fedex() -->
             {% for key, val in status.items %}
-              {% if val == 'Delivered' %}
-                <strong style="margin-right: 1%;">{{key}}:</strong><span style="color:green; font-size:x-large;">{{val}}</span>
-              {% else %}
-                <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
-              {% endif %}
+              <strong style="margin-right: 1%;">{{key}}:</strong>{{val}}
               <br>
             {% endfor %}
           </div>

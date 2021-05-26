@@ -4,7 +4,6 @@ import pandas as pd
 from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 
 # API Credentials
@@ -59,7 +58,7 @@ def track_request_fedex(track_id, api_key, api_pass):
         }
 
     response = requests.request("POST", url, data=payload, headers=tracking_headers).text
-    # with open('temp_files/tracking_info_new_ship.json','w') as f:
+    # with open('helper_files/tracking_info_new_ship.json','w') as f:
     #     f.write(response)
     json_response = json.loads(response)
     return json_response
@@ -89,20 +88,19 @@ def fedex(request):
     try:
         if request.method == "POST":
             track_response = track_request_fedex(request.POST['track_num'], FedEx['api_key'], FedEx['api_pass'])
-            if 'message' in track_response['output']['completeTrackResults'][0]["trackResults"][0]['error'].keys():
-                messages.info(request, track_response['output']['completeTrackResults'][0]["trackResults"][0]['error']['message'])
-                flag = False
-                context = {'msg' : '*Please enter valid tracking number', 'flag': flag}
-            else:
-                latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
-                location = latest_status['scanLocation']
-                latest_status.pop('scanLocation')
-                weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
-                shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
-                scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
-                scan_events = scan_events[:-1]
-                history = scanEvents_fedex(scan_events)
-                context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
+            print(json.dumps(track_response,indent=4))
+            latest_status = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["latestStatusDetail"]
+            if "receivedByName" in track_response["output"]["completeTrackResults"][0]["trackResults"][0]["deliveryDetails"].keys():
+                latest_status['Signed for by'] = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["deliveryDetails"]["receivedByName"]
+            location = latest_status['scanLocation']
+            latest_status.pop('scanLocation')
+            weight = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["packageDetails"]["weightAndDimensions"]["weight"][0]
+            shipper_ref = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["additionalTrackingInfo"]["packageIdentifiers"][0]["values"][0]
+            scan_events = track_response["output"]["completeTrackResults"][0]["trackResults"][0]["scanEvents"]
+            scan_events = scan_events[:-1]
+            history = scanEvents_fedex(scan_events)
+            context = {'status' : latest_status, 'location': location, 'weight': weight, 'flag': flag, 'track_num':request.POST['track_num'], 'ref': shipper_ref, 'history': history}
+
             return render(request, page, context)
 
     except:
