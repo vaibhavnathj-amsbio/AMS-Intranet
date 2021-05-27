@@ -69,6 +69,18 @@ Python script for automatically downloading the FedEx shipment records for both 
 
 22. Open <code>settings.py</code>
 23. Enter the hostname in the <code>ALLOWED_HOSTS</code> list like this, <code>ALLOWED_HOSTS = ['localhost', 'server_ip']</code>
-24. Find your website at <code>http://localhost:81</code>
 
+##### Adding Static files
 
+24. Right click the web site and choose Add Virtual Directory
+25. Configure the following settings:
+  Alias - This will be the name specified for STATICURL in your project’s settings file.
+  Physical Path - This will be name specified for STATICROOT in your project’s setting file.
+  Click ok to close the Add Virtual Directory dialog box
+26. Select the newly created virtual directory
+27. Open Handler Mappings
+28. Click View Ordered List (located in actions pane on the right side)
+29. Select StaticFile and click Move Up until the entry is at the top of the list.
+30. Click Yes on the Handler Mappings warning dialog box informing you that changing made at the parent level will no longer be inherited at this level.
+
+#### Find your website at <code>http://localhost:81</code>
