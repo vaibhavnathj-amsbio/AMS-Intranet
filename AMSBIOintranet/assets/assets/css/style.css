@@ -768,18 +768,6 @@ section {
     background-color: transparent;
 }
 
-textarea{
-  height: 50px;
-}
-input[id='id_product_code']{
-  background-color: #d3d3d3;
-  border-color: #c9c9c9;
-}
-input[id='id_supplier_product_code']{
-  background-color: #d3d3d3;
-  border-color: #c9c9c9;
-}
-
 /*--------------------------------------------------------------
 # Rounded corners for a table
 --------------------------------------------------------------*/

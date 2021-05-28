@@ -62,34 +62,31 @@
 
 
     <section id="about" class="about" style="margin-top: 3% !important;">
-      <div class="container text-center" style="margin: auto;">
+      <div class="container text-center">
         <div class="row">
-          <div class="col-md-6">
-            <form action="myDatabase/Search" style="margin-bottom: 20px;" method="POST" id="form1">
+          <div class="col-md-12">
+            <form action="myDatabase/Search" method="POST" id="form1">
               {% csrf_token %}
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 3%; margin-left: 75px; margin-top:2%;">
                 <label for="Prod" class="sr-only">Search by Product Code: </label>
-                <div class="input-group col-sm-12">
+                <div class="input-group col-sm-5">
                   <div class="input-group-prepend">
                     <div class="input-group-text">Product Code</div>
                   </div>
                   <input type="text" id="Prod" name="Prod" placeholder="Database Search" class="form-control">
-                  <span style="margin-left: 3%;"></span>
+                </div>
+                <label for="Prod" class="sr-only">Search by Description:</label>
+                <div class="input-group col-sm-5">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Description</div>
+                  </div>
+                  <input type="text" id="Desc" name="Desc" form="form1" placeholder="Database Search" class="form-control">
+                </div>
+                <div class="col-sm-2" style="text-align: left;">
+                  <button id="btn_search_db" class="btn btn-danger" form="form1"><strong>Go</strong></button>
                 </div>
               </div>
             </form>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group row">
-              <label for="Prod" class="sr-only">Search by Description:</label>
-              <div class="input-group col-sm-12">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">Description</div>
-                </div>
-                <input type="text" id="Desc" name="Desc" form="form1" placeholder="Database Search" class="form-control">
-                <button id="btn_search_db" class="btn btn-danger" form="form1" style="margin-left: 3%;"><strong>Go</strong></button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -130,36 +127,28 @@
                         <input type="text" placeholder="YYYY-MM-DD" id="to_date" name="to_date" class="form-control">
                       </div>
                     </div>
-                  </form>
-                </div>
-              </div>
-              <div class="row" style="margin-top:5px;">
-                <div class="col-md-12">
-                  <div class="form-group row">  
-                    <label for="status" class="col-sm-3 col-form-label">Status:</label>
-                    <div class="col-sm-9">
-                      <select name="status" id="status" form="form2" class="form-control">
-                        <option value="None" selected>ALL</option>
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                      </select>
+                    <div class="form-group row">  
+                      <label for="status" class="col-sm-3 col-form-label">Status:</label>
+                      <div class="col-sm-9">
+                        <select name="status" id="status" form="form2" class="form-control">
+                          <option value="None" selected>ALL</option>
+                          <option value="pending">Pending</option>
+                          <option value="processing">Processing</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>   
-                </div>
-              </div>
-              <div class="row" style="margin-top:5px;">
-                <div class="col-md-12">
                     <div class="form-group row">
                       <label for="number_of_orders" class="col-sm-3 col-form-label">Num of orders: </label>
                       <div class="col-sm-9">
                         <input type="number" id="number_of_orders" name="number_of_orders" placeholder="20" form="form2" class="form-control">
                       </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-md-12" style="text-align: center;">
-                  <input type="submit" class="btn btn-danger" form="form2">
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-12" style="text-align: center;">
+                        <button type="submit" class="btn btn-danger" form="form2">Submit</button>
+                      </div>
+                    </div> 
+                  </form>
                 </div>
               </div>
             </div>
@@ -183,12 +172,12 @@
                     {% csrf_token %}
                     <div class="form-group row">
                       <label for="order_id" class="col-sm-3 col-form-label">Enter ID:</label>
-                      <div class="col-sm-9">
+                      <div class="col-sm-7">
                         <input type="text" placeholder="Order ID" id="order_id" name="order_id" class="form-control">
                       </div>
-                    </div>
-                    <div class="container" style="margin-top: 3%; text-align:center;">
-                      <input type="submit" class="btn btn-danger" form="form3" >
+                      <div class="col-sm-2" style="margin-left: -1em;">
+                        <button type="submit" class="btn btn-danger" form="form3" >Go</button>
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -312,7 +301,7 @@
                           <div class="input-group-text">Add comment</div>
                         </div>
                         <input type="hidden" name="reference_id" value="${id}">
-                        <textarea type="text" id="comment" name="comment" class="form-control"></textarea>
+                        <textarea type="text" id="comment" name="comment" class="form-control" style="height: 45px;"></textarea>
                       </div>
                     </div>
                     <div class="row">

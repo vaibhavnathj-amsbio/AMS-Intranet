@@ -90,13 +90,15 @@
           <div class="col-md-12">
             <form action="" method="POST">
               {% csrf_token %}
-              <div class="form-group row">
-                <label for="track_num" class="col-sm-3 col-form-lable">Enter Tracking Number: </label>
-                <div class="col-sm-7">
+              <div class="form-group row" style="padding-left: 25%; padding-right: 25%;">
+                <div class="input-group col-sm-12">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Tracking Number</div>
+                  </div>
                   <input type="text" id='track_num' name='track_num' class="form-control">
-                </div>
-                <div class="col-sm-2">
-                  <button type="submit" class="btn btn-danger">Go</button>
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-danger">Go</button>
+                  </div>
                 </div>
               </div>
             </form>

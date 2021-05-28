@@ -77,16 +77,23 @@
     </section>
 
     <section id="testimonials" class="testimonials">
-      <div class="container">
+      <div class="container text-center" style="margin-bottom: 20px;">
         <div class="row">
-          <div class="col-md-12 text-center">
+          <div class="col-md-12">
             <form method="POST">
               {% csrf_token %}
-              <label for="ProdCode">Enter Product Code: </label>
-              <input type="text" name="ProdCode" id="ProdCode" placeholder="Search">
-              <button class="btn btn-danger" name="btnSubmitCode" style="margin-left: 20px;">Submit</button>
+              <div class="form-group row" style="padding-left: 25%; padding-right: 25%;">
+                <div class="input-group col-sm-12">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Product Code</div>
+                  </div>
+                  <input type="text" name="ProdCode" id="ProdCode" placeholder="Search" class="form-control">
+                  <div class="input-group-append">
+                    <button class="btn btn-danger" name="btnSubmitCode">Submit</button>
+                  </div>
+                </div>
+              </div>
             </form>
-            <br>
           </div>
         </div>
       </div >
@@ -96,17 +103,27 @@
         </div>
       {% else %}
         {% if nocategory %} <!--Output if no categories are defined-->
-          <div class="row" style="padding-top: 10px; border-radius: 5px; background-color: #fafafa; margin: 20px;">
-            <div id="prodform_container" class="col-md-6" style="padding-left: 10%;"> <!--Output only the Edit Product form-->
+          <div class="row" style="padding-top: 10px; border-radius: 5px; background-color: #fafafa; width:85%; margin:auto;">
+            <div id="prodform_container" class="col-md-6"> <!--Output only the Edit Product form-->
               <form id='ProdForm' method="POST">
                 {% csrf_token %}
-                <table class="table-responsive" style="padding-bottom: 10px;">
-                  <thead>
-                    <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>Product Details</button></th>
-                  </thead>
-                    {{ ProdForm }}
-                </table>
-               <button type="submit" class="btn btn-danger" id="btnProdForm" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
+                <div class="form-group row" style="text-align: center; margin-bottom: 20px;">
+                  <div class="col-sm-12">
+                    <button class="btn btn-primary" disabled>Product Details</button>
+                  </div>
+                </div>
+                {% for field in ProdForm %}
+                  <div class="form-group{% if field.errors %} invalid{% endif %} row">
+                    <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">{{ field.label }}:</label>
+                    <div class="col-sm-8">
+                      {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                      <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-danger" id="btnProdForm" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
               </form>
             </div>
             <div class="col-md-6" style="padding: 2%; padding-left: 20%;"> <!--Display message for no categories-->
@@ -114,61 +131,56 @@
             </div>
           </div>
           {% else %} <!--Output if categories are defined-->
-          <div class="row" style="padding-top: 10px; border-radius: 5px; background-color: #fafafa; margin: 20px;">
-            <div id="prodform_container" class="col-md-6" style="padding-left: 10%;"> <!--Output the Edit Product form-->
+          <div class="row" style="padding-top: 10px; border-radius: 5px; background-color: #fafafa; width:88%; margin:auto;">
+            <div id="prodform_container" class="col-md-6" style="padding-right: 5%;"> <!--Output the Edit Product form-->
               <form id='ProdForm' method="POST">
                 {% csrf_token %}
-                <table class="table-responsive" style="padding-bottom: 10px;">
-                  <thead>
-                    <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>Product Details</button></th>
-                  </thead>
-                    {{ ProdForm }}
-                </table>
-               <button type="submit" class="btn btn-danger" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
+                <div class="form-group row" style="text-align: center; margin-bottom: 20px;">
+                  <div class="col-sm-12">
+                    <button class="btn btn-primary" disabled>Product Details</button>
+                  </div>
+                </div>
+                {% for field in ProdForm %}
+                <div class="form-group{% if field.errors %} invalid{% endif %} row">
+                  <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">{{ field.label }}:</label>
+                  <div class="col-sm-8">
+                    {{ field }}
+                  </div>
+                  {% for error in field.errors %}
+                    <p class="help-block">{{ error }}</p>
+                  {% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-danger" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
               </form>
             </div>
-            <div id="techform_container" class="col-md-6" style="padding-left: 10%; padding-right: 5px;">
-              {% if catflag %} <!--Output if 2 categories are defined-->
-                <form id='TechForm' method="POST">
-                  {% csrf_token %}
-                  <table class="table-responsive">
-                    <thead>
-                      <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>{{cat1}}, {{cat2}}</button></th>
-                    </thead>
-                    <tbody>
-                      {% for field in TechForm %}
-                        {% if field.id_for_label in attrs %}
-                          <tr>
-                            <th><label for="{{ field.id_for_label }}">{{ field.label }}: </label></th>
-                            <td>{{ field }}</td>
-                          </tr>
-                        {% endif %}
-                      {% endfor %}
-                      </tbody>
-                  </table>
-                 <button type="submit" class="btn btn-danger" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
-                </form>
-              {% else %} <!--Output if only 1 category is defined-->
-                <form id='TechForm' method="POST">
-                  {% csrf_token %}
-                  <table class="table-responsive">
-                    <thead>
-                      <th colspan="2" style="text-align: center; padding-bottom: 10px;"><button class="btn btn-primary" disabled>{{cat1}}</button></th>
-                    </thead>
-                    <tbody>
-                    {% for field in TechForm %}
-                      {% if field.id_for_label in attrs %}
-                        <tr>
-                          <th><label for="{{ field.id_for_label }}">{{ field.label }}: </label></th>
-                          <td>{{ field }}</td>
-                        </tr>
-                      {% endif %}
+            <div id="techform_container" class="col-md-6" style="padding-left: 5%;"> <!--Output the Edit Tech form-->
+              <form id='TechForm' method="POST">
+                {% csrf_token %}
+                <div class="form-group row" style="text-align: center; margin-bottom: 20px;">
+                  <div class="col-sm-12">
+                    {% if catflag %}
+                      <button class="btn btn-primary" disabled>{{cat1}}, {{cat2}}</button>
+                    {% else %}
+                      <button class="btn btn-primary" disabled>{{cat1}}</button>
+                    {% endif %}
+                  </div>
+                </div>
+                {% for field in TechForm %}
+                  {% if field.id_for_label in attrs %}
+                  <div class="form-group{% if field.errors %} invalid{% endif %} row">
+                    <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label">{{ field.label }}:</label>
+                    <div class="col-sm-8">
+                      {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                      <p class="help-block">{{ error }}</p>
                     {% endfor %}
-                    </tbody>
-                  </table>
-                 <button type="submit" class="btn btn-danger" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
-                </form>
-              {% endif %}
+                  </div>
+                  {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-danger" style="margin:auto; display:block; padding-top: 10px; margin-bottom: 10px;">Submit</button>
+              </form>
             </div>
           </div>
           {% endif %}

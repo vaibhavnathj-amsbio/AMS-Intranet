@@ -222,7 +222,7 @@
       success: function (response) {
         var div_body = document.querySelector('#prodform_container');
         $(this).remove();
-        div_body.innerHTML = `<div class="card" style="width: 15em; text-align: center; height: 5em; margin-bottom: 5px;">
+        div_body.innerHTML = `<div class="card" style="width: 15em; text-align: center; height: 5em; margin-bottom: 10px !important; margin: auto;">
                                 <div style="margin: auto;">
                                   <strong>${response.msg}</strong>
                                 </div>
@@ -246,7 +246,7 @@
       success: function (response) {
         var div_body = document.querySelector('#techform_container');
         $(this).remove();
-        div_body.innerHTML = `<div class="card" style="width: 15em; text-align: center; height: 5em; margin-bottom: 10px;">
+        div_body.innerHTML = `<div class="card" style="width: 15em; text-align: center; height: 5em; margin-bottom: 10px !important; margin: auto;">
                                 <div style="margin: auto;">
                                   <strong>${response.msg}</strong>
                                 </div>
