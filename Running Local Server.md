@@ -1,5 +1,6 @@
-After installing Python at <code>C:\Program Files\Python37</code>
+Downloading Repository from GIT: <code>git clone __insert-link-here__</code>
 
+After installing Python at <code>C:\Program Files\Python37</code>
 
 ###### Setting up the environment
 
