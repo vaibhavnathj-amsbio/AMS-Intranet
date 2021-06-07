@@ -131,5 +131,14 @@
 
   <script src="{% static 'assets/js/main.js' %}"></script>
 
+  <script type="text/javascript">
+    $('a[id^="similarProduct"]').on('click', function (e) {
+      var link = $(this).prop('href');
+      e.preventDefault();
+      open_page = window.open(link,"_blank","width=600,height=680,top=150,left=650");
+      open_page.onblur = function() { this.close(); };
+    });
+  </script>
+
 </body>
 </html>

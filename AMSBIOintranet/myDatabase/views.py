@@ -3,7 +3,7 @@ import getpass
 from datetime import datetime
 
 from .forms import EditProductForm, EditTechDetailsForm
-from .tables import CurrencyTable, ProductRecordsTable
+from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable
 from .models import (MasterCurrencies,
                      ProductRecords,
                      ProductRecordsTech,
@@ -18,6 +18,8 @@ from django.shortcuts import render, redirect
 from django_tables2 import RequestConfig
 from django_tables2.export.export import TableExport
 from django_tables2.paginators import LazyPaginator
+from django.contrib import messages
+
 
 
 def index(request):
@@ -49,8 +51,7 @@ def addNewSupplier(request):
 def search(request):
     """ Function to control and render the search page!"""
     obj = ProductRecordsTable(ProductRecords.objects.all()[8:])
-    RequestConfig(request, paginate={
-                  "paginator_class": LazyPaginator, "per_page": 25}).configure(obj)
+    RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
     msg = True
     if request.method == "POST":
         code = request.POST['Prod']
@@ -237,3 +238,19 @@ def techRecords(request):
         data2 = {item: val for item, val in temp[0]['fields'].items() if item in attrs[1]}
         context = {'data1': data1, 'data2': data2, 'flag': onlyOneCategory, 'cat_1': attrs[2], 'cat_2': attrs[3]}
     return JsonResponse(context)
+
+
+def similarProducts(request, pk):
+    geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+    if len(geneid) > 0:
+        messages.success(request, 'Showing Products similar to Product code: ' + pk)
+        obj = TechRecordsTable(ProductRecordsTech.objects.filter(gene_id=geneid))
+        RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
+        context = {'obj': obj}
+        return render(request, "similarProducts.html", context)
+    else:
+        messages.warning(request, 'Gene ID not found! Showing All records instead')
+        obj = TechRecordsTable(ProductRecordsTech.objects.all()[8:])
+        RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
+        context = {'obj': obj}
+        return render(request, "similarProducts.html", context)

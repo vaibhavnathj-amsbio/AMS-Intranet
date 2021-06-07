@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path
 from . import views
 
@@ -10,5 +11,6 @@ urlpatterns = [
     path('CurrencyValues', views.currencyValue, name='CurrencyValues'),
     path('Search', views.search, name='Search'),
     path('techrecords',views.techRecords, name = 'techrecords'), # used for ajax call
-    path('formsubmit',views.FormSubmit, name = 'formsubmit'), # used for ajax call 
+    path('formsubmit',views.FormSubmit, name = 'formsubmit'), # used for ajax call
+    path('similarProducts/<str:pk>/',views.similarProducts, name= 'similarProducts'),
 ]

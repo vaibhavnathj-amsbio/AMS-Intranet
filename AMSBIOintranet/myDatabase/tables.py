@@ -1,4 +1,4 @@
-from .models import MasterCurrencies, ProductRecords
+from .models import MasterCurrencies, ProductRecords, ProductRecordsTech
 import django_tables2 as tables
 
 
@@ -27,7 +27,7 @@ class ProductRecordsTable(tables.Table):
     rsearch3 = tables.Column(accessor='research3', verbose_name='Research area 3')
     rsearch4 = tables.Column(accessor='research4', verbose_name='Research area 4')
     attrs = tables.TemplateColumn(template_name='button.html',verbose_name='Attribute')
-    product_code = tables.Column(attrs={"td": {"style": "font-weight: bold;"}})
+    product_code = tables.Column(linkify=("similarProducts", [tables.A("product_code")]), attrs={"a": {"target":"_blank", "id": "similarProduct"}})
 
     class Meta:
         model = ProductRecords
@@ -37,3 +37,12 @@ class ProductRecordsTable(tables.Table):
                             "previous_purchase_price", "price_change_flag", "price_change_percent", "special_shipping", ]
         orderable = False
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive"}
+
+
+class TechRecordsTable(tables.Table):
+    
+    class Meta:
+        model = ProductRecordsTech
+        fields = ["product_code","gene_id"]
+        orderable = False
+        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive", "style": "width: fit-content; margin:auto;"}
