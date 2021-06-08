@@ -23,7 +23,14 @@
       <div class="alert alert-{{message.tags}}" role="alert" style="width: fit-content; margin-top: 1% !important; margin:auto;" id="missingGene">{{ message }}</div>
     {% endfor %}
     {% endif %}
-    <div class="content" style="width: 90%; margin:0 auto; margin-top: 5%;">
+    <div class="row" style="margin:auto; margin-top: 3%;">
+      <div class="col-md-12" style="text-align: center;">
+        <div class="card" style="width: fit-content; height: 3em; padding: 1%; margin:auto;">
+          <p>Number of Similar Products: <strong>{{ num_of_prods }}</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="content" style="width: 90%; margin:0 auto; margin-top: 1%;">
       {% render_table obj %}
     </div>
 

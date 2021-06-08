@@ -135,8 +135,13 @@
     $('a[id^="similarProduct"]').on('click', function (e) {
       var link = $(this).prop('href');
       e.preventDefault();
-      open_page = window.open(link,"_blank","width=685,height=685,top=150,left=650");
+      open_page = window.open(link,"_blank","width=685,height=750,top=150,left=650");
       open_page.onblur = function() { this.close(); };
+    });
+
+    $('button[id^="getrecord"]').click(function() {
+      $(this).toggleClass('btn icofont-plus-square');
+      $(this).toggleClass('btn icofont-minus-square');
     });
   </script>
 

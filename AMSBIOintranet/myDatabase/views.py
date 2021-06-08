@@ -244,13 +244,14 @@ def similarProducts(request, pk):
     geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
     if len(geneid) > 0:
         messages.success(request, 'Showing Products similar to Product code: ' + pk)
-        obj = TechRecordsTable(ProductRecordsTech.objects.filter(gene_id=geneid))
+        queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
+        obj = TechRecordsTable(queryset)
         RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
-        context = {'obj': obj}
+        context = {'obj': obj, 'num_of_prods': len(queryset)}
         return render(request, "similarProducts.html", context)
     else:
         messages.warning(request, 'Gene ID not found! Showing All records instead')
         obj = TechRecordsTable(ProductRecordsTech.objects.all()[8:])
         RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
-        context = {'obj': obj}
+        context = {'obj': obj, 'num_of_prods': "-"}
         return render(request, "similarProducts.html", context)
