@@ -186,12 +186,12 @@
           </div>
         </div>
       </div>
+      <!-- Modal Section ends-->
       {% if messages %} <!-- Prints success message when a shipment is created -->
         {% for message in messages %}
           <div class="alert alert-success" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
         {% endfor %}
       {% endif %}
-      <!-- Modal Section ends-->
       {% if flag %}
       <div class="content" style="width:80%; margin:auto;">
         <div class="row" style="margin-top: -0.2%;">
