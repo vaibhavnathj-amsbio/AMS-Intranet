@@ -27,7 +27,7 @@ class ProductRecordsTable(tables.Table):
     rsearch3 = tables.Column(accessor='research3', verbose_name='Research area 3')
     rsearch4 = tables.Column(accessor='research4', verbose_name='Research area 4')
     attrs = tables.TemplateColumn(template_name='button.html',verbose_name='Attribute')
-    product_code = tables.Column(linkify=("similarProducts", [tables.A("product_code")]), attrs={"a": {"target":"_blank", "id": "similarProduct"}})
+    product_code = tables.Column(linkify=("similarProducts", [tables.A("product_code")]), attrs={"a": {"id": "similarProduct"}})
 
     class Meta:
         model = ProductRecords
@@ -45,4 +45,6 @@ class TechRecordsTable(tables.Table):
         model = ProductRecordsTech
         fields = ["product_code","gene_id"]
         orderable = False
-        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive", "style": "width: fit-content; margin:auto;"}
+        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
+                "class": "table table-striped table-responsive", 
+                "style": "width: fit-content; margin:auto; overflow-y: auto; max-height: 540px;"}

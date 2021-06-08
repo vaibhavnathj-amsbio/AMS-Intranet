@@ -240,18 +240,29 @@ def techRecords(request):
     return JsonResponse(context)
 
 
-def similarProducts(request, pk):
-    geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+def similarProducts(request, pk="3011-100"):
+    if request.method == "POST":
+        prod_code = request.POST['prod_code']
+        try:
+            queryset = ProductRecordsTech.objects.get(product_code=prod_code)
+            geneid = queryset.gene_id
+            return setContext(geneid, request, prod_code)
+        except ProductRecordsTech.DoesNotExist:
+            return setContext(geneid=[], request=request, pk=" ", msg='Enter Correct Product Code!')
+    else:
+        geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+        return setContext(geneid, request, pk)
+
+
+def setContext(geneid, request , pk, msg='Gene ID not found! Showing All records instead'):
     if len(geneid) > 0:
         messages.success(request, 'Showing Products similar to Product code: ' + pk)
         queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
         obj = TechRecordsTable(queryset)
-        RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
         context = {'obj': obj, 'num_of_prods': len(queryset)}
         return render(request, "similarProducts.html", context)
     else:
-        messages.warning(request, 'Gene ID not found! Showing All records instead')
-        obj = TechRecordsTable(ProductRecordsTech.objects.all()[8:])
-        RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
+        messages.warning(request, msg)
+        obj = TechRecordsTable(ProductRecordsTech.objects.all()[8:18])
         context = {'obj': obj, 'num_of_prods': "-"}
         return render(request, "similarProducts.html", context)

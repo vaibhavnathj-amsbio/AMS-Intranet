@@ -40,6 +40,7 @@
               <li><a href="AddNewSupplier">Add New Supplier</a></li>
               <li><a href="Search">Search Products</a></li>
               <li><a href="EditSingleProduct">Edit Single Product</a></li>
+              <li><a href="similarProducts/3011-100">Similar Products</a></li>
               <li><a href="CurrencyValues">Currency Values</a></li>
             </ul>
           </li>
@@ -132,13 +133,6 @@
   <script src="{% static 'assets/js/main.js' %}"></script>
 
   <script type="text/javascript">
-    $('a[id^="similarProduct"]').on('click', function (e) {
-      var link = $(this).prop('href');
-      e.preventDefault();
-      open_page = window.open(link,"_blank","width=685,height=750,top=150,left=650");
-      open_page.onblur = function() { this.close(); };
-    });
-
     $('button[id^="getrecord"]').click(function() {
       $(this).toggleClass('btn icofont-plus-square');
       $(this).toggleClass('btn icofont-minus-square');

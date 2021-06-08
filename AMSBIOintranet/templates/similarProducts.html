@@ -18,30 +18,104 @@
 
 </head>
 <body>
-    {% if messages %} <!-- Prints success message when a shipment is created -->
-    {% for message in messages %}
-      <div class="alert alert-{{message.tags}}" role="alert" style="width: fit-content; margin-top: 1% !important; margin:auto;" id="missingGene">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-    <div class="row" style="margin:auto; margin-top: 3%;">
-      <div class="col-md-12" style="text-align: center;">
-        <div class="card" style="width: fit-content; height: 3em; padding: 1%; margin:auto;">
-          <p>Number of Similar Products: <strong>{{ num_of_prods }}</strong></p>
+
+  <header id="header" class="fixed-top header-inner-pages">
+    <div class="container d-flex align-items-center">
+
+      <a href="index"><img class="header_img" src="{% static 'assets/img/amsbio_logo.png' %}" alt="amsbio_logo"></a>
+
+
+      <nav class="nav-menu d-none d-lg-block">
+
+        <ul>
+          <li><a href="../../index">Home</a></li>
+
+          <li class="drop-down"><a href=" ">Database</a>
+            <ul>
+              <li><a href="../../AddNewSupplier">Add New Supplier</a></li>
+              <li><a href="../../Search">Search Products</a></li>
+              <li><a href="../../EditSingleProduct">Edit Single Product</a></li>
+              <li><a href="../../similarProducts/3011-100">Similar Products</a></li>
+              <li><a href="../../CurrencyValues">Currency Values</a></li>
+            </ul>
+          </li>
+          <li class="drop-down"><a href="#">Courier</a>
+            <ul>
+              <li class="drop-down"><a href="#">FedEx</a>
+                <ul>
+                  <li><a href="../../../Courier/FedexUK">FedEx UK</a></li>
+                  <li><a href="../../../Courier/FedexUSA">FedEx USA</a></li>
+                </ul>
+              </li>
+              <li><a href="../../../Courier/DHL">DHL</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Similar Products</h2>
+          <ol>
+            <li><a href="index">Home</a></li>
+            <li>Similar Products</li>
+          </ol>
         </div>
       </div>
-    </div>
-    <div class="content" style="width: 90%; margin:0 auto; margin-top: 1%;">
-      {% render_table obj %}
-    </div>
+    </section>
 
-    <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+    <section id="testimonials" class="testimonials">
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-md-12">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group row" style="padding-left: 25%; padding-right: 25%;">
+                <div class="input-group col-sm-12">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Product Code</div>
+                  </div>
+                  <input type="text" id='prod_code' name='prod_code' class="form-control" placeholder="Search Similar Products">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-danger">Go</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% if messages %} <!-- Prints success message when a shipment is created -->
+      {% for message in messages %}
+        <div class="alert alert-{{message.tags}}" role="alert" style="width: fit-content; margin-top: 1% !important; margin:auto;" id="missingGene">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+      <div class="row" style="margin:auto; margin-top: 2%;">
+        <div class="col-md-4" style="text-align: right;">
+          <div class="card" style="width: fit-content; padding: 1%; margin-left: 30%;">
+            <div>Number of Similar Products: <strong>{{ num_of_prods }}</strong></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          {% render_table obj %}
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
-  
-    <script src="{% static 'assets/js/main.js' %}"></script>
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
+
+  <script src="{% static 'assets/js/main.js' %}"></script>
 
 </body>
 </html>
