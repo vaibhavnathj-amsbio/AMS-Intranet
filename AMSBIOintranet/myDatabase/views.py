@@ -1,10 +1,11 @@
+from itertools import product
 import json
 import getpass
 from datetime import datetime
 
 from .forms import EditProductForm, EditTechDetailsForm
-from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable
-from .models import (MasterCurrencies,
+from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository
+from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture,
                      ProductRecords,
                      ProductRecordsTech,
                      NwCategoryIds,
@@ -191,7 +192,7 @@ def checkCategory(data, flag, cat1, cat2):
         return [data[index1], data[index2], cat1, cat2]
 
 
-def loadCategory(id):
+def loadCategory(id, file='categories.json'):
     """ Helper function for fetching the categories from the DB! """
     obj1 = ProductRecords.objects.get(pk=id).category_1
     cat1_lev1 = NwCategoryLowestNodes.objects.get(pk=obj1).level1
@@ -204,7 +205,7 @@ def loadCategory(id):
     else:
         onlyOneCategory = True
         cat2 = "Null"
-    f = open('myDatabase/categories.json')
+    f = open('myDatabase/' + file)
     data = json.load(f)
     categories = checkCategory(data, onlyOneCategory, cat1, cat2)
     return categories
@@ -244,25 +245,49 @@ def similarProducts(request, pk="3011-100"):
     if request.method == "POST":
         prod_code = request.POST['prod_code']
         try:
-            queryset = ProductRecordsTech.objects.get(product_code=prod_code)
-            geneid = queryset.gene_id
-            return setContext(geneid, request, prod_code)
+            category = list(loadCategory(prod_code)[0].keys())[0]
+            return categoryWiseProductSorting(category, prod_code, request)
         except ProductRecordsTech.DoesNotExist:
-            return setContext(geneid=[], request=request, pk=" ", msg='Enter Correct Product Code!')
+            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Product does not exist, Enter valid Product Code.')
+        except NwCategoryLowestNodes.DoesNotExist:
+            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Categories do not exists.')
+        except ProductRecords.DoesNotExist:
+            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Product does not exist, Enter valid Product Code.')
     else:
-        geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
-        return setContext(geneid, request, pk)
+        try:
+            category = list(loadCategory(pk)[0].keys())[0]
+            return categoryWiseProductSorting(category, pk, request)
+        except NwCategoryLowestNodes.DoesNotExist:
+            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Categories do not exist!')
 
 
-def setContext(geneid, request , pk, msg='Gene ID not found! Showing All records instead'):
+def setContext_geneID(geneid, request , pk, msg='Gene ID not found!'):
     if len(geneid) > 0:
         messages.success(request, 'Showing Products similar to Product code: ' + pk)
         queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
-        obj = TechRecordsTable(queryset)
+        obj = TechRecordsTable_Base(queryset)
         context = {'obj': obj, 'num_of_prods': len(queryset)}
         return render(request, "similarProducts.html", context)
     else:
         messages.warning(request, msg)
-        obj = TechRecordsTable(ProductRecordsTech.objects.all()[8:18])
+        obj = TechRecordsTable_Base(ProductRecordsTech.objects.all()[8:18])
         context = {'obj': obj, 'num_of_prods': "-"}
+        return render(request, "similarProducts.html", context) 
+
+
+def categoryWiseProductSorting(cat, pk, request):
+    if cat == "Biorepository":
+        queryset_base = NwAttributes11Biorepository.objects.get(product_code=pk)
+        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease)
+        obj = TechRecordsTable_Biorepository(queryset)
+        context = {'obj': obj, 'num_of_prods': len(queryset)}
+        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat)
         return render(request, "similarProducts.html", context)
+    elif cat == "Cells & Cell Culture":
+        obj = ProductRecords.objects.get(pk=pk)
+        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == "132" and NwCategoryLowestNodes.objects.get(pk=obj.category_1).level3:
+            queryset_base = NwAttributes15Cellscellculture.objects.get(product_code=pk)
+
+    else:
+        geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+        return setContext_geneID(geneid, request, pk)

@@ -1,4 +1,5 @@
-from .models import MasterCurrencies, ProductRecords, ProductRecordsTech
+from os import access
+from .models import MasterCurrencies, NwAttributes11Biorepository, ProductRecords, ProductRecordsTech
 import django_tables2 as tables
 
 
@@ -39,8 +40,12 @@ class ProductRecordsTable(tables.Table):
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive"}
 
 
-class TechRecordsTable(tables.Table):
-    
+class TechRecordsTable_Base(tables.Table):
+    Owner = tables.Column(accessor='supplierName')
+    Supplier_product_code = tables.Column(accessor='prod_rec_fetch__supplier_product_code')
+    Pack_Size = tables.Column(accessor='prod_rec_fetch__packsize')
+    sell_price_gbp = tables.Column(accessor='prod_rec_fetch__sell_price_gbp', verbose_name='Selling Price GBP')
+
     class Meta:
         model = ProductRecordsTech
         fields = ["product_code","gene_id"]
@@ -48,3 +53,17 @@ class TechRecordsTable(tables.Table):
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
                 "class": "table table-striped table-responsive", 
                 "style": "width: fit-content; margin:auto; overflow-y: auto; max-height: 540px;"}
+  
+
+class TechRecordsTable_Biorepository(TechRecordsTable_Base, tables.Table):
+
+    class Meta(TechRecordsTable_Base.Meta):
+        model = NwAttributes11Biorepository
+        fields = ["product_code",
+            "species",
+            "tissue_type",
+            "disease",
+            "format",
+            "cell_line",
+        ]
+        exclude = ['gene_id']

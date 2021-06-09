@@ -1,4 +1,5 @@
 Run this first: python manage.py makemigrations myDatabase
-Then run: python manage.py migrate --database sysdb --fake-initial myDatabase
+For first time migration Run: python manage.py migrate --database sysdb --fake-initial myDatabase
+Every other time Run: python manage.py migrate --database sysdb --fake myDatabase "migration_file_name"
 
 Note: The command "python manage.py migrate" will only migrate changes made to the default db
