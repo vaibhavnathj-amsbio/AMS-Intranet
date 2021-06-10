@@ -116,8 +116,8 @@
 
     $('button[id^="getrecord"]').one('click', function () {
       var rec_id = $(this).val();
-      if (rec_id.search(/[.]/g) > 0) {
-        var new_tag = rec_id.replace(/[\s.]/g, "-");
+      if (rec_id.search(/[.|\s]/g) > 0) {
+        var new_tag = rec_id.replace(/[\s.|\s]/g, "-");
         console.log(new_tag);
         $(this).attr("data-target", "#collapse" + new_tag);
         $(this).attr("aria-controls", "collapse" + new_tag);

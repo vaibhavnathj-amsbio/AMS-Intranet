@@ -321,6 +321,12 @@ class NwAttributes11Biorepository(models.Model):
         managed = False
         db_table = 'nw_attributes_11_biorepository'
         app_label = 'myDatabase'
+    
+    def supplierName(self):
+        return ProductRecordsTech.supplierName(self)
+
+    def prod_rec_fetch(self):
+        return ProductRecordsTech.prod_rec_fetch(self)
 
 class NwAttributes12Molecularbiology(models.Model):
     product_code = models.CharField(primary_key=True, max_length=64)
@@ -486,6 +492,12 @@ class NwAttributes15Cellscellculture(models.Model):
         db_table = 'nw_attributes_15_cellscellculture'
         app_label = 'myDatabase'
 
+    def supplierName(self):
+        return ProductRecordsTech.supplierName(self)
+
+    def prod_rec_fetch(self):
+        return ProductRecordsTech.prod_rec_fetch(self)
+
 
 class NwAttributes16Reagentslabware(models.Model):
     product_code = models.CharField(primary_key=True, max_length=64)
@@ -516,6 +528,12 @@ class NwAttributes16Reagentslabware(models.Model):
         managed = False
         db_table = 'nw_attributes_16_reagentslabware'
         app_label = 'myDatabase'
+
+    def supplierName(self):
+        return ProductRecordsTech.supplierName(self)
+
+    def prod_rec_fetch(self):
+        return ProductRecordsTech.prod_rec_fetch(self)
 
 
 class NwAttributes17Kitsassays(models.Model):

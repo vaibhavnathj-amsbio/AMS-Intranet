@@ -108,7 +108,7 @@
             "expression_host",
             "promoter",
             "protein_type",
-            "matrix_protein",
+            "protein",
             "mycoplasma_testing",
             "license_requirement",
             "expression",

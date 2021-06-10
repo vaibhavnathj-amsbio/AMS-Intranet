@@ -1,5 +1,5 @@
 from os import access
-from .models import MasterCurrencies, NwAttributes11Biorepository, ProductRecords, ProductRecordsTech
+from .models import MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware, ProductRecords, ProductRecordsTech
 import django_tables2 as tables
 
 
@@ -48,11 +48,12 @@ class TechRecordsTable_Base(tables.Table):
 
     class Meta:
         model = ProductRecordsTech
-        fields = ["product_code","gene_id"]
+        fields = ["product_code"]
         orderable = False
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
                 "class": "table table-striped table-responsive", 
-                "style": "width: fit-content; margin:auto; overflow-y: auto; max-height: 540px;"}
+                "style": "margin: 0 auto; width: fit-content;"}
+        sequence = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "..."]
   
 
 class TechRecordsTable_Biorepository(TechRecordsTable_Base, tables.Table):
@@ -66,4 +67,34 @@ class TechRecordsTable_Biorepository(TechRecordsTable_Base, tables.Table):
             "format",
             "cell_line",
         ]
-        exclude = ['gene_id']
+
+
+class TechRecordsTable_CellsCellCulture(TechRecordsTable_Base, tables.Table):
+
+    class Meta(TechRecordsTable_Base.Meta):
+        model = NwAttributes15Cellscellculture
+        fields = ["product_code",
+            "protein",
+            "accession_no",
+            "species",
+            "tag",
+            "aa_sequence",
+            "tag_position",
+            "serotype",
+            "promoter",
+            "selection_marker"
+        ]
+
+
+class TechRecordsTable_Reagentslabware(TechRecordsTable_Base, tables.Table):
+
+    class Meta(TechRecordsTable_Base.Meta):
+        model = NwAttributes16Reagentslabware
+        fields = ["product_code",
+                "cas_no",
+                "expression_host",
+                "activity",
+                "species",
+                "carbohydrate_type",
+                "oligosaccharide_length"
+            ]

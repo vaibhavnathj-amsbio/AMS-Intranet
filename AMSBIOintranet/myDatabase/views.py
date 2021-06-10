@@ -3,9 +3,11 @@ import json
 import getpass
 from datetime import datetime
 
+from django.http.response import HttpResponse
+
 from .forms import EditProductForm, EditTechDetailsForm
-from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository
-from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture,
+from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository, TechRecordsTable_CellsCellCulture, TechRecordsTable_Reagentslabware
+from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware,
                      ProductRecords,
                      ProductRecordsTech,
                      NwCategoryIds,
@@ -262,17 +264,20 @@ def similarProducts(request, pk="3011-100"):
 
 
 def setContext_geneID(geneid, request , pk, msg='Gene ID not found!'):
-    if len(geneid) > 0:
-        messages.success(request, 'Showing Products similar to Product code: ' + pk)
-        queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
-        obj = TechRecordsTable_Base(queryset)
-        context = {'obj': obj, 'num_of_prods': len(queryset)}
-        return render(request, "similarProducts.html", context)
-    else:
-        messages.warning(request, msg)
-        obj = TechRecordsTable_Base(ProductRecordsTech.objects.all()[8:18])
-        context = {'obj': obj, 'num_of_prods': "-"}
-        return render(request, "similarProducts.html", context) 
+    try:
+        if len(geneid) > 0:
+            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' with Gene ID, '+ geneid)
+            queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
+            obj = TechRecordsTable_Base(queryset)
+            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            return render(request, "similarProducts.html", context)
+        else:
+            messages.warning(request, msg)
+            obj = TechRecordsTable_Base(ProductRecordsTech.objects.all()[8:18])
+            context = {'obj': obj, 'num_of_prods': "-"}
+            return render(request, "similarProducts.html", context) 
+    except TypeError:
+        return setContext_geneID(geneid=[], request=request, pk=" ", msg='Gene ID does not exist!')
 
 
 def categoryWiseProductSorting(cat, pk, request):
@@ -285,9 +290,34 @@ def categoryWiseProductSorting(cat, pk, request):
         return render(request, "similarProducts.html", context)
     elif cat == "Cells & Cell Culture":
         obj = ProductRecords.objects.get(pk=pk)
-        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == "132" and NwCategoryLowestNodes.objects.get(pk=obj.category_1).level3:
+        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == 132:
             queryset_base = NwAttributes15Cellscellculture.objects.get(product_code=pk)
-
+            queryset = NwAttributes15Cellscellculture.objects.filter(protein=queryset_base.protein)
+            obj = TechRecordsTable_CellsCellCulture(queryset)
+            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>3D Cell Culture & Extracellular Matrices')
+            return render(request, "similarProducts.html", context)
+        else:
+            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+            return setContext_geneID(geneid, request, pk)
+    elif cat == "Reagents & Labware":
+        obj = ProductRecords.objects.get(pk=pk)
+        level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2
+        if level2 in [137,138]:
+            queryset_base = NwAttributes16Reagentslabware.objects.get(product_code=pk)
+            if level2 == 137:
+                queryset = NwAttributes16Reagentslabware.objects.filter(cas_no=queryset_base.cas_no)
+                lev = 'Reagents & Consumables'
+            else:
+                queryset = NwAttributes16Reagentslabware.objects.filter(carbohydrate_type=queryset_base.carbohydrate_type)
+                lev = 'Carbohydrates'
+            obj = TechRecordsTable_Reagentslabware(queryset)
+            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>' + lev)
+            return render(request, "similarProducts.html", context)
+        else:
+            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+            return setContext_geneID(geneid, request, pk)
     else:
         geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
         return setContext_geneID(geneid, request, pk)
