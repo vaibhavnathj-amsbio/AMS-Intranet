@@ -283,7 +283,7 @@ def setContext_geneID(geneid, request , pk, msg='Gene ID not found!'):
 def categoryWiseProductSorting(cat, pk, request):
     if cat == "Biorepository":
         queryset_base = NwAttributes11Biorepository.objects.get(product_code=pk)
-        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease, product_flag=0)
+        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease).exclude(product_flag=0)
         obj = TechRecordsTable_Biorepository(queryset)
         context = {'obj': obj, 'num_of_prods': len(queryset)}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat)
