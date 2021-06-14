@@ -24,7 +24,7 @@ Python script for automatically downloading the FedEx shipment records for both 
 
 ## Deployment on IIS
 
-#### Required installation 
+####    1.  Required installation 
 
 1.  Install Python(ver=3.7.5) for all users on Windows
 2.  Open CMD and install all requirements mentioned in _requirements.txt_ using <code>pip install -r requirements.txt</code>.
@@ -32,37 +32,37 @@ Python script for automatically downloading the FedEx shipment records for both 
 _Note: If error is thrown at the time of installing libraries, try upgrading pip by <code>pip install --upgrade pip</code>, then start from *STEP 2*_
 4.  Install *IIS* on Windows
 
-#### Cloning Project from Git
+####    2.  Cloning Project from Git
 
 5.  Navigate to C:/inetpub/wwwroot Open CMD at this location then enter: <code>git clone https://github.com/vaibhavnathj-amsbio/AMS-Intranet.git</code><br>
 _Note: Make sure Git is already installed, the above commad will clone/download the project from GitHub_
 6.  Navigate to C:/, right-click on Python37, and edit Properties. Under Security, add <code>IIS AppPool\DefaultAppPool</code>. DefaultAppPool is the default app pool.
 7.  Repeat *STEP 6* for the Project folder as well, located at *C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet*
 
-#### Enabling wfastcgi
+####    3.  Enabling wfastcgi
 
 7.  Open a CMD terminal as Administrator, and run the command <code>wfastcgi-enable</code><br>
 _Note: Before running the command make sure no other wfastcgi app is running in FastCGI module of IIS_
 
-#### Adding web.config
+####    4.  Adding web.config
 8.  Copy the Python path returned in *STEP 8*, and replace the scriptProcessor="<code>to be filled in</code>" in <code>web.config-template</code>
 9.  If necessary edit the remaining settings in <code>web.config-template</code> then save it as <code>web.config</code> in the _C:/inetpub/wwwroot/_ directory. It should NOT sit inside _AMSBIOintranet/_
     1.  Edit project PYTHONPATH (path to project, should be *C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet*)
     2.  Edit WSGI_HANDLER (located in your wsgi.py, should be *AMSBIOintranet.wsgi.application*)
     3.  Edit DJANGO_SETTINGS_MODULE (your settings.py module, should be *AMSBIOintranet.settings*)
 
-#### IIS settings
+####    5.  IIS settings
 10. Open Internet Information Services (IIS) Manager. Under connections select the server
 11. In the center pane under Management select Configuration Editor
 12. Under *Section* select <code>system.webServer/handlers</code>. 
 13. Under *Section* select <code> Unlock Section</code>. This is required because the C:/inetpub/wwwroot/web.config creates a route handler for our project.
 
-#### Adding virtual directory for serving static files
+####    6.  Adding virtual directory for serving static files
 
 14. In order to enable serving static files, create a virtual directory for the site and name it as *static*
 15. The Full Path should be: <code>C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet/static</code>
 
-#### Bindings
+####    7.  Bindings
 
 16. Open Bindings for the site and change the port to 81
 17. Restart the server and navigate to the website
@@ -73,4 +73,4 @@ _Note: Before running the command make sure no other wfastcgi app is running in 
     4.  You will see add MIME Type box and put woff2 extension in the file extension ".woff2" and MIME type as "application/font-woff2" as well.
     5.  Save it and restart the server
 
-#### Find the website at <code>http://localhost:81</code>
+####    8.  Find the website at <code>http://localhost:81</code>
