@@ -128,8 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-chromedriver.exe
 .vscode
 run_DevServer.bat
 helper_files/

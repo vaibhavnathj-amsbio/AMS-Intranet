@@ -1,17 +1,14 @@
 ﻿## Running Local development Server
 
-1.	Go to the path where project is saved, there should be a file named “manage.py”. The path in this case is: <code>G:\Vaibhav\new_intranet\AMS-Intranet\AMSBIOintranet</code>.
+1.	Go to the path where project is saved, there should be a file named “manage.py”. The path in this case is: <code>C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet</code>.
 2.	Here, open command prompt by typing “cmd” in the address bar.
-3.	In the command prompt, enter: <code>C:\ProgramData\Anaconda3\Scripts\activate test_env</code> to activate the python environment.
-4.	Once activated enter the command, <code>python manage.py runserver</code> to run the tests.
-5.	The local server will start and could be visited at https://127.0.0.1:8000.
-6.  On closing the command prompt the server will stop.
-
-*Note: Open the available run_DevServer.bat file to start the server*
+3.	Enter the command, <code>python manage.py runserver</code>
+4.	The local server will start and could be visited at https://127.0.0.1:8000.
+5.  On closing the command prompt the server will stop.
 
 ## Testing Procedures
 
-1.	Go to the path where project is saved, there should be a folder named “functional_tests”. The path in this case is: <code>G:\Vaibhav\new_intranet\AMS-Intranet\AMSBIOintranet</code>.
+1.	Go to the path where project is saved, there should be a folder named “functional_tests”. The path in this case is: <code>C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet</code>.
 2.	Here, open command prompt by typing “cmd” in the address bar.
 3.	In the command prompt, enter: <code>C:\ProgramData\Anaconda3\Scripts\activate intranetenv</code> to activate the python environment.
 4.	Once activated enter the command, <code>python manage.py test -n functional_tests</code> to run the tests.
@@ -27,60 +24,53 @@ Python script for automatically downloading the FedEx shipment records for both 
 
 ## Deployment on IIS
 
+#### Required installation 
+
 1.  Install Python(ver=3.7.5) for all users on Windows
-2.  Create a virtual environment for Django web application, activate it, and install all requirements mentioned in _requirements.txt_ using <code>pip install -r requirements.txt</code>.
-3.  Install _wfastcgi_ library as well, <code>pip install  _wfastcgi_</code>
+2.  Open CMD and install all requirements mentioned in _requirements.txt_ using <code>pip install -r requirements.txt</code>.
+3.  After all the libraries are successfully installed, Install _wfastcgi_ library as well, <code>pip install  _wfastcgi_</code><br>
+_Note: If error is thrown at the time of installing libraries, try upgrading pip by <code>pip install --upgrade pip</code>, then start from *STEP 2*_
 4.  Install *IIS* on Windows
 
-##### Setting up FastCGI 
+#### Cloning Project from Git
 
-5.  Add a new application under the actions pane after opening the FastCGI Settings.
-6.  Under *Full Path:* enter the location of Python interpreter when a virtual environment for the Project is created
-7.  In the argument box, add the  *wfastcgi.py* file from the virtual environment
+5.  Navigate to C:/inetpub/wwwroot Open CMD at this location then enter: <code>git clone https://github.com/vaibhavnathj-amsbio/AMS-Intranet.git</code><br>
+_Note: Make sure Git is already installed, the above commad will clone/download the project from GitHub_
+6.  Navigate to C:/, right-click on Python37, and edit Properties. Under Security, add <code>IIS AppPool\DefaultAppPool</code>. DefaultAppPool is the default app pool.
+7.  Repeat *STEP 6* for the Project folder as well, located at *C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet*
 
-##### Adding New Member in Environment Variables
+#### Enabling wfastcgi
 
-8.   *Name*: <code>DJANGO_SETTINGS_MODULE</code>
-9.  *Value*: <code>AMSBIOintranet.settings</code>
+7.  Open a CMD terminal as Administrator, and run the command <code>wfastcgi-enable</code><br>
+_Note: Before running the command make sure no other wfastcgi app is running in FastCGI module of IIS_
 
-10. *Name*: <code>WSGI_HANDLER</code>
-11. *Value*: <code>AMSBIOintranet.wsgi.application</code>
+#### Adding web.config
+8.  Copy the Python path returned in *STEP 8*, and replace the scriptProcessor="<code>to be filled in</code>" in <code>web.config-template</code>
+9.  If necessary edit the remaining settings in <code>web.config-template</code> then save it as <code>web.config</code> in the _C:/inetpub/wwwroot/_ directory. It should NOT sit inside _AMSBIOintranet/_
+    1.  Edit project PYTHONPATH (path to project, should be *C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet*)
+    2.  Edit WSGI_HANDLER (located in your wsgi.py, should be *AMSBIOintranet.wsgi.application*)
+    3.  Edit DJANGO_SETTINGS_MODULE (your settings.py module, should be *AMSBIOintranet.settings*)
 
-10. *Name*: <code>PYTHONPATH</code>
-11. *Value*: <code>"filepath of directory where manage.py resides"</code>
+#### IIS settings
+10. Open Internet Information Services (IIS) Manager. Under connections select the server
+11. In the center pane under Management select Configuration Editor
+12. Under *Section* select <code>system.webServer/handlers</code>. 
+13. Under *Section* select <code> Unlock Section</code>. This is required because the C:/inetpub/wwwroot/web.config creates a route handler for our project.
 
-##### Django Web Application settings
+#### Adding virtual directory for serving static files
 
-12. Open IIS Manager and add a Website
-13. For Physical Path, enter the location of the directory where manage.py resides
-14. Change the port to 81
+14. In order to enable serving static files, create a virtual directory for the site and name it as *static*
+15. The Full Path should be: <code>C:/inetpub/wwwroot/AMS-Intranet/AMSBIOintranet/static</code>
 
-##### Handler Mappings
+#### Bindings
 
-15. Open your Website in IIS Manager.
-16. Add new Module mapping after navigating to Handler mapping
-17. After that Type * in Request Path
-18. Then Select FastCgiModule in Module Textbox.
-19. And In “Executable(Optional)” section write the following with a pipe separator, <code>"filepath to virtual environment's python interpreter"| "filepath_to_\wfastcgi.py"</code>
-20. Finally In the “Name” Section write anything.
-21. Click the “Request Restrictions” button and uncheck the “Invoke handler only if request is mapped to” checkbox
+16. Open Bindings for the site and change the port to 81
+17. Restart the server and navigate to the website
+18. (Optional) If font-awesome/icofont icons are not loading then do the following:
+    1.  Open IIS manager
+    2.  Navigate to MIME Types
+    3.  Actions -> Add
+    4.  You will see add MIME Type box and put woff2 extension in the file extension ".woff2" and MIME type as "application/font-woff2" as well.
+    5.  Save it and restart the server
 
-##### Updating settings.py file
-
-22. Open <code>settings.py</code>
-23. Enter the hostname in the <code>ALLOWED_HOSTS</code> list like this, <code>ALLOWED_HOSTS = ['localhost', 'server_ip']</code>
-
-##### Adding Static files
-
-24. Right click the web site and choose Add Virtual Directory
-25. Configure the following settings:
-  Alias - This will be the name specified for STATICURL in your project’s settings file.
-  Physical Path - This will be name specified for STATICROOT in your project’s setting file.
-  Click ok to close the Add Virtual Directory dialog box
-26. Select the newly created virtual directory
-27. Open Handler Mappings
-28. Click View Ordered List (located in actions pane on the right side)
-29. Select StaticFile and click Move Up until the entry is at the top of the list.
-30. Click Yes on the Handler Mappings warning dialog box informing you that changing made at the parent level will no longer be inherited at this level.
-
-#### Find your website at <code>http://localhost:81</code>
+#### Find the website at <code>http://localhost:81</code>
