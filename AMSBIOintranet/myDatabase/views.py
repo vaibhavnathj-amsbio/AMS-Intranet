@@ -6,8 +6,8 @@ from datetime import datetime
 from django.http.response import HttpResponse
 
 from .forms import EditProductForm, EditTechDetailsForm
-from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository, TechRecordsTable_CellsCellCulture, TechRecordsTable_Reagentslabware
-from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware,
+from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository, TechRecordsTable_CellsCellCulture, TechRecordsTable_Proteinspeptides, TechRecordsTable_Reagentslabware
+from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware,
                      ProductRecords,
                      ProductRecordsTech,
                      NwCategoryIds,
@@ -283,19 +283,25 @@ def setContext_geneID(geneid, request , pk, msg='Gene ID not found!'):
 def categoryWiseProductSorting(cat, pk, request):
     if cat == "Biorepository":
         queryset_base = NwAttributes11Biorepository.objects.get(product_code=pk)
-        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease)
+        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease, product_flag=0)
         obj = TechRecordsTable_Biorepository(queryset)
         context = {'obj': obj, 'num_of_prods': len(queryset)}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat)
         return render(request, "similarProducts.html", context)
     elif cat == "Cells & Cell Culture":
         obj = ProductRecords.objects.get(pk=pk)
-        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == 132:
+        level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 
+        if  level2 in [129, 132]:
             queryset_base = NwAttributes15Cellscellculture.objects.get(product_code=pk)
-            queryset = NwAttributes15Cellscellculture.objects.filter(protein=queryset_base.protein)
+            if level2 == 129:
+                queryset = NwAttributes15Cellscellculture.objects.filter(cell_line=queryset_base.cell_line).exclude(cell_line='', product_flag=0)
+                lev = "Cell Lines"
+            else:
+                queryset = NwAttributes15Cellscellculture.objects.filter(protein=queryset_base.protein).exclude(protein='', product_flag=0)
+                lev = "3D Cell Culture & Extracellular Matrices"
             obj = TechRecordsTable_CellsCellCulture(queryset)
             context = {'obj': obj, 'num_of_prods': len(queryset)}
-            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>3D Cell Culture & Extracellular Matrices')
+            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev)
             return render(request, "similarProducts.html", context)
         else:
             geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
@@ -306,10 +312,10 @@ def categoryWiseProductSorting(cat, pk, request):
         if level2 in [137,138]:
             queryset_base = NwAttributes16Reagentslabware.objects.get(product_code=pk)
             if level2 == 137:
-                queryset = NwAttributes16Reagentslabware.objects.filter(cas_no=queryset_base.cas_no)
+                queryset = NwAttributes16Reagentslabware.objects.filter(cas_no=queryset_base.cas_no).exclude(cas_no='', product_flag=0)
                 lev = 'Reagents & Consumables'
             else:
-                queryset = NwAttributes16Reagentslabware.objects.filter(carbohydrate_type=queryset_base.carbohydrate_type)
+                queryset = NwAttributes16Reagentslabware.objects.filter(carbohydrate_type=queryset_base.carbohydrate_type).exclude(carbohydrate_type='', product_flag=0)
                 lev = 'Carbohydrates'
             obj = TechRecordsTable_Reagentslabware(queryset)
             context = {'obj': obj, 'num_of_prods': len(queryset)}
@@ -318,6 +324,19 @@ def categoryWiseProductSorting(cat, pk, request):
         else:
             geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
             return setContext_geneID(geneid, request, pk)
+    elif cat == "Proteins & Peptides":
+        obj = ProductRecords.objects.get(pk=pk)
+        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == 125:
+            queryset_base = NwAttributes14Proteinspeptides.objects.get(product_code=pk)
+            queryset = NwAttributes14Proteinspeptides.objects.filter(cell_line=queryset_base.cell_line).exclude(cell_line='', product_flag=0)
+            obj = TechRecordsTable_Proteinspeptides(queryset)
+            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>Cell Line Lysates')
+            return render(request, "similarProducts.html", context)
+        else:
+            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
+            return setContext_geneID(geneid, request, pk)
+
     else:
         geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
         return setContext_geneID(geneid, request, pk)

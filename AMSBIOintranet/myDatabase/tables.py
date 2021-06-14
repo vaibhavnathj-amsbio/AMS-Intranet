@@ -1,5 +1,5 @@
 from os import access
-from .models import MasterCurrencies, NwAttributes11Biorepository, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware, ProductRecords, ProductRecordsTech
+from .models import MasterCurrencies, NwAttributes11Biorepository, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware, ProductRecords, ProductRecordsTech
 import django_tables2 as tables
 
 
@@ -97,4 +97,21 @@ class TechRecordsTable_Reagentslabware(TechRecordsTable_Base, tables.Table):
                 "species",
                 "carbohydrate_type",
                 "oligosaccharide_length"
+            ]
+
+
+class TechRecordsTable_Proteinspeptides(TechRecordsTable_Base, tables.Table):
+
+    class Meta(TechRecordsTable_Base.Meta):
+        model = NwAttributes14Proteinspeptides
+        fields = ["product_code",
+        "name",
+            "cell_line",
+            "accession_no",
+            "species",
+            "expression_host",
+            "aa_sequence",
+            "tag",
+            "label_conjugate",
+            "tag_position"
             ]
