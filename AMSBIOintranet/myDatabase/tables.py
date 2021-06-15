@@ -1,5 +1,6 @@
-from os import access
-from .models import MasterCurrencies, NwAttributes11Biorepository, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware, ProductRecords, ProductRecordsTech
+from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes12Molecularbiology, 
+                    NwAttributes13Antibodies, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, 
+                    NwAttributes16Reagentslabware, NwAttributes17Kitsassays, NwAttributes18Bioseparationelectrophoresis, ProductRecords, ProductRecordsTech)
 import django_tables2 as tables
 
 
@@ -40,40 +41,89 @@ class ProductRecordsTable(tables.Table):
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive"}
 
 
-class TechRecordsTable_Base(tables.Table):
-    Owner = tables.Column(accessor='supplierName')
-    Supplier_product_code = tables.Column(accessor='prod_rec_fetch__supplier_product_code')
-    Pack_Size = tables.Column(accessor='prod_rec_fetch__packsize')
-    sell_price_gbp = tables.Column(accessor='prod_rec_fetch__sell_price_gbp', verbose_name='Selling Price GBP')
+class TechRecords_Base(tables.Table):
+    product_code = tables.Column(accessor='product_code__product_code')
+    Owner = tables.Column(accessor='product_code__suppliername', verbose_name='Owner')
+    Supplier_product_code = tables.Column(accessor='product_code__supplier_product_code', verbose_name='Supplier Product Code')
+    Pack_Size = tables.Column(accessor='product_code__packsize', verbose_name='Pack Size')
+    sell_price_gbp = tables.Column(accessor='product_code__sell_price_gbp', verbose_name='Selling Price GBP')
 
     class Meta:
-        model = ProductRecordsTech
-        fields = ["product_code"]
+        model = ProductRecords
+        fields = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "sell_price_gbp"]
         orderable = False
+        sequence = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "sell_price_gbp", "..."]
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
                 "class": "table table-striped table-responsive", 
                 "style": "margin: 0 auto; width: fit-content;"}
-        sequence = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "..."]
-  
 
-class TechRecordsTable_Biorepository(TechRecordsTable_Base, tables.Table):
 
-    class Meta(TechRecordsTable_Base.Meta):
+class TechRecordsTable_Biorepository(TechRecords_Base, tables.Table):
+
+    class Meta(TechRecords_Base.Meta):
         model = NwAttributes11Biorepository
-        fields = ["product_code",
+        fields = [
+            "name",
             "species",
             "tissue_type",
             "disease",
             "format",
+            "cell_line"]
+
+
+class TechRecordsTable_Molecularbiology(TechRecords_Base, tables.Table):
+
+    class Meta(TechRecords_Base.Meta):
+        model = NwAttributes12Molecularbiology
+        fields = ["accession_no",
+            "tag",
+            "aa_sequence",
+            "species",
+            "selection_marker",
+            "promoter",
+            "tag_position",
+            "purification"]
+
+
+class TechRecordsTable_Antibodies(TechRecords_Base, tables.Table):
+
+    class Meta(TechRecords_Base.Meta):
+        model = NwAttributes13Antibodies
+        fields = ["host_species",
+            "species_reactivity",
+            "immunogen",
+            "isotype",
+            "clone_number",
+            "application",
+            "label_conjugate",
+            "epitope",
+            "target",
+            "species"]
+
+
+class TechRecordsTable_Proteinspeptides(TechRecords_Base, tables.Table):
+
+    class Meta(TechRecords_Base.Meta):
+        model = NwAttributes14Proteinspeptides
+        fields = [
+            "name",
             "cell_line",
-        ]
+            "accession_no",
+            "species",
+            "expression_host",
+            "aa_sequence",
+            "tag",
+            "label_conjugate",
+            "tag_position"]
 
 
-class TechRecordsTable_CellsCellCulture(TechRecordsTable_Base, tables.Table):
+class TechRecordsTable_CellsCellCulture(TechRecords_Base, tables.Table):
 
-    class Meta(TechRecordsTable_Base.Meta):
+    class Meta(TechRecords_Base.Meta):
         model = NwAttributes15Cellscellculture
-        fields = ["product_code",
+        fields = [
+            "name",
+            "cell_line",
             "protein",
             "accession_no",
             "species",
@@ -82,36 +132,41 @@ class TechRecordsTable_CellsCellCulture(TechRecordsTable_Base, tables.Table):
             "tag_position",
             "serotype",
             "promoter",
-            "selection_marker"
-        ]
+            "selection_marker"]
 
 
-class TechRecordsTable_Reagentslabware(TechRecordsTable_Base, tables.Table):
+class TechRecordsTable_Reagentslabware(TechRecords_Base, tables.Table):
 
-    class Meta(TechRecordsTable_Base.Meta):
+    class Meta(TechRecords_Base.Meta):
         model = NwAttributes16Reagentslabware
-        fields = ["product_code",
+        fields = [
+                "name",
                 "cas_no",
                 "expression_host",
                 "activity",
                 "species",
                 "carbohydrate_type",
-                "oligosaccharide_length"
-            ]
+                "oligosaccharide_length"]
 
 
-class TechRecordsTable_Proteinspeptides(TechRecordsTable_Base, tables.Table):
+class TechRecordsTable_Kitsassays(TechRecords_Base, tables.Table):
 
-    class Meta(TechRecordsTable_Base.Meta):
-        model = NwAttributes14Proteinspeptides
-        fields = ["product_code",
-        "name",
-            "cell_line",
-            "accession_no",
-            "species",
-            "expression_host",
-            "aa_sequence",
-            "tag",
-            "label_conjugate",
-            "tag_position"
-            ]
+    class Meta(TechRecords_Base.Meta):
+        model = NwAttributes17Kitsassays
+        fields = [
+            "species_reactivity",
+            "detection_range",
+            "sensitivity",
+            "sample_type",
+            "elisa_format",
+            "cross_reactivity",
+            "specificity"]
+
+
+class TechRecordsTable_Bioseparationelectrophoresis(TechRecords_Base, tables.Table):
+
+    class Meta(TechRecords_Base.Meta):
+        model = NwAttributes18Bioseparationelectrophoresis
+        fields = [
+            "format_of_drug",
+            "bead_size"]

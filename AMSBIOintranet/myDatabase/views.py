@@ -1,19 +1,17 @@
-from itertools import product
 import json
 import getpass
 from datetime import datetime
 
-from django.http.response import HttpResponse
-
 from .forms import EditProductForm, EditTechDetailsForm
-from .tables import CurrencyTable, ProductRecordsTable, TechRecordsTable_Base, TechRecordsTable_Biorepository, TechRecordsTable_CellsCellCulture, TechRecordsTable_Proteinspeptides, TechRecordsTable_Reagentslabware
-from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, NwAttributes16Reagentslabware,
-                     ProductRecords,
-                     ProductRecordsTech,
-                     NwCategoryIds,
-                     NwCategoryLowestNodes,
-                     DataOwners,
-                     Currencies)
+from .tables import (CurrencyTable, ProductRecordsTable, TechRecordsTable_Antibodies, 
+                    TechRecordsTable_Bioseparationelectrophoresis,
+                    TechRecordsTable_Biorepository, TechRecordsTable_CellsCellCulture, 
+                    TechRecordsTable_Kitsassays, TechRecordsTable_Molecularbiology, 
+                    TechRecordsTable_Proteinspeptides, TechRecordsTable_Reagentslabware)
+from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes12Molecularbiology, 
+                    NwAttributes13Antibodies, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, 
+                    NwAttributes16Reagentslabware, NwAttributes17Kitsassays, NwAttributes18Bioseparationelectrophoresis, ProductRecords,
+                    ProductRecordsTech, NwCategoryIds, NwCategoryLowestNodes, DataOwners, Currencies)
 
 from django.http import JsonResponse
 from django.core import serializers
@@ -22,7 +20,6 @@ from django_tables2 import RequestConfig
 from django_tables2.export.export import TableExport
 from django_tables2.paginators import LazyPaginator
 from django.contrib import messages
-
 
 
 def index(request):
@@ -249,94 +246,120 @@ def similarProducts(request, pk="3011-100"):
         try:
             category = list(loadCategory(prod_code)[0].keys())[0]
             return categoryWiseProductSorting(category, prod_code, request)
-        except ProductRecordsTech.DoesNotExist:
-            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Product does not exist, Enter valid Product Code.')
         except NwCategoryLowestNodes.DoesNotExist:
-            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Categories do not exists.')
+            return setGeneralContext(request=request, msg='Categories do not exists.')
         except ProductRecords.DoesNotExist:
-            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Product does not exist, Enter valid Product Code.')
+            return setGeneralContext(request=request, msg='Product does not exist, Enter valid Product Code.')
+        except ProductRecordsTech.DoesNotExist:
+            return setGeneralContext(request=request, msg='Product does not exist, Enter valid Product Code.')
     else:
         try:
             category = list(loadCategory(pk)[0].keys())[0]
             return categoryWiseProductSorting(category, pk, request)
         except NwCategoryLowestNodes.DoesNotExist:
-            return setContext_geneID(geneid=[], request=request, pk=" ", msg='Categories do not exist!')
+            return setGeneralContext(request=request, msg='Categories do not exist!')
 
 
-def setContext_geneID(geneid, request , pk, msg='Gene ID not found!'):
+def setGeneralContext(request, msg='Gene ID not found!'):
+    messages.warning(request, msg)
+    obj = TechRecordsTable_Biorepository(NwAttributes11Biorepository.objects.filter(species='Just need to return a table'))
+    context = {'obj': obj, 'num_of_prods': "-"}
+    return render(request, "similarProducts.html", context) 
+
+
+def innerQuery(pk):
+    obj = ProductRecords.objects.get(pk=pk)
+    level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2
+    inner_queryset = NwCategoryLowestNodes.objects.filter(level2=level2).values('lowest_node')
+    return inner_queryset, level2
+
+
+def TableBindings(request, pk, cat):
+    inner_queryset, level2 = innerQuery(pk)
+    Table_looker = { "Biorepository": [NwAttributes11Biorepository, TechRecordsTable_Biorepository],
+                    "Molecular Biology": [NwAttributes12Molecularbiology, TechRecordsTable_Molecularbiology],
+                    "Antibodies": [NwAttributes13Antibodies,TechRecordsTable_Antibodies],
+                    "Proteins & Peptides": [NwAttributes14Proteinspeptides, TechRecordsTable_Proteinspeptides],
+                    "Cells & Cell Culture": [NwAttributes15Cellscellculture, TechRecordsTable_CellsCellCulture],
+                    "Reagents & Labware": [NwAttributes16Reagentslabware, TechRecordsTable_Reagentslabware],
+                    "Kits & Assays": [NwAttributes17Kitsassays, TechRecordsTable_Kitsassays],
+                    "Bioseparation & Electrophoresis": [NwAttributes18Bioseparationelectrophoresis, TechRecordsTable_Bioseparationelectrophoresis]}
+
+    queryset_base = Table_looker[cat][0].objects.get(product_code=pk)
+    queryset_cat = Table_looker[cat][0].objects.select_related('product_code').filter(product_code__category_1__in=inner_queryset).exclude(product_flag=0)
+    lev = NwCategoryIds.objects.get(cat_id=int(level2)).category_name
     try:
-        if len(geneid) > 0:
-            messages.success(request, 'Showing Products similar to Product code: ' + pk + ' with Gene ID, '+ geneid)
-            queryset = ProductRecordsTech.objects.filter(gene_id=geneid)
-            obj = TechRecordsTable_Base(queryset)
-            context = {'obj': obj, 'num_of_prods': len(queryset)}
-            return render(request, "similarProducts.html", context)
-        else:
-            messages.warning(request, msg)
-            obj = TechRecordsTable_Base(ProductRecordsTech.objects.all()[8:18])
-            context = {'obj': obj, 'num_of_prods': "-"}
-            return render(request, "similarProducts.html", context) 
-    except TypeError:
-        return setContext_geneID(geneid=[], request=request, pk=" ", msg='Gene ID does not exist!')
+        geneID = queryset_base.gene_id
+        queryset_geneID = queryset_cat.filter(gene_id=geneID)
+        obj = Table_looker[cat][1](queryset_geneID)
+        context = {'obj': obj, 'num_of_prods': len(queryset_geneID)}
+        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev + ', Gene ID: ' + geneID)
+        return render(request, "similarProducts.html", context)
+    except AttributeError:
+        geneID = "N\\a"
+        obj = Table_looker[cat][1](queryset_cat)
+        context = {'obj': obj, 'num_of_prods': len(queryset_cat)}
+        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev + ', Gene ID: ' + geneID)
+        return render(request, "similarProducts.html", context)
 
 
 def categoryWiseProductSorting(cat, pk, request):
     if cat == "Biorepository":
+        inner_queryset, level2 = innerQuery(pk)
         queryset_base = NwAttributes11Biorepository.objects.get(product_code=pk)
-        queryset = NwAttributes11Biorepository.objects.filter(species=queryset_base.species, tissue_type=queryset_base.tissue_type, disease=queryset_base.disease).exclude(product_flag=0)
+        queryset = NwAttributes11Biorepository.objects.select_related('product_code').filter(species=queryset_base.species, 
+                                                                                            tissue_type=queryset_base.tissue_type, 
+                                                                                            disease=queryset_base.disease,
+                                                                                            product_code__category_1__in=inner_queryset).exclude(product_flag=0)
+        lev = NwCategoryIds.objects.get(cat_id=int(level2)).category_name
         obj = TechRecordsTable_Biorepository(queryset)
         context = {'obj': obj, 'num_of_prods': len(queryset)}
-        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat)
+        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>' + lev)
         return render(request, "similarProducts.html", context)
     elif cat == "Cells & Cell Culture":
-        obj = ProductRecords.objects.get(pk=pk)
-        level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 
+        inner_queryset, level2 = innerQuery(pk)
         if  level2 in [129, 132]:
             queryset_base = NwAttributes15Cellscellculture.objects.get(product_code=pk)
             if level2 == 129:
-                queryset = NwAttributes15Cellscellculture.objects.filter(cell_line=queryset_base.cell_line).exclude(cell_line='', product_flag=0)
+                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = "Cell Lines"
             else:
-                queryset = NwAttributes15Cellscellculture.objects.filter(protein=queryset_base.protein).exclude(protein='', product_flag=0)
+                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(protein='').filter(protein=queryset_base.protein, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = "3D Cell Culture & Extracellular Matrices"
             obj = TechRecordsTable_CellsCellCulture(queryset)
             context = {'obj': obj, 'num_of_prods': len(queryset)}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev)
             return render(request, "similarProducts.html", context)
         else:
-            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
-            return setContext_geneID(geneid, request, pk)
+            return TableBindings(request, pk, cat)
     elif cat == "Reagents & Labware":
-        obj = ProductRecords.objects.get(pk=pk)
-        level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2
+        inner_queryset, level2 = innerQuery(pk)
         if level2 in [137,138]:
             queryset_base = NwAttributes16Reagentslabware.objects.get(product_code=pk)
             if level2 == 137:
-                queryset = NwAttributes16Reagentslabware.objects.filter(cas_no=queryset_base.cas_no).exclude(cas_no='', product_flag=0)
+                queryset = NwAttributes16Reagentslabware.objects.select_related('product_code').exclude(cas_no='').filter(cas_no=queryset_base.cas_no,
+                                                                                                                        product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = 'Reagents & Consumables'
             else:
-                queryset = NwAttributes16Reagentslabware.objects.filter(carbohydrate_type=queryset_base.carbohydrate_type).exclude(carbohydrate_type='', product_flag=0)
+                queryset = NwAttributes16Reagentslabware.objects.select_related('product_code').exclude(carbohydrate_type='').filter(carbohydrate_type=queryset_base.carbohydrate_type, 
+                                                                                                                                    product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = 'Carbohydrates'
             obj = TechRecordsTable_Reagentslabware(queryset)
             context = {'obj': obj, 'num_of_prods': len(queryset)}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>' + lev)
             return render(request, "similarProducts.html", context)
         else:
-            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
-            return setContext_geneID(geneid, request, pk)
+            return TableBindings(request, pk, cat)
     elif cat == "Proteins & Peptides":
-        obj = ProductRecords.objects.get(pk=pk)
-        if NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2 == 125:
+        inner_queryset, level2 = innerQuery(pk)
+        if level2 == 125:
             queryset_base = NwAttributes14Proteinspeptides.objects.get(product_code=pk)
-            queryset = NwAttributes14Proteinspeptides.objects.filter(cell_line=queryset_base.cell_line).exclude(cell_line='', product_flag=0)
+            queryset = NwAttributes14Proteinspeptides.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
             obj = TechRecordsTable_Proteinspeptides(queryset)
             context = {'obj': obj, 'num_of_prods': len(queryset)}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>Cell Line Lysates')
             return render(request, "similarProducts.html", context)
         else:
-            geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
-            return setContext_geneID(geneid, request, pk)
-
+            return TableBindings(request, pk, cat)
     else:
-        geneid = ProductRecordsTech.objects.get(product_code=pk).gene_id
-        return setContext_geneID(geneid, request, pk)
+        return TableBindings(request, pk, cat)

@@ -308,7 +308,7 @@ class NwResearchAreaIds(models.Model):
 
 
 class NwAttributes11Biorepository(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     species = models.CharField(max_length=256)
@@ -323,14 +323,9 @@ class NwAttributes11Biorepository(models.Model):
         db_table = 'nw_attributes_11_biorepository'
         app_label = 'myDatabase'
     
-    def supplierName(self):
-        return ProductRecordsTech.supplierName(self)
-
-    def prod_rec_fetch(self):
-        return ProductRecordsTech.prod_rec_fetch(self)
 
 class NwAttributes12Molecularbiology(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     accession_no = models.TextField()
@@ -366,7 +361,7 @@ class NwAttributes12Molecularbiology(models.Model):
 
 
 class NwAttributes13Antibodies(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     accession_no = models.TextField()
@@ -405,7 +400,7 @@ class NwAttributes13Antibodies(models.Model):
 
 
 class NwAttributes14Proteinspeptides(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     accession_no = models.TextField()
@@ -448,15 +443,9 @@ class NwAttributes14Proteinspeptides(models.Model):
         db_table = 'nw_attributes_14_proteinspeptides'
         app_label = 'myDatabase'
 
-    def supplierName(self):
-        return ProductRecordsTech.supplierName(self)
-
-    def prod_rec_fetch(self):
-        return ProductRecordsTech.prod_rec_fetch(self)
-
 
 class NwAttributes15Cellscellculture(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     accession_no = models.TextField()
@@ -503,15 +492,9 @@ class NwAttributes15Cellscellculture(models.Model):
         db_table = 'nw_attributes_15_cellscellculture'
         app_label = 'myDatabase'
 
-    def supplierName(self):
-        return ProductRecordsTech.supplierName(self)
-
-    def prod_rec_fetch(self):
-        return ProductRecordsTech.prod_rec_fetch(self)
-
 
 class NwAttributes16Reagentslabware(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     gene_id = models.TextField()
@@ -541,15 +524,9 @@ class NwAttributes16Reagentslabware(models.Model):
         db_table = 'nw_attributes_16_reagentslabware'
         app_label = 'myDatabase'
 
-    def supplierName(self):
-        return ProductRecordsTech.supplierName(self)
-
-    def prod_rec_fetch(self):
-        return ProductRecordsTech.prod_rec_fetch(self)
-
 
 class NwAttributes17Kitsassays(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     accession_no = models.TextField()
@@ -580,7 +557,7 @@ class NwAttributes17Kitsassays(models.Model):
 
 
 class NwAttributes18Bioseparationelectrophoresis(models.Model):
-    product_code = models.CharField(primary_key=True, max_length=64)
+    product_code = models.OneToOneField(ProductRecords, primary_key=True, max_length=64, db_constraint=False, db_column='product_code', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     long_description = models.TextField()
     application = models.TextField()
