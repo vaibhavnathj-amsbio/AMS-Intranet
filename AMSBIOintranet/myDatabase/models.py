@@ -323,7 +323,6 @@ class NwAttributes11Biorepository(models.Model):
     disease = models.CharField(max_length=256)
     format = models.CharField(max_length=256)
     cell_line = models.CharField(max_length=256)
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -359,7 +358,6 @@ class NwAttributes12Molecularbiology(models.Model):
     concentration = models.TextField()
     bead_size = models.TextField()
     cell_type = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -398,7 +396,6 @@ class NwAttributes13Antibodies(models.Model):
     species = models.TextField()
     tissue_type = models.TextField()
     cell_line = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -443,7 +440,6 @@ class NwAttributes14Proteinspeptides(models.Model):
     bead_size = models.TextField()
     label_conjugate = models.TextField()
     tag_position = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -492,7 +488,6 @@ class NwAttributes15Cellscellculture(models.Model):
     components = models.TextField()
     preparation = models.TextField()
     selection_marker = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -524,7 +519,6 @@ class NwAttributes16Reagentslabware(models.Model):
     carbohydrate_type = models.TextField()
     oligosaccharide_length = models.TextField()
     label_conjugate = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -555,7 +549,6 @@ class NwAttributes17Kitsassays(models.Model):
     assay_time = models.TextField()
     intra_assay_cv = models.TextField()
     inter_assay_cv = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -571,7 +564,6 @@ class NwAttributes18Bioseparationelectrophoresis(models.Model):
     format = models.TextField()
     bead_size = models.TextField()
     type = models.TextField()
-    product_flag = models.SmallIntegerField()
 
     class Meta:
         managed = False
