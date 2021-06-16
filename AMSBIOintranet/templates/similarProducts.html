@@ -96,9 +96,21 @@
       {% endfor %}
       {% endif %}
       <div class="row" style="margin:auto; margin-top: 2%;">
-        <div class="col-md-2" style="text-align: right;">
+        <div class="col-md-2">
           <div class="card" style="width: fit-content; padding: 2%;">
-            <div>No. of Similar Products: <strong>{{ num_of_prods }}</strong></div>
+            <div>No. of Similar Products
+              {% if num_of_prods == 1000 %}
+                <strong> > {{ num_of_prods }}</strong>
+              {% else %}
+                <strong>, {{ num_of_prods }}</strong>
+              {% endif %}
+            </div>
+            <div style="margin-top: 2%;">Products filtered on,<br> 
+              {% for key, val in filter.items %}
+                {{key}}: <strong>{{val}}</strong>
+                <br>
+              {% endfor %}
+            </div>
           </div>
         </div>
         <div class="col-md-8" style="overflow:auto; max-height: 540px;">
