@@ -1,6 +1,6 @@
 from .models import (MasterCurrencies, NwAttributes11Biorepository, NwAttributes12Molecularbiology, 
                     NwAttributes13Antibodies, NwAttributes14Proteinspeptides, NwAttributes15Cellscellculture, 
-                    NwAttributes16Reagentslabware, NwAttributes17Kitsassays, NwAttributes18Bioseparationelectrophoresis, ProductRecords, ProductRecordsTech)
+                    NwAttributes16Reagentslabware, NwAttributes17Kitsassays, NwAttributes18Bioseparationelectrophoresis, ProductRecords)
 import django_tables2 as tables
 
 
@@ -41,29 +41,31 @@ class ProductRecordsTable(tables.Table):
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive"}
 
 
+# Django Parent class for generating the base table for 'similar product' page
 class TechRecords_Base(tables.Table):
     product_code = tables.Column(accessor='product_code__product_code')
     Owner = tables.Column(accessor='product_code__suppliername', verbose_name='Owner')
     Supplier_product_code = tables.Column(accessor='product_code__supplier_product_code', verbose_name='Supplier Product Code')
     Pack_Size = tables.Column(accessor='product_code__packsize', verbose_name='Pack Size')
     sell_price_gbp = tables.Column(accessor='product_code__sell_price_gbp', verbose_name='Selling Price GBP')
+    purchase_price_gbp = tables.Column(accessor='product_code__purchasePriceGbp', verbose_name='Purchase Price GBP')
 
     class Meta:
         model = ProductRecords
-        fields = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "sell_price_gbp"]
+        fields = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "sell_price_gbp", "purchase_price_gbp"]
         orderable = False
-        sequence = ["product_code", "Owner", "Supplier_product_code", "Pack_Size", "sell_price_gbp", "..."]
+        sequence = ["product_code", "..."]
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
                 "class": "table table-striped table-responsive", 
                 "style": "margin: 0 auto; width: fit-content;"}
 
 
-class TechRecordsTable_Biorepository(TechRecords_Base, tables.Table):
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
+class TechRecordsTable_Biorepository(TechRecords_Base, tables.Table):    
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes11Biorepository
-        fields = [
-            "name",
+        fields = ["name",
             "species",
             "tissue_type",
             "disease",
@@ -71,11 +73,13 @@ class TechRecordsTable_Biorepository(TechRecords_Base, tables.Table):
             "cell_line"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Molecularbiology(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes12Molecularbiology
-        fields = ["accession_no",
+        fields = ["name",
+            "accession_no",
             "tag",
             "aa_sequence",
             "species",
@@ -85,11 +89,13 @@ class TechRecordsTable_Molecularbiology(TechRecords_Base, tables.Table):
             "purification"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Antibodies(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes13Antibodies
-        fields = ["host_species",
+        fields = ["name",
+            "host_species",
             "species_reactivity",
             "immunogen",
             "isotype",
@@ -101,12 +107,12 @@ class TechRecordsTable_Antibodies(TechRecords_Base, tables.Table):
             "species"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Proteinspeptides(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes14Proteinspeptides
-        fields = [
-            "name",
+        fields = ["name",
             "cell_line",
             "accession_no",
             "species",
@@ -117,12 +123,12 @@ class TechRecordsTable_Proteinspeptides(TechRecords_Base, tables.Table):
             "tag_position"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_CellsCellCulture(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes15Cellscellculture
-        fields = [
-            "name",
+        fields = ["name",
             "cell_line",
             "protein",
             "accession_no",
@@ -135,12 +141,12 @@ class TechRecordsTable_CellsCellCulture(TechRecords_Base, tables.Table):
             "selection_marker"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Reagentslabware(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes16Reagentslabware
-        fields = [
-                "name",
+        fields = ["name",
                 "cas_no",
                 "expression_host",
                 "activity",
@@ -149,11 +155,12 @@ class TechRecordsTable_Reagentslabware(TechRecords_Base, tables.Table):
                 "oligosaccharide_length"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Kitsassays(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes17Kitsassays
-        fields = [
+        fields = ["name",
             "species_reactivity",
             "detection_range",
             "sensitivity",
@@ -163,10 +170,11 @@ class TechRecordsTable_Kitsassays(TechRecords_Base, tables.Table):
             "specificity"]
 
 
+# Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Bioseparationelectrophoresis(TechRecords_Base, tables.Table):
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes18Bioseparationelectrophoresis
-        fields = [
+        fields = ["name",
             "format_of_drug",
             "bead_size"]

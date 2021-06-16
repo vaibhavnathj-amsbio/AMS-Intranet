@@ -8,6 +8,33 @@
 from django.db import models
 import requests
 
+
+# Global dictionary to store Live Currency Exchange Rate
+live_rate_dict = { "USD": {"USD": 1, "JPY": 0, "GBP": 0, "EUR": 0, "CHF": 0},
+                    "JPY": {"USD": 0, "JPY": 1, "GBP": 0, "EUR": 0, "CHF": 0},
+                    "GBP": {"USD": 0, "JPY": 0, "GBP": 1, "EUR": 0, "CHF": 0},
+                    "EUR": {"USD": 0, "JPY": 0, "GBP": 0, "EUR": 1, "CHF": 0},
+                    "CHF": {"USD": 0, "JPY": 0, "GBP": 0, "EUR": 0, "CHF": 1}}
+
+
+def getCurrencyRate():
+    global live_rate_dict
+    url = "https://currency-exchange.p.rapidapi.com/exchange"
+    headers = {
+        'x-rapidapi-key': "9b7191561emshf73238a9c9be76cp1eb370jsnc687d527eeee",
+        'x-rapidapi-host': "currency-exchange.p.rapidapi.com"
+        }
+    for key, value in live_rate_dict.items():
+        for inner_key, inner_value in value.items():
+            querystring = {"from": key , "to": inner_key}
+            response = requests.request("GET", url, headers=headers, params=querystring)
+            live_rate_dict[key][inner_key] = round(float(response.text),3)
+    return live_rate_dict
+
+
+getCurrencyRate()
+
+
 class Currencies(models.Model):
     # Field name made lowercase.
     currencyid = models.AutoField(db_column='CurrencyID', primary_key=True)
@@ -64,8 +91,7 @@ class DataOwners(models.Model):
         db_table = 'data_owners'
         app_label = 'myDatabase'
         verbose_name_plural = "Data Owners"
-    
-
+  
 
 class MasterCurrencies(models.Model):
     mstr_cur_id = models.AutoField(primary_key=True)
@@ -84,20 +110,10 @@ class MasterCurrencies(models.Model):
                 return Currencies.objects.get(pk=self.to_currency_id).descriptive
 
     def liverate(self):
-        url = "https://currency-exchange.p.rapidapi.com/exchange"
-
-        querystring = {"from": self.symbolfrom() , "to": self.symbolto()}
-
-        headers = {
-            'x-rapidapi-key': "9b7191561emshf73238a9c9be76cp1eb370jsnc687d527eeee",
-            'x-rapidapi-host': "currency-exchange.p.rapidapi.com"
-            }
-
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        return float(response.text)
+        return live_rate_dict[self.symbolfrom()][self.symbolto()]
     
     def diff(self):
-        return round(self.liverate() - self.exchange_rate,3)
+        return round(self.liverate() - self.exchange_rate, 3)
            
     class Meta:
         db_table = 'master_currencies'
@@ -187,6 +203,11 @@ class ProductRecords(models.Model):
     def research4(self):
         return NwResearchAreaIds.objects.get(pk=self.research_area_4).research_area
 
+    def purchasePriceGbp(self):
+        global live_rate_dict
+        currency = DataOwners.objects.get(pk=self.ct_supplier_id).supplierpurchasecurrency
+        return round(self.purchase_nett_price*live_rate_dict[currency]["GBP"],3)
+
 
 class ProductRecordsTech(models.Model):
     product_code = models.CharField(primary_key=True, max_length=64)
@@ -267,13 +288,6 @@ class ProductRecordsTech(models.Model):
     class Meta:
         db_table = 'product_records_tech'
         app_label = 'myDatabase'
-    
-    def supplierName(self):
-        queryset = ProductRecords.objects.get(pk=self.product_code).ct_supplier_id
-        return DataOwners.objects.get(pk=queryset).owner
-
-    def prod_rec_fetch(self):
-        return ProductRecords.objects.get(pk=self.product_code)
 
 
 class NwCategoryIds(models.Model):
