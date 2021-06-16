@@ -286,19 +286,19 @@ def TableBindings(request, pk, cat):
                     "Bioseparation & Electrophoresis": [NwAttributes18Bioseparationelectrophoresis, TechRecordsTable_Bioseparationelectrophoresis]}
 
     queryset_base = Table_looker[cat][0].objects.get(product_code=pk)
-    queryset_cat = Table_looker[cat][0].objects.select_related('product_code').filter(product_code__category_1__in=inner_queryset).exclude(product_flag=0)
     lev = NwCategoryIds.objects.get(cat_id=int(level2)).category_name
     try:
         geneID = queryset_base.gene_id
-        queryset_geneID = queryset_cat.filter(gene_id=geneID)
+        queryset_geneID = Table_looker[cat][0].objects.select_related('product_code').filter(product_code__category_1__in=inner_queryset, gene_id=geneID).exclude(product_flag=0)[:1000]
         obj = Table_looker[cat][1](queryset_geneID)
-        context = {'obj': obj, 'num_of_prods': len(queryset_geneID)}
+        context = {'obj': obj, 'num_of_prods': queryset_geneID.count()}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev + ', Gene ID: ' + geneID)
         return render(request, "similarProducts.html", context)
     except AttributeError:
         geneID = "N\\a"
+        queryset_cat = Table_looker[cat][0].objects.select_related('product_code').filter(product_code__category_1__in=inner_queryset).exclude(product_flag=0)[:1000]
         obj = Table_looker[cat][1](queryset_cat)
-        context = {'obj': obj, 'num_of_prods': len(queryset_cat)}
+        context = {'obj': obj, 'num_of_prods': queryset_cat.count()}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev + ', Gene ID: ' + geneID)
         return render(request, "similarProducts.html", context)
 
@@ -313,7 +313,7 @@ def categoryWiseProductSorting(cat, pk, request):
                                                                                             product_code__category_1__in=inner_queryset).exclude(product_flag=0)
         lev = NwCategoryIds.objects.get(cat_id=int(level2)).category_name
         obj = TechRecordsTable_Biorepository(queryset)
-        context = {'obj': obj, 'num_of_prods': len(queryset)}
+        context = {'obj': obj, 'num_of_prods': queryset.count()}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>' + lev)
         return render(request, "similarProducts.html", context)
     elif cat == "Cells & Cell Culture":
@@ -321,13 +321,15 @@ def categoryWiseProductSorting(cat, pk, request):
         if  level2 in [129, 132]:
             queryset_base = NwAttributes15Cellscellculture.objects.get(product_code=pk)
             if level2 == 129:
-                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
+                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, 
+                                                                                                                            product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = "Cell Lines"
             else:
-                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(protein='').filter(protein=queryset_base.protein, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
+                queryset = NwAttributes15Cellscellculture.objects.select_related('product_code').exclude(protein='').filter(protein=queryset_base.protein, 
+                                                                                                                            product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = "3D Cell Culture & Extracellular Matrices"
             obj = TechRecordsTable_CellsCellCulture(queryset)
-            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            context = {'obj': obj, 'num_of_prods': queryset.count()}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev)
             return render(request, "similarProducts.html", context)
         else:
@@ -345,7 +347,7 @@ def categoryWiseProductSorting(cat, pk, request):
                                                                                                                                     product_code__category_1__in=inner_queryset).exclude(product_flag=0)
                 lev = 'Carbohydrates'
             obj = TechRecordsTable_Reagentslabware(queryset)
-            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            context = {'obj': obj, 'num_of_prods': queryset.count()}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>' + lev)
             return render(request, "similarProducts.html", context)
         else:
@@ -354,9 +356,10 @@ def categoryWiseProductSorting(cat, pk, request):
         inner_queryset, level2 = innerQuery(pk)
         if level2 == 125:
             queryset_base = NwAttributes14Proteinspeptides.objects.get(product_code=pk)
-            queryset = NwAttributes14Proteinspeptides.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, product_code__category_1__in=inner_queryset).exclude(product_flag=0)
+            queryset = NwAttributes14Proteinspeptides.objects.select_related('product_code').exclude(cell_line='').filter(cell_line=queryset_base.cell_line, 
+                                                                                                                        product_code__category_1__in=inner_queryset).exclude(product_flag=0)
             obj = TechRecordsTable_Proteinspeptides(queryset)
-            context = {'obj': obj, 'num_of_prods': len(queryset)}
+            context = {'obj': obj, 'num_of_prods': queryset.count()}
             messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>Cell Line Lysates')
             return render(request, "similarProducts.html", context)
         else:
