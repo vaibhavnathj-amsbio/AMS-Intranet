@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 import requests
+import regex as re
 
 
 # Global dictionary to store Live Currency Exchange Rate
@@ -207,6 +208,24 @@ class ProductRecords(models.Model):
         global live_rate_dict
         currency = DataOwners.objects.get(pk=self.ct_supplier_id).supplierpurchasecurrency
         return round(self.purchase_nett_price*live_rate_dict[currency]["GBP"],3)
+
+    def ug_ps(self):
+        mlr = 1
+        ps = self.packsize.replace('µ','u')
+        outp = 0
+        if 'x' in ps.lower():
+            if '/ml' in ps.lower():
+                ps = re.sub(r'([0-9\.]+) ?([mu]?g) ?/ ?ml ?x ?([0-9\.]+) ?ml',r'\1 x \3 \2',ps,re.IGNORECASE)
+            mlr = float(re.findall('([0-9\.]{1,2}) ?x ?',ps,re.IGNORECASE)[0])
+            ps = re.sub('[0-9]{1,2} ?x ?','',ps,re.IGNORECASE)
+
+        if 'mg' in ps.lower():
+            outp = mlr * float(re.findall('([0-9\.]{1,4}) ?mg',ps,re.IGNORECASE)[0]) * 1000
+        elif re.match('^[0-9] ?g$',ps,re.IGNORECASE):
+            outp = mlr * float(re.findall('([0-9\.]{1,4}) ?g',ps,re.IGNORECASE)[0]) * 1000000
+        elif 'ug' in ps.lower():
+            outp = mlr * float(re.findall('([0-9\.]{1,4}) ?ug',ps,re.IGNORECASE)[0])
+        return round(self.purchasePriceGbp()/outp, 3)
 
 
 class ProductRecordsTech(models.Model):

@@ -109,10 +109,12 @@ class TechRecordsTable_Antibodies(TechRecords_Base, tables.Table):
 
 # Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Proteinspeptides(TechRecords_Base, tables.Table):
+    GBP_per_ug = tables.Column(accessor='product_code__ug_ps', verbose_name='GBP per ug')
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes14Proteinspeptides
-        fields = ["name",
+        fields = ["GBP_per_ug",
+            "name",
             "cell_line",
             "accession_no",
             "species",
