@@ -22,4 +22,4 @@ def getCurrencyRate():
             live_rate_dict[key][inner_key] = round(float(response.text),3)
     return live_rate_dict
 
-# getCurrencyRate()
+getCurrencyRate()
