@@ -204,6 +204,8 @@
           $(this).parents().next('.hide').toggle();
         });
       }
+      $(this).toggleClass('btn icofont-plus-circle');
+      $(this).toggleClass('btn icofont-minus-circle');
     });
   });
 
