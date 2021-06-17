@@ -48,7 +48,7 @@ class TechRecords_Base(tables.Table):
     Supplier_product_code = tables.Column(accessor='product_code__supplier_product_code', verbose_name='Supplier Product Code')
     Pack_Size = tables.Column(accessor='product_code__packsize', verbose_name='Pack Size')
     sell_price_gbp = tables.Column(accessor='product_code__sell_price_gbp', verbose_name='Selling Price GBP')
-    purchase_price_gbp = tables.Column(accessor='product_code__purchasePriceGbp', verbose_name='Purchase Price GBP')
+    purchase_price_gbp = tables.Column(accessor='product_code__purchasePriceGbp', verbose_name='Purchase Price GBP', attrs={"th" : {"id": "PriceGBPhead"}})
 
     class Meta:
         model = ProductRecords
@@ -57,7 +57,8 @@ class TechRecords_Base(tables.Table):
         sequence = ["product_code", "..."]
         attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, 
                 "class": "table table-striped table-responsive", 
-                "style": "margin: 0 auto; width: fit-content;"}
+                "style": "margin: 0 auto; width: fit-content;",
+                "tbody": {"id": "sim_prod_body"}}
 
 
 # Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
@@ -109,7 +110,7 @@ class TechRecordsTable_Antibodies(TechRecords_Base, tables.Table):
 
 # Django Child class inheriting from 'TechRecords_Base' for generating the table for the below Category
 class TechRecordsTable_Proteinspeptides(TechRecords_Base, tables.Table):
-    GBP_per_ug = tables.Column(accessor='product_code__ug_ps', verbose_name='GBP per ug')
+    GBP_per_ug = tables.Column(accessor='product_code__ug_ps', verbose_name='GBP per ug', attrs={"th":{"id":"GBPperug"}})
 
     class Meta(TechRecords_Base.Meta):
         model = NwAttributes14Proteinspeptides

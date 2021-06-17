@@ -97,24 +97,35 @@
       {% endif %}
       <div class="row" style="margin:auto; margin-top: 2%;">
         <div class="col-md-2">
-          <div class="card" style="width: fit-content; padding: 2%;">
-            <div>No. of Similar Products
-              {% if num_of_prods == 1000 %}
-                <strong> > {{ num_of_prods }}</strong>
-              {% else %}
-                <strong>, {{ num_of_prods }}</strong>
-              {% endif %}
-            </div>
-            <div style="margin-top: 2%;">Products filtered on,<br> 
-              {% for key, val in filter.items %}
-                {{key}}: <strong>{{val}}</strong>
-                <br>
-              {% endfor %}
-            </div>
+          <div class="card" style="padding: 2%;">
+            <ul>
+              <li>
+                <div>No. of Similar Products
+                  {% if num_of_prods == 1000 %}
+                    <strong> > {{ num_of_prods }}</strong>
+                  {% else %}
+                    <strong>, {{ num_of_prods }}</strong>
+                  {% endif %}
+                </div>
+              </li>
+              <li>
+                <div style="margin-top: 2%;">Products filtered on,<br>
+                  <ol>
+                    {% for key, val in filter.items %}
+                      <li>{{key}}: <strong>{{val}}</strong></li>
+                      <br>
+                    {% endfor %}
+                  </ol>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="col-md-8" style="overflow:auto; max-height: 540px;">
           {% render_table obj %}
+        </div>
+        <div class="col-md-2">
+          <!-- Blank -->
         </div>
       </div>
     </section>

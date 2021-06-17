@@ -204,6 +204,8 @@
           $(this).parents().next('.hide').toggle();
         });
       }
+      $(this).toggleClass('btn icofont-plus-circle');
+      $(this).toggleClass('btn icofont-minus-circle');
     });
   });
 
@@ -358,6 +360,38 @@
       }, 3500);
     }
 
+  });
+
+  // JS for sorting table by,if available, GBP per ug o/w Purchase price GBP
+  $(document).ready(function () {  
+    var table =document.querySelector("#sim_prod_body");
+    if (document.querySelector("#GBPperug")) {
+      sortTable(6);
+    }
+    else if (document.querySelector("#PriceGBPhead")) {
+      sortTable(5);
+    }
+    function sortTable(col_index){
+      var rows, switching, i, x, y, shouldSwitch;
+      switching = true
+      while (switching){
+        switching = false;
+        rows = table.rows;
+        for (i = 0; i < (rows.length - 1) ; i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[col_index];
+          y = rows[i + 1].getElementsByTagName("TD")[col_index];
+          if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
   });
   
 })(jQuery);
