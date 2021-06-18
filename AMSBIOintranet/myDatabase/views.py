@@ -241,6 +241,14 @@ def techRecords(request):
 
 
 def similarProducts(request, pk="3011-100"):
+    """ Main Function for rendering the Similar Product page. 
+    
+    By default the page will render similar products to 3011-100. 
+    This is done in order to connect both the POST and click request on search page.
+
+    arguments:  request - Default Object for accepting the Http request made
+                pk - The product for which similar products are to be fetched, by default it is "3011-100"
+    """
     if request.method == "POST":
         prod_code = request.POST['prod_code']
         try:
@@ -261,6 +269,7 @@ def similarProducts(request, pk="3011-100"):
 
 
 def setGeneralContext(request, msg='Gene ID not found!'):
+    """ Helper Function for generating a default view when an error is encountered  """
     messages.warning(request, msg)
     obj = TechRecordsTable_Biorepository(NwAttributes11Biorepository.objects.filter(species='Just need to return a table'))
     context = {'obj': obj, 'num_of_prods': "-"}
@@ -268,6 +277,11 @@ def setGeneralContext(request, msg='Gene ID not found!'):
 
 
 def innerQuery(pk):
+    """ Helper function for generating a queryset to filter the DB based on Level 2 of Category 1.
+    
+    arguments: pk - Product code for which the similar products are being loaded
+    
+    """
     obj = ProductRecords.objects.get(pk=pk)
     level2 = NwCategoryLowestNodes.objects.get(pk=obj.category_1).level2
     inner_queryset = NwCategoryLowestNodes.objects.filter(level2=level2).values('lowest_node')
@@ -275,6 +289,15 @@ def innerQuery(pk):
 
 
 def TableBindings(request, pk, cat):
+    """ Sub function for querying the DB when special criteria for filtering the products are not met.
+    
+    The func will filter the DB based on Level 2 of Categry 1 for the requested Product (pk). 
+    Then, if the gene_ID is available for the product it'll further filter the DB based on gene_id o/w return it based on just the previous case.
+    
+    argument:   request - Object for extending the similarProduct function properly
+                pk - Product code for which the similar products are being loaded
+                cat - Category 1 of the concerned Product (pk)
+    """
     inner_queryset, level2 = innerQuery(pk)
     Table_looker = { "Biorepository": [NwAttributes11Biorepository, TechRecordsTable_Biorepository],
                     "Molecular Biology": [NwAttributes12Molecularbiology, TechRecordsTable_Molecularbiology],
@@ -306,6 +329,14 @@ def TableBindings(request, pk, cat):
 
 
 def categoryWiseProductSorting(cat, pk, request):
+    """ Sub Function for querying the DB based on special Cases. As discussed with James.
+    
+    If the conditions are met the DB is queried as defined by the respective queryset o/w TableBindings function is called. 
+    
+    arguments:  request - Object for extending the similarProduct function properly
+                pk - Product code for which the similar products are being loaded
+                cat - Category 1 of the concerned Product (pk)
+    """
     if cat == "Biorepository":
         inner_queryset, level2 = innerQuery(pk)
         queryset_base = NwAttributes11Biorepository.objects.get(product_code=pk)

@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 import regex as re
-from .cron import live_rate_dict
+from API.call import live_rate_dict
 
 
 class Currencies(models.Model):

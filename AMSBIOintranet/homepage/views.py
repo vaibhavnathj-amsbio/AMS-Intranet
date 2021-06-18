@@ -5,6 +5,8 @@ import json
 from django.shortcuts import render
 from django.contrib import messages
 
+from API.call import oAuth_magento
+
 
 # Create your views here.
 def index(request):
@@ -38,28 +40,6 @@ def index(request):
         response = track_request(params = {})
         context = {'response': response[0], 'col_headers': format_cols(response[1]), 'flag':True}
         return render(request, 'index.html', context)
-
-
-# stage : "dY0K9wAWxA4U5LjEea"
-# production: "Tg5fTysjobQFlDvYUf7"
-def oAuth_magento(): 
-    """ Helper function for authenticating every API call made to Magento! """
-    payload = json.dumps({'username': "amsBioAPI", 'password': "Tg5fTysjobQFlDvYUf7"})    
-    
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    }
-
-    response_auth = requests.request("POST", "https://www.amsbio.com/index.php/rest/V1/integration/admin/token", data=payload, headers=headers).text
-
-    api_url = "https://www.amsbio.com/index.php/rest/V1/orders/"
-    api_headers = {
-        'Content-Type': "application/json",
-        'Authorization': "Bearer " + json.loads(response_auth),
-        'Accept': 'application/json',
-        }
-    return  api_url, api_headers
 
 
 def track_request(params):
