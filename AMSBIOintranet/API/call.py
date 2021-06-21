@@ -23,12 +23,15 @@ def getCurrencyRate():
     headers = API_credentials["RapidAPI"]
     for key, value in live_rate_dict.items():
         for inner_key, inner_value in value.items():
-            querystring = {"from": key , "to": inner_key}
-            response = requests.request("GET", url, headers=headers, params=querystring)
-            live_rate_dict[key][inner_key] = round(float(response.text),3)
+            if key == inner_key:
+                pass
+            else:
+                querystring = {"from": key , "to": inner_key}
+                response = requests.request("GET", url, headers=headers, params=querystring)
+                live_rate_dict[key][inner_key] = round(float(response.text),3)
     return live_rate_dict
 
-getCurrencyRate() # Function call to fetch the rates
+# getCurrencyRate() # Function call to fetch the rates
 
 #/*********************** Section Ends ****************************************/#
 
