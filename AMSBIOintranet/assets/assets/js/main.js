@@ -111,7 +111,7 @@
     return false;
   });
 
-  // js for loading Technical Records data on button.html
+  // JS for loading Technical Records data on button.html | Ajax call
   $(document).ready(function () {
 
     $('button[id^="getrecord"]').one('click', function () {
@@ -211,7 +211,7 @@
     });
   });
 
-  // js for form submission at 'edit single product' page for product records table
+  // JS for form submission at 'edit single product' page for product records table | Ajax call
   $(document).on('submit', '#ProdForm', function (e) {
     e.preventDefault();
     var csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -235,7 +235,7 @@
     });
   });
 
-  // js for form submission at 'edit single product' page for technical records table
+  // JS for form submission at 'edit single product' page for technical records table | Ajax call
   $(document).on('submit', '#TechForm', function (e) {
     e.preventDefault();
     var csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -259,7 +259,7 @@
     });
   });
 
-  // js for form submission at 'add new supplier' page
+  // JS for form submission at 'add new supplier' page | Ajax call
   $(document).on('submit', '#NewSupplier', function (e) {
     e.preventDefault();
     $.ajax({
@@ -292,7 +292,7 @@
     });
   });
 
-  // js to hide tracking details modal box on FedEx UK/USA.html and DHL.html
+  // JS to hide tracking details modal box on FedEx UK/USA.html and DHL.html
   $('button[id^="closeInfo"]').on('click', function () {
     var v = document.getElementById("showOrHide");
     if (v.style.display === "none") {
@@ -302,7 +302,7 @@
     }
   });
 
-  // js for loading shipment details on index.html
+  // JS for loading shipment details on index.html | Ajax call
   $(document).ready(function () {
     $('button[id^="viewOrder"]').one('click', function () {
       var OID = $(this).val();
