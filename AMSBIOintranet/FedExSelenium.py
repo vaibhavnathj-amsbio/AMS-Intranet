@@ -4,7 +4,7 @@ import shutil
 
 
 def getFedExData(filename, user, passcode):
-    browser = webdriver.Chrome('chromedriver.exe')
+    browser = webdriver.Chrome('./chromedriver.exe')
     browser.maximize_window()
     browser.get('https://www.fedex.com/en-gb/tracking/advanced.html')
 
