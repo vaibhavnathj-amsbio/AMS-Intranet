@@ -91,13 +91,19 @@ def track_request(params):
                 
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,customer_lastname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company]]",
             }
 
     response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
     # with open('temp_files/magento_orders_test.json','w') as f:
     #     f.write(response.text)
     json_response = json.loads(response.text)
+    for ele in json_response['items']:
+        for key, val in ele.items():
+            if key == 'billing_address':
+                ele['purchasing_institute'] = ele.pop(key)['company']
+            else:
+                pass
     col_headers = list((json_response['items'][0]).keys())
     return json_response['items'], col_headers
     
@@ -125,7 +131,7 @@ def searchOrder(order_id):
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
                 "searchCriteria[filter_groups][0][filters][0][value]": order_id,
                 "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,customer_firstname,customer_lastname,status]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company]]",
             }
 
     try:
@@ -133,6 +139,12 @@ def searchOrder(order_id):
         # with open('temp_files/magento_search_orders.json','w') as f:
         #     f.write(response.text)
         json_response = json.loads(response.text)
+        for ele in json_response['items']:
+            for key, val in ele.items():
+                if key == 'billing_address':
+                    ele['purchasing_institute'] = ele.pop(key)['company']
+                else:
+                    pass
         col_headers = list((json_response['items'][0]).keys())
         context = {'result': json_response['items'], 'col_headers': col_headers}
         return context

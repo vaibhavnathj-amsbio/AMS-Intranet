@@ -37,7 +37,7 @@
             <ul>
               <li><a id="add_new_supplier" href="myDatabase/AddNewSupplier">Add New Supplier</a></li>
               <li><a id="search_db" href="myDatabase/Search">Search Products</a></li>
-              <li><a id="edit_single_product" href="myDatabase/EditSingleProduct">Edit Single Product</a></li>
+              <li><a id="edit_single_product" href="myDatabase/EditSingleProduct/LoadDefaultView">Edit Single Product</a></li>
               <li><a id="simlr_prod" href="myDatabase/similarProducts/3011-100">Similar Products</a></li>
               <li><a id="currency_ex" href="myDatabase/CurrencyValues">Currency Values</a></li>
             </ul>
@@ -253,9 +253,9 @@
       });
   }
     var tbl = jQuery('table');
-    jQuery.moveColumn(tbl, 6, 1);
-    jQuery.moveColumn(tbl, 7, 2);
-    jQuery.moveColumn(tbl, 7, 4);
+    jQuery.moveColumn(tbl, 4, 1);
+    jQuery.moveColumn(tbl, 5, 2);
+    jQuery.moveColumn(tbl, 5, 4);
   </script>
 
   <script type="text/javascript">
@@ -263,8 +263,6 @@
     var table = document.getElementById("magento_orders");
     for (var i = 1, row; row = table.rows[i]; i++) {
       var id = row.cells[1].innerHTML;
-      var full_name = document.querySelector("#magento_orders > tbody > tr:nth-child(1) > th:nth-child(7)");
-      full_name.innerHTML = 'Customer Name';
       row.cells[1].innerHTML = `<button style="border: none; background: none; padding: 0; color: #dc3545;" data-toggle="modal" data-target='#viewData${i}' id='viewOrder${i}' value='${id}'>${id}</button>
       <div class="modal fade" id="viewData${i}" tabindex="-1" role="dialog" aria-labelledby="viewData${i}Label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -321,12 +319,6 @@
           </div>
         </div>
       </div>`;
-      var firstname = row.cells[6].innerHTML;
-      var lastname = row.cells[7].innerHTML;
-      row.cells[6].innerHTML = firstname + ' ' + lastname;
-    }
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      row.deleteCell(7);
     }
   </script>
 

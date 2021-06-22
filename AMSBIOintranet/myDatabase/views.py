@@ -140,7 +140,7 @@ def FormSubmit(request):
             return JsonResponse({"msg": TechForm.errors})
 
 
-def editSingleProduct(request):
+def editSingleProduct(request, pk):
     """ Main function for rendering the Edit Product page! """
     flag = True
     nocategory = False
@@ -172,9 +172,35 @@ def editSingleProduct(request):
                 return render(request, 'editsingleprod.html', context)
         except:
             flag = True
-            return render(request, 'editsingleprod.html', {'msg': "*Please enter a valid product code", 'flag': flag})
-
-    return render(request, 'editsingleprod.html', {'msg': " ", 'flag': flag})
+            return render(request, 'editsingleprod.html', {'msg': "Enter a valid product code", 'flag': flag})
+    else:
+        try:
+            if ProductRecords.objects.get(pk=pk).category_1 == 0: # Case where no categories are defined.
+                ProdForm= editProductRecords(pk)
+                noTechCategory = "No Categories defined!"
+                nocategory = True
+                context = {'ProdForm':ProdForm,'NoTechCategory': noTechCategory, 'nocategory' : nocategory}
+                return render(request, 'editsingleprod.html', context)
+            else:
+                cat = loadCategory(pk) # generating level 1 category
+                attributes = ['id_product_code'] +  ['id_' + ele for ele in list(cat[0].values())[0]]
+                ProdForm = editProductRecords(pk)
+                TechForm = editTechDetails(pk)
+                flag = False
+                TwoCategories = True
+                if len(cat) > 1: # check if 2 categories exists
+                    attributes2 = ['id_' + ele for ele in list(cat[1].values())[0]]
+                    merged_attrs = attributes + list(set(attributes2) - set(attributes))
+                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0], 
+                                'cat2': list(cat[1].keys())[0], 'catflag': TwoCategories, 'attrs': merged_attrs}
+                else: 
+                    TwoCategories = False
+                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0],
+                                'catflag': TwoCategories, 'attrs': attributes}
+                return render(request, 'editsingleprod.html', context)
+        except:
+            flag = True
+            return render(request, 'editsingleprod.html', {'msg': "Enter a valid product code", 'flag': flag})
 
 
 def checkCategory(data, flag, cat1, cat2):
