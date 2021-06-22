@@ -27,4 +27,9 @@ _requirements.txt_ contains all the essential libraries required in order to run
 
 ## FedExSelenium.py
 
-Python script for automatically downloading the FedEx shipment records for both UK and USA accounts.
+### Python script for automatically downloading the FedEx shipment records for both UK and USA accounts.
+1.  Check where all the downloaded file from the browser are being saved. This will be the source _(src)_ location.
+2.  FedEx provides the csv files named "DataExport.csv".
+3.  The FedExSelenium.py will move these newly downloaded csv files from the _src_ location and place them in a folder named *helper_files*,
+4.  The csv files will be named UK.csv and USA.csv
+5.  Schedule the sciript as desired.
