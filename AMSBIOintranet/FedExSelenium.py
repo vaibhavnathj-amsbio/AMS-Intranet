@@ -4,7 +4,7 @@ import shutil
 
 
 def getFedExData(filename, user, passcode):
-    browser = webdriver.Chrome('chromedriver.exe')
+    browser = webdriver.Edge('C://inetpub//wwwroot//AMS-Intranet//AMSBIOintranet//msedgedriver.exe')
     browser.maximize_window()
     browser.get('https://www.fedex.com/en-gb/tracking/advanced.html')
 
@@ -41,7 +41,7 @@ def getFedExData(filename, user, passcode):
     browser.close() # exit the browser
 
     src = "C://Users//administrator.AMSBIO//Downloads//DataExport.csv"
-    dest = "C://inetpub//wwwroot//AMS-Intranet//AMSBIOintranet//helper_files" + filename
+    dest = "C://inetpub//wwwroot//AMS-Intranet//AMSBIOintranet//helper_files//" + filename
 
     return print(shutil.move(src,dest))
 
