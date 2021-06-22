@@ -30,15 +30,16 @@ class ProductRecordsTable(tables.Table):
     rsearch4 = tables.Column(accessor='research4', verbose_name='Research area 4')
     attrs = tables.TemplateColumn(template_name='button.html',verbose_name='Attribute')
     product_code = tables.Column(linkify=("similarProducts", [tables.A("product_code")]), attrs={"a": {"id": "similarProduct"}})
+    rest_of_world_usd = tables.Column(accessor='restOfWorldCurr', verbose_name='Sell price rest of world USD')
 
     class Meta:
         model = ProductRecords
         fields = ["attrs","product_code", "supplier_product_code", "description", "long_description", "packsize", "purchase_nett_price", "supplier_list_price", "sell_price_gbp", "sell_price_eur", "sell_price_chf", 
-                    "sell_price_usd", "storage_conditions", "shipping_temperature", "commodity_code", "cat_1", "cat_2", "rsearch1", "rsearch2", "rsearch3", 
+                    "sell_price_usd", "rest_of_world_usd", "storage_conditions", "shipping_temperature", "commodity_code", "cat_1", "cat_2", "rsearch1", "rsearch2", "rsearch3", 
                         "rsearch4", "supplier_lead_time", "sup_col", "delete_flag", "listing_precedence", "last_updated_user", "last_change_date", "price_calculation_type", "website_flag", "new_product_flag", 
                             "previous_purchase_price", "price_change_flag", "price_change_percent", "special_shipping", ]
         orderable = False
-        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive"}
+        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive", "style": "height: 650px;"}
 
 
 # Django Parent class for generating the base table for 'similar product' page

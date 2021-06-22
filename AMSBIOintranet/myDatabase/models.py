@@ -8,6 +8,7 @@
 from django.db import models
 import regex as re
 from API.call import live_rate_dict
+from math import ceil
 
 
 class Currencies(models.Model):
@@ -200,6 +201,9 @@ class ProductRecords(models.Model):
         elif 'ug' in ps.lower():
             outp = mlr * float(re.findall('([0-9\.]{1,4}) ?ug',ps,re.IGNORECASE)[0])
         return round(self.purchasePriceGbp()/outp, 3)
+
+    def restOfWorldCurr(self):
+        return 5 * ceil((self.sell_price_usd * 1.2)/5)
 
 
 class ProductRecordsTech(models.Model):
