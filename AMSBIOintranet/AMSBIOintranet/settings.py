@@ -24,8 +24,10 @@ SECRET_KEY = '3u1gjabugnf!+op062j%@^=c=ldk)d6!0e97@f&&7jlb+w0+q='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 ALLOWED_HOSTS = ['intranet.amsbio.com']
+
+# DEBUG = True
+# ALLOWED_HOSTS = []
 
 
 # Application definition
