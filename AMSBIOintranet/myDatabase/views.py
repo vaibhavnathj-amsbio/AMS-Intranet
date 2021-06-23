@@ -63,17 +63,17 @@ def search(request):
         elif len(code) == 0 and len(desc) > 0:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                description__icontains=desc)[:100])
+                description__icontains=desc).order_by('product_code')[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         elif len(desc) == 0 and len(code) > 0:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code)[:100])
+                product_code__icontains=code).order_by('product_code')[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         else:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code).filter(description__icontains=desc)[:100])
+                product_code__icontains=code).filter(description__icontains=desc).order_by('product_code')[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
     else:
         return render(request, 'search.html', {'obj': obj, 'msg': msg})

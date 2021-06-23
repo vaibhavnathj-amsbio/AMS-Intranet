@@ -31,8 +31,6 @@ def getCurrencyRate():
                 live_rate_dict[key][inner_key] = round(float(response.text),3)
     return live_rate_dict
 
-getCurrencyRate() # Function call to fetch the rates
-
 #/*********************** Section Ends ****************************************/#
 
 
@@ -136,3 +134,6 @@ def track_request_dhl(track_num, api_key= API_credentials["DHL"]["api_key"]):
     return json_response
 
 #/*********************** Section Ends ****************************************/#
+
+
+getCurrencyRate() # Function call to fetch the rates

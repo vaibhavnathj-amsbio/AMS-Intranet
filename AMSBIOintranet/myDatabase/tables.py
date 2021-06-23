@@ -37,13 +37,31 @@ class ProductRecordsTable(tables.Table):
     sell_price_chf = tables.Column(verbose_name='Sell Price CHF')
     sell_price_usd = tables.Column(verbose_name='Sell Price USD')
 
+    def render_long_description(self, value):
+        if len(value) > 50:
+            return value[:50] + ' ...'
+        else:
+            return value
+
+    def render_description(self, value):
+        if len(value) > 50:
+            return value[:50] + ' ...'
+        else:
+            return value
+
+    def render_storage_conditions(self, value):
+        if len(value) > 50:
+            return value[:50] + ' ...'
+        else:
+            return value
+
     class Meta:
         model = ProductRecords
-        fields = ["attrs","product_code", "supplier_product_code", "description", "long_description", "packsize", "sup_col", "purchase_nett_price", "supplier_list_price", "sell_price_gbp", "sell_price_eur", "sell_price_chf", 
+        fields = ["attrs","product_code", "supplier_product_code", "description", "packsize", "sup_col", "purchase_nett_price", "supplier_list_price", "sell_price_gbp", "sell_price_eur", "sell_price_chf", 
                     "sell_price_usd", "rest_of_world_usd", "storage_conditions", "shipping_temperature", "special_shipping", "commodity_code", "cat_1", "cat_2","supplier_lead_time", "delete_flag", "listing_precedence", "last_updated_user", "last_change_date", "price_calculation_type", "website_flag", "new_product_flag", 
-                            "previous_purchase_price", "price_change_flag", "price_change_percent", "rsearch1", "rsearch2", "rsearch3", "rsearch4"]
+                            "previous_purchase_price", "price_change_flag", "price_change_percent", "rsearch1", "rsearch2", "rsearch3", "rsearch4", "long_description"]
         orderable = False
-        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive", "style": "height: 450px;"}
+        attrs = {"thead": {"style": "color: #fff; background-color: #f1594a;"}, "class": "table table-striped table-responsive", "style": "max-height: 450px;"}
 
 
 # Django Parent class for generating the base table for 'similar product' page
