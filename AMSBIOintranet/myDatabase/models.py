@@ -144,6 +144,9 @@ class ProductRecords(models.Model):
 
     def suppliername(self):
         return DataOwners.objects.get(pk=self.ct_supplier_id).owner
+
+    def supplierCurrency(self):
+        return DataOwners.objects.get(pk=self.ct_supplier_id).supplierpurchasecurrency
     
     def cat1(self):
         lev1 = NwCategoryLowestNodes.objects.get(pk=self.category_1).level1

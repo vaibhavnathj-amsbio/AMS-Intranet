@@ -30,12 +30,13 @@ class ProductRecordsTable(tables.Table):
     rsearch4 = tables.Column(accessor='research4', verbose_name='Research area 4')
     attrs = tables.TemplateColumn(template_name='button.html',verbose_name='Similar Products', linkify=("similarProducts", [tables.A("product_code")]), attrs={"a": {"id": "similarProduct"}})
     product_code = tables.Column(linkify=("EditSingleProduct", [tables.A("product_code")]), attrs={"a": {"id": "EditSingleProduct"}})
-    rest_of_world_usd = tables.Column(accessor='restOfWorldCurr', verbose_name='Sell price rest of world USD')
+    rest_of_world_usd = tables.Column(accessor='restOfWorldCurr', verbose_name='$ Price (Rest of world)')
     packsize = tables.Column(verbose_name='Pack Size')
-    sell_price_gbp = tables.Column(verbose_name='Sell Price GBP')
-    sell_price_eur = tables.Column(verbose_name='Sell Price EUR')
-    sell_price_chf = tables.Column(verbose_name='Sell Price CHF')
-    sell_price_usd = tables.Column(verbose_name='Sell Price USD')
+    sell_price_gbp = tables.Column(verbose_name='£ Price' )
+    sell_price_eur = tables.Column(verbose_name='€ Price')
+    sell_price_chf = tables.Column(verbose_name='₣ Price')
+    sell_price_usd = tables.Column(verbose_name='$ Price')
+    purchase_currency = tables.Column(accessor='supplierCurrency')
 
     def render_long_description(self, value):
         if len(value) > 50:
@@ -57,7 +58,7 @@ class ProductRecordsTable(tables.Table):
 
     class Meta:
         model = ProductRecords
-        fields = ["attrs","product_code", "supplier_product_code", "description", "packsize", "sup_col", "purchase_nett_price", "supplier_list_price", "sell_price_gbp", "sell_price_eur", "sell_price_chf", 
+        fields = ["attrs","product_code", "supplier_product_code", "description", "packsize", "sup_col", "purchase_currency", "purchase_nett_price", "supplier_list_price", "sell_price_gbp", "sell_price_eur", "sell_price_chf", 
                     "sell_price_usd", "rest_of_world_usd", "storage_conditions", "shipping_temperature", "special_shipping", "commodity_code", "cat_1", "cat_2","supplier_lead_time", "delete_flag", "listing_precedence", "last_updated_user", "last_change_date", "price_calculation_type", "website_flag", "new_product_flag", 
                             "previous_purchase_price", "price_change_flag", "price_change_percent", "rsearch1", "rsearch2", "rsearch3", "rsearch4", "long_description"]
         orderable = False
