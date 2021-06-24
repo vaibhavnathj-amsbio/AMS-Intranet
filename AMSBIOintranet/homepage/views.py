@@ -91,7 +91,7 @@ def track_request(params):
                 
                 "searchCriteria[pageSize]": number_of_orders,
                 "searchCriteria[sortOrders][0][field]":"created_at",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company]]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company,firstname,lastname]]",
             }
 
     response = requests.request("GET", url=generate_request[0], headers=generate_request[1], params=payload)
@@ -101,7 +101,11 @@ def track_request(params):
     for ele in json_response['items']:
         for key, val in ele.items():
             if key == 'billing_address':
-                ele['purchasing_institute'] = ele.pop(key)['company']
+                name_container = ele.pop(key)
+                try:
+                    ele['purchasing_institute'] = name_container['company']
+                except:
+                    ele['purchasing_institute'] = name_container['firstname'] + ' ' +  name_container['lastname']
             else:
                 pass
     col_headers = list((json_response['items'][0]).keys())
@@ -131,7 +135,7 @@ def searchOrder(order_id):
     payload = {"searchCriteria[filter_groups][0][filters][0][field]": "increment_id",
                 "searchCriteria[filter_groups][0][filters][0][value]": order_id,
                 "searchCriteria[filter_groups][0][filters][0][conditionType]": "eq",
-                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company]]",
+                "fields": "items[increment_id,base_currency_code,grand_total,created_at,status,billing_address[company,firstname,lastname]]",
             }
 
     try:
@@ -142,7 +146,11 @@ def searchOrder(order_id):
         for ele in json_response['items']:
             for key, val in ele.items():
                 if key == 'billing_address':
-                    ele['purchasing_institute'] = ele.pop(key)['company']
+                    name_container = ele.pop(key)
+                    try:
+                        ele['purchasing_institute'] = name_container['company']
+                    except:
+                        ele['purchasing_institute'] = name_container['firstname'] + ' ' +  name_container['lastname']
                 else:
                     pass
         col_headers = list((json_response['items'][0]).keys())
