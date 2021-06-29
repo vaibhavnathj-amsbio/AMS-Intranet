@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '3u1gjabugnf!+op062j%@^=c=ldk)d6!0e97@f&&7jlb+w0+q='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['intranet.amsbio.com']
+#DEBUG = False
+#ALLOWED_HOSTS = ['intranet.amsbio.com']
 
-# DEBUG = True
-# ALLOWED_HOSTS = []
+DEBUG = True
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -91,13 +91,17 @@ DATABASES = {
     'sysdb': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ams',
-        'USER': 'vaibhav',
-        'PASSWORD': 'G4rageC4r',
-        'PORT': '3309',
-        'HOST': 'development.amsbio.com',
-        'TEST': {
-            'NAME': 'test_ams',
-        }
+        # 'USER': 'vaibhav',
+        # 'PASSWORD': 'G4rageC4r',
+        # 'PORT': '3309',
+        # 'HOST': 'development.amsbio.com',
+        # 'TEST': {
+        #     'NAME': 'test_ams',
+        # }
+        'USER': 'amsd',
+        'PASSWORD': 'amsd23sept2009',
+        'PORT': '3306',
+        'HOST': 'database.amsbio.com'
     }
 }
 
