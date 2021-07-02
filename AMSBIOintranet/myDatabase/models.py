@@ -576,3 +576,25 @@ class NwAttributes18Bioseparationelectrophoresis(models.Model):
         managed = False
         db_table = 'nw_attributes_18_bioseparationelectrophoresis'
         app_label = 'myDatabase'
+
+
+class CodeToGeneId(models.Model):
+    product_code = models.CharField(primary_key=True, max_length=64)
+    gene_id = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'code_to_gene_id'
+        app_label = 'myDatabase'
+
+
+class NcbiGeneInfo(models.Model):
+    gene_id = models.CharField(primary_key=True, max_length=64)
+    gene_symbol = models.CharField(max_length=64, blank=True, null=True)
+    gene_synonyms = models.TextField(blank=True, null=True)
+    gene_description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ncbi_gene_info'
+        app_label = 'myDatabase'
