@@ -14,7 +14,7 @@ from django_tables2.export.export import TableExport
 from django_tables2.paginators import LazyPaginator
 
 from .utils import *
-from .similarProductsUtils import *
+from .smlrProdsUtils import *
 
 
 def index(request):

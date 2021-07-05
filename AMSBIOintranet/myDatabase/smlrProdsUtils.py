@@ -57,6 +57,15 @@ def TableBindings(request, pk, cat):
         context = {'obj': obj, 'num_of_prods': queryset_geneID.count(), 'filter': filter_used}
         messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev)
         return render(request, "similarProducts.html", context)
+    except NcbiGeneInfo.DoesNotExist:
+        geneID = Table_looker[cat][0].objects.get(product_code=pk).gene_id
+        queryset_geneID = Table_looker[cat][0].objects.select_related('product_code').exclude(gene_id='').filter(product_code__category_1__in=inner_queryset, product_code__delete_flag=0, gene_id=geneID)
+        obj = Table_looker[cat][1](queryset_geneID)
+        gene_info = NcbiGeneInfo.objects.get(gene_id=geneID)
+        filter_used = {'Gene ID': geneID, 'Gene Symbol': gene_info.gene_symbol, 'Gene Description': (gene_info.gene_description)}
+        context = {'obj': obj, 'num_of_prods': queryset_geneID.count(), 'filter': filter_used}
+        messages.success(request, 'Showing Products similar to Product code: ' + pk + ' in ' + cat + '>>'+ lev)
+        return render(request, "similarProducts.html", context)
     except (AttributeError, ObjectDoesNotExist):
         geneID = "N\\A"
         queryset_cat = Table_looker[cat][0].objects.filter(product_code__category_1__in=inner_queryset, product_code__delete_flag=0, gene_id=geneID).exclude(gene_id='')[:1000]
