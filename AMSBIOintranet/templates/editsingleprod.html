@@ -201,6 +201,13 @@
   <script src="{% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
 
   <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script type="text/javascript">
+    var usd_sell_price = document.querySelector("#id_sell_price_usd").value;
+    var rest_of_world_price = document.querySelector("#id_sell_price_rest_of_world_usd");
+    var usd_price_float = parseFloat(usd_sell_price);
+    rest_of_world_price.value = 5 * Math.ceil((usd_price_float * 1.2)/5);
+  </script>
   
 </body>
 
