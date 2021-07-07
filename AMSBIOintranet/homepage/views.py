@@ -1,6 +1,8 @@
 from django.http.response import JsonResponse
 import requests
 import json
+from datetime import datetime
+import logging
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -11,6 +13,10 @@ from API.call import oAuth_magento
 # Create your views here.
 def index(request):
     """ Main function for rendering the homepage! """
+    logging.basicConfig(filename='intranet.log',filemode='w',format='%(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+    date_time = datetime.now().strftime("%m/%d/%Y - %H:%M:%S")
+    for key, val in request.META.items():
+        logging.info(f'{date_time}- {key}: {val}')
     if request.method == "POST" and 'from_date' in request.POST: # Controls the filter button
         params = {'from_date': request.POST['from_date'], 'to_date': request.POST['to_date'], 'number_of_orders': request.POST['number_of_orders'], 'status': request.POST['status']}
         response = track_request(params)

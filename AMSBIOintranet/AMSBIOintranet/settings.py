@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'ams',
         # 'USER': 'vaibhav',
         # 'PASSWORD': 'G4rageC4r',
-        # 'PORT': '3309',
+        # 'PORT': '3306',
         # 'HOST': 'development.amsbio.com',
         # 'TEST': {
         #     'NAME': 'test_ams',
