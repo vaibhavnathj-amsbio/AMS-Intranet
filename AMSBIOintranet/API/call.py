@@ -7,35 +7,6 @@ f = open('API/credentials.json')
 API_credentials = json.load(f) 
 
 
-#/**************** Exchange Rate Section on Currency Values | Call made at myDatabase/models ********************/#
-
-# Global dictionary to store Live Currency Exchange Rate
-live_rate_dict = { "USD": {"USD": 1, "JPY": 0, "GBP": 0, "EUR": 0, "CHF": 0},
-                    "JPY": {"USD": 0, "JPY": 1, "GBP": 0, "EUR": 0, "CHF": 0},
-                    "GBP": {"USD": 0, "JPY": 0, "GBP": 1, "EUR": 0, "CHF": 0},
-                    "EUR": {"USD": 0, "JPY": 0, "GBP": 0, "EUR": 1, "CHF": 0},
-                    "CHF": {"USD": 0, "JPY": 0, "GBP": 0, "EUR": 0, "CHF": 1}}
-
-def getCurrencyRate():
-    """ Function to fetch exchange rates from API"""
-    global live_rate_dict
-    url = "https://currency-exchange.p.rapidapi.com/exchange"
-    headers = API_credentials["RapidAPI"]
-    for key, value in live_rate_dict.items():
-        for inner_key, inner_value in value.items():
-            if key == inner_key:
-                pass
-            else:
-                querystring = {"from": key , "to": inner_key}
-                response = requests.request("GET", url, headers=headers, params=querystring)
-                live_rate_dict[key][inner_key] = round(float(response.text),3)
-    return live_rate_dict
-
-#/*********************** Section Ends ****************************************/#
-
-
-
-
 #/**************** Magento Section on Homepage | Call made at homepage/views ********************/#
 
 def oAuth_magento(api_credentials= API_credentials["magento_credentials_production"]): 
@@ -134,6 +105,3 @@ def track_request_dhl(track_num, api_key= API_credentials["DHL"]["api_key"]):
     return json_response
 
 #/*********************** Section Ends ****************************************/#
-
-
-getCurrencyRate() # Function call to fetch the rates

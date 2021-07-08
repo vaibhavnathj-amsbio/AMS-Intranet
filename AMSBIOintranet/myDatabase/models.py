@@ -7,8 +7,9 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 import regex as re
-from API.call import live_rate_dict
 from math import ceil
+
+from homepage.models import liveCurrencyRate
 
 
 class Currencies(models.Model):
@@ -86,7 +87,7 @@ class MasterCurrencies(models.Model):
                 return Currencies.objects.get(pk=self.to_currency_id).descriptive
 
     def liverate(self):
-        return live_rate_dict[self.symbolfrom()][self.symbolto()]
+        return liveCurrencyRate.objects.get(base_currency=self.symbolfrom(),to_currency=self.symbolto()).live_rate
     
     def diff(self):
         return round(self.liverate() - self.exchange_rate, 3)
@@ -183,9 +184,8 @@ class ProductRecords(models.Model):
         return NwResearchAreaIds.objects.get(pk=self.research_area_4).research_area
 
     def purchasePriceGbp(self):
-        global live_rate_dict
         currency = DataOwners.objects.get(pk=self.ct_supplier_id).supplierpurchasecurrency
-        return round(self.purchase_nett_price*live_rate_dict[currency]["GBP"],3)
+        return round(self.purchase_nett_price*liveCurrencyRate.objects.get(base_currency=currency,to_currency="GBP").live_rate,3)
 
     def ug_ps(self):
         mlr = 1
