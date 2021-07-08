@@ -132,5 +132,32 @@
 
   <script src="{% static 'assets/js/main.js' %}"></script>
 
+  <script type="text/javascript">
+    // Instead of running order_by query on MySQL, Let JS handle the sorting based on Product Code
+    var table = document.querySelector("#testimonials > div.content > div > div > table > tbody");
+    function sortTable(col_index){
+      var rows, switching, i, x, y, shouldSwitch;
+      switching = true
+      while (switching){
+        switching = false;
+        rows = table.rows;
+        for (i = 0; i < (rows.length - 1) ; i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[col_index];
+          y = rows[i + 1].getElementsByTagName("TD")[col_index];
+          if (x.innerHTML > y.innerHTML) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+    sortTable(1)
+  </script>
+
 </body>
 </html>
