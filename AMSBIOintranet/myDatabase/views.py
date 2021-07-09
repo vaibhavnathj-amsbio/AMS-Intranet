@@ -45,6 +45,11 @@ def addNewSupplier(request):
 
 def search(request):
     """ Function to control and render the search page!"""
+    product_codes_with_forward_slash = ["7001-SS0601/100","7001-SS0604/100","7001-SS0724/100","7001-SS0740/100","7001-SS0741/100",
+                                        "7001-SS0742/100","7001-SS0743/100","7001-SS0745/100","7001-SS0794/100","7001-SS0854/100",
+                                        "AC-AML-007/1012","AC-AML-010/0712","AC-AML-012/0912","AC-AML-014/1212","AC-ANL-007/1012",
+                                        "AML-010/0712-2E7","AML-012/0912-1E7","AML-012/0912-5E6","ANL-007/1012-5E6","IK-NSX007-12/1670"]
+    # The list defined above leads to url error when searched from the 'Search page'. They can be accessed individually from Edit Single Product page.
     obj = ProductRecordsTable(ProductRecords.objects.all()[8:])
     RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
     msg = True
@@ -58,17 +63,17 @@ def search(request):
         elif len(code) == 0 and len(desc) > 0:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                description__icontains=desc).filter(delete_flag = 0)[:100])
+                description__icontains=desc).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         elif len(desc) == 0 and len(code) > 0:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code).filter(delete_flag = 0)[:100])
+                product_code__icontains=code).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         else:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code).filter(description__icontains=desc).filter(delete_flag = 0)[:100])
+                product_code__icontains=code).filter(description__icontains=desc).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
     else:
         return render(request, 'search.html', {'obj': obj, 'msg': msg})

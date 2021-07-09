@@ -1,6 +1,7 @@
 import sqlite3
 import requests
 import json
+import time
 
 
 # Loading credentials from credentials.json
@@ -33,6 +34,7 @@ def fetchLiveRates(url,headers,template):
 
 try:
     fetchLiveRates(url = "https://currency-exchange.p.rapidapi.com/exchange", headers= API_credentials["RapidAPI"], template=live_rate_dict)
-    print("Successfully updated currency live rates!")
 except Exception as e:
     print("Error occurred ", e)
+    print("Exiting...")
+    time.sleep(30)
