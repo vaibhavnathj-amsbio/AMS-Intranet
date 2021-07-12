@@ -26,7 +26,7 @@ def fetchLiveRates(url,headers,template):
                 else:
                     querystring = {"from": key , "to": inner_key}
                     response = requests.request("GET", url, headers=headers, params=querystring)
-                    rate = round(float(response.text),3)
+                    rate = round(float(response.text),4)
                     # target_values = (counter, key, inner_key, rate)
                     cursor.execute("UPDATE homepage_livecurrencyrate SET live_rate = ? WHERE base_currency = ? and to_currency = ?", (rate,key,inner_key))
                     connection.commit()
