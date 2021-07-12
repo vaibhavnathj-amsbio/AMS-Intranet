@@ -129,5 +129,5 @@ dmypy.json
 
 .vscode
 run_DevServer.bat
-helper_files/
+extras/
 intranet.log

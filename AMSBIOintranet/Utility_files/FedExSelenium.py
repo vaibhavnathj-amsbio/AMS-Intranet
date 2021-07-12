@@ -4,7 +4,7 @@ import shutil
 
 
 def getFedExData(filename, user, passcode):
-    browser = webdriver.Edge('C://inetpub//wwwroot//AMS-Intranet//AMSBIOintranet//msedgedriver.exe')
+    browser = webdriver.Edge('C://inetpub//wwwroot//AMS-Intranet//AMSBIOintranet//extra_files//msedgedriver.exe')
     browser.maximize_window()
     browser.get('https://www.fedex.com/en-gb/tracking/advanced.html')
 
