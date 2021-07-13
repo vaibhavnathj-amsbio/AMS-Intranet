@@ -24,7 +24,10 @@ def fetchLiveRates(url,headers,template):
                 if key == inner_key:
                     pass
                 else:
-                    querystring = {"from": key , "to": inner_key}
+                    # querystring = {"from": key , "to": inner_key}
+                    # Comment: Earlier the parameter q was not required but now if not added, the response comes out to be 0 for every currency.
+                    # if desired results are not being generated i.e., base rate * 2 = live rate then uncomment the above line of code and comment out next one.
+                    querystring = {"from": key , "to": inner_key, "q": 2}
                     response = requests.request("GET", url, headers=headers, params=querystring)
                     rate = round(float(response.text),4)
                     # target_values = (counter, key, inner_key, rate)
@@ -37,4 +40,4 @@ try:
 except Exception as e:
     print("Error occurred ", e)
     print("Exiting...")
-    time.sleep(30)
+    time.sleep(60)
