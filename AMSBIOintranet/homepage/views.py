@@ -61,7 +61,7 @@ def track_request(params):
     """
 
     if len(params) == 0:
-        number_of_orders = "20"
+        number_of_orders = "10"
         field = None
         from_date = None
         condition_1 = None
