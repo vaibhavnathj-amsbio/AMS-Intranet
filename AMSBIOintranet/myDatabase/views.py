@@ -5,10 +5,11 @@ from datetime import datetime
 from .forms import EditProductForm, EditTechDetailsForm
 from .tables import (CurrencyTable, ProductRecordsTable)
 from .models import (MasterCurrencies, ProductRecords, ProductRecordsTech,
-                        NwCategoryLowestNodes, DataOwners, Currencies)
+                     NwCategoryLowestNodes, DataOwners, Currencies)
 
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django_tables2 import RequestConfig
 from django_tables2.export.export import TableExport
 from django_tables2.paginators import LazyPaginator
@@ -28,16 +29,17 @@ def addNewSupplier(request):
         code = request.POST['acc_code'].upper()
         curr = request.POST['curr_code']
         if curr == 'USD':
-            cur_id = 2    
+            cur_id = 2
         else:
             cur_id = Currencies.objects.get(descriptive=curr).currencyid
         DataOwners.objects.create(
-            currencyid= cur_id,
-            owner= name,
-            supplierpurchasecurrency= curr,
-            dimmensionssuppliercode= code
+            currencyid=cur_id,
+            owner=name,
+            supplierpurchasecurrency=curr,
+            dimmensionssuppliercode=code
         )
-        context = {'c_name': name, 'c_code':code, 'cur': curr , 'msg': 'Supplier successfully added!'}
+        context = {'c_name': name, 'c_code': code,
+                   'cur': curr, 'msg': 'Supplier successfully added!'}
         return JsonResponse(context)
     else:
         return render(request, 'newsupplier.html')
@@ -45,13 +47,14 @@ def addNewSupplier(request):
 
 def search(request):
     """ Function to control and render the search page!"""
-    product_codes_with_forward_slash = ["7001-SS0601/100","7001-SS0604/100","7001-SS0724/100","7001-SS0740/100","7001-SS0741/100",
-                                        "7001-SS0742/100","7001-SS0743/100","7001-SS0745/100","7001-SS0794/100","7001-SS0854/100",
-                                        "AC-AML-007/1012","AC-AML-010/0712","AC-AML-012/0912","AC-AML-014/1212","AC-ANL-007/1012",
-                                        "AML-010/0712-2E7","AML-012/0912-1E7","AML-012/0912-5E6","ANL-007/1012-5E6","IK-NSX007-12/1670"]
+    product_codes_with_forward_slash = ["7001-SS0601/100", "7001-SS0604/100", "7001-SS0724/100", "7001-SS0740/100", "7001-SS0741/100",
+                                        "7001-SS0742/100", "7001-SS0743/100", "7001-SS0745/100", "7001-SS0794/100", "7001-SS0854/100",
+                                        "AC-AML-007/1012", "AC-AML-010/0712", "AC-AML-012/0912", "AC-AML-014/1212", "AC-ANL-007/1012",
+                                        "AML-010/0712-2E7", "AML-012/0912-1E7", "AML-012/0912-5E6", "ANL-007/1012-5E6", "IK-NSX007-12/1670"]
     # The list defined above leads to url error when searched from the 'Search page'. They can be accessed individually from Edit Single Product page.
     obj = ProductRecordsTable(ProductRecords.objects.all()[8:])
-    RequestConfig(request, paginate={"paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
+    RequestConfig(request, paginate={
+                  "paginator_class": LazyPaginator, "per_page": 10}).configure(obj)
     msg = True
     if request.method == "POST":
         code = request.POST['Prod']
@@ -63,17 +66,17 @@ def search(request):
         elif len(code) == 0 and len(desc) > 0:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                description__icontains=desc).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
+                description__icontains=desc).filter(delete_flag=0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         elif len(desc) == 0 and len(code) > 0:
             # instance limit set to 100
-            obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
+            obj = ProductRecordsTable(ProductRecords.objects.filter(Q(product_code__icontains=code) | Q(supplier_product_code__icontains=code)
+                                                                    ).filter(delete_flag=0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
         else:
             # instance limit set to 100
             obj = ProductRecordsTable(ProductRecords.objects.filter(
-                product_code__icontains=code).filter(description__icontains=desc).filter(delete_flag = 0).exclude(pk__in=product_codes_with_forward_slash)[:100])
+                product_code__icontains=code).filter(description__icontains=desc).filter(delete_flag=0).exclude(pk__in=product_codes_with_forward_slash)[:100])
             return render(request, 'search.html', {'obj': obj, 'msg': msg})
     else:
         return render(request, 'search.html', {'obj': obj, 'msg': msg})
@@ -101,17 +104,19 @@ def FormSubmit(request):
     form_data.pop('csrfmiddlewaretoken')
     if 'supplier_product_code' in form_data.keys():
         form_data['last_updated_user'] = getpass.getuser().upper()
-        #form_data['last_updated_user'] = request.user.username
-        form_data['last_change_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # form_data['last_updated_user'] = request.user.username
+        form_data['last_change_date'] = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S")
         Product = ProductRecords.objects.get(pk=form_data['product_code'])
-        ProdForm = EditProductForm(form_data,instance=Product)
+        ProdForm = EditProductForm(form_data, instance=Product)
         if ProdForm.is_valid():
             ProdForm.save()
             return JsonResponse({"msg": "Form Submitted!"})
         else:
             return JsonResponse({"msg": ProdForm.errors})
     else:
-        TechRecord = ProductRecordsTech.objects.get(pk=form_data['product_code'])
+        TechRecord = ProductRecordsTech.objects.get(
+            pk=form_data['product_code'])
         TechForm = EditTechDetailsForm(form_data, instance=TechRecord)
         if TechForm.is_valid():
             TechForm.save()
@@ -127,56 +132,66 @@ def editSingleProduct(request, pk):
     if request.method == "POST" and 'btnSubmitCode' in request.POST:
         code = request.POST["ProdCode"]
         try:
-            if ProductRecords.objects.get(pk=code).category_1 == 0: # Case where no categories are defined.
-                ProdForm= editProductRecords(code)
+            # Case where no categories are defined.
+            if ProductRecords.objects.get(pk=code).category_1 == 0:
+                ProdForm = editProductRecords(code)
                 noTechCategory = "No Categories defined!"
                 nocategory = True
-                context = {'ProdForm':ProdForm,'NoTechCategory': noTechCategory, 'nocategory' : nocategory}
+                context = {'ProdForm': ProdForm,
+                           'NoTechCategory': noTechCategory, 'nocategory': nocategory}
                 return render(request, 'editsingleprod.html', context)
             else:
-                cat = loadCategory(code) # generating level 1 category
-                attributes = ['id_product_code'] +  ['id_' + ele for ele in list(cat[0].values())[0]]
+                cat = loadCategory(code)  # generating level 1 category
+                attributes = ['id_product_code'] + \
+                    ['id_' + ele for ele in list(cat[0].values())[0]]
                 ProdForm = editProductRecords(code)
                 TechForm = editTechDetails(code)
                 flag = False
                 TwoCategories = True
-                if len(cat) > 1: # check if 2 categories exists
-                    attributes2 = ['id_' + ele for ele in list(cat[1].values())[0]]
-                    merged_attrs = attributes + list(set(attributes2) - set(attributes))
-                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0], 
-                                'cat2': list(cat[1].keys())[0], 'catflag': TwoCategories, 'attrs': merged_attrs}
-                else: 
+                if len(cat) > 1:  # check if 2 categories exists
+                    attributes2 = [
+                        'id_' + ele for ele in list(cat[1].values())[0]]
+                    merged_attrs = attributes + \
+                        list(set(attributes2) - set(attributes))
+                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0],
+                               'cat2': list(cat[1].keys())[0], 'catflag': TwoCategories, 'attrs': merged_attrs}
+                else:
                     TwoCategories = False
                     context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0],
-                                'catflag': TwoCategories, 'attrs': attributes}
+                               'catflag': TwoCategories, 'attrs': attributes}
                 return render(request, 'editsingleprod.html', context)
         except:
             flag = True
             return render(request, 'editsingleprod.html', {'msg': "Enter a valid product code", 'flag': flag})
     else:
         try:
-            if ProductRecords.objects.get(pk=pk).category_1 == 0: # Case where no categories are defined.
-                ProdForm= editProductRecords(pk)
+            # Case where no categories are defined.
+            if ProductRecords.objects.get(pk=pk).category_1 == 0:
+                ProdForm = editProductRecords(pk)
                 noTechCategory = "No Categories defined!"
                 nocategory = True
-                context = {'ProdForm':ProdForm,'NoTechCategory': noTechCategory, 'nocategory' : nocategory}
+                context = {'ProdForm': ProdForm,
+                           'NoTechCategory': noTechCategory, 'nocategory': nocategory}
                 return render(request, 'editsingleprod.html', context)
             else:
-                cat = loadCategory(pk) # generating level 1 category
-                attributes = ['id_product_code'] +  ['id_' + ele for ele in list(cat[0].values())[0]]
+                cat = loadCategory(pk)  # generating level 1 category
+                attributes = ['id_product_code'] + \
+                    ['id_' + ele for ele in list(cat[0].values())[0]]
                 ProdForm = editProductRecords(pk)
                 TechForm = editTechDetails(pk)
                 flag = False
                 TwoCategories = True
-                if len(cat) > 1: # check if 2 categories exists
-                    attributes2 = ['id_' + ele for ele in list(cat[1].values())[0]]
-                    merged_attrs = attributes + list(set(attributes2) - set(attributes))
-                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0], 
-                                'cat2': list(cat[1].keys())[0], 'catflag': TwoCategories, 'attrs': merged_attrs}
-                else: 
+                if len(cat) > 1:  # check if 2 categories exists
+                    attributes2 = [
+                        'id_' + ele for ele in list(cat[1].values())[0]]
+                    merged_attrs = attributes + \
+                        list(set(attributes2) - set(attributes))
+                    context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0],
+                               'cat2': list(cat[1].keys())[0], 'catflag': TwoCategories, 'attrs': merged_attrs}
+                else:
                     TwoCategories = False
                     context = {'ProdForm': ProdForm, 'TechForm': TechForm, 'flag': flag, 'cat1': list(cat[0].keys())[0],
-                                'catflag': TwoCategories, 'attrs': attributes}
+                               'catflag': TwoCategories, 'attrs': attributes}
                 return render(request, 'editsingleprod.html', context)
         except:
             flag = True
@@ -184,9 +199,9 @@ def editSingleProduct(request, pk):
 
 
 def similarProducts(request, pk="3011-100"):
-    """ Main Function for rendering the Similar Product page. 
-    
-    By default the page will render similar products to 3011-100. 
+    """ Main Function for rendering the Similar Product page.
+
+    By default the page will render similar products to 3011-100.
     This is done in order to connect both the POST and click request on search page.
 
     arguments:  request - Default Object for accepting the Http request made

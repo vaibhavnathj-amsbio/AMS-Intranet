@@ -12,7 +12,9 @@
 
   <link href="{% static 'assets/img/favicon.JPG' %}" rel="icon">
 
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
@@ -37,7 +39,8 @@
             <ul>
               <li><a id="add_new_supplier" href="myDatabase/AddNewSupplier">Add New Supplier</a></li>
               <li><a id="search_db" href="myDatabase/Search">Search Products</a></li>
-              <li><a id="edit_single_product" href="myDatabase/EditSingleProduct/LoadDefaultView">Edit Single Product</a></li>
+              <li><a id="edit_single_product" href="myDatabase/EditSingleProduct/LoadDefaultView">Edit Single
+                  Product</a></li>
               <li><a id="simlr_prod" href="myDatabase/similarProducts/3011-100">Similar Products</a></li>
               <li><a id="currency_ex" href="myDatabase/CurrencyValues">Currency Values</a></li>
             </ul>
@@ -72,16 +75,17 @@
                 <label for="Prod" class="sr-only">Search by Product Code: </label>
                 <div class="input-group col-sm-5">
                   <div class="input-group-prepend">
-                    <div class="input-group-text">Product Code</div>
+                    <div class="input-group-text">Search</div>
                   </div>
-                  <input type="text" id="Prod" name="Prod" placeholder="Database Search" class="form-control">
+                  <input type="text" id="Prod" name="Prod" placeholder="Product Code/Suppier Product Code"
+                    class="form-control">
                 </div>
                 <label for="Prod" class="sr-only">Search by Description:</label>
                 <div class="input-group col-sm-5">
                   <div class="input-group-prepend">
-                    <div class="input-group-text">Description</div>
+                    <div class="input-group-text">Search</div>
                   </div>
-                  <input type="text" id="Desc" name="Desc" form="form1" placeholder="Database Search" class="form-control">
+                  <input type="text" id="Desc" name="Desc" form="form1" placeholder="Description" class="form-control">
                 </div>
                 <div class="col-sm-2" style="text-align: left;">
                   <button id="btn_search_db" class="btn btn-danger" form="form1"><strong>Go</strong></button>
@@ -101,7 +105,8 @@
         </div>
       </div>
       <!-- Modal Section begins-->
-      <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel" aria-hidden="true">
+      <div class="modal fade" id="filterData" tabindex="-1" role="dialog" aria-labelledby="filterDataLabel"
+        aria-hidden="true">
         <!-- Renders Filter Button -->
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -119,7 +124,8 @@
                     <div class="form-group row">
                       <label for="from_date" class="col-sm-3 col-form-label">From:</label>
                       <div class="col-sm-9">
-                        <input type="text" placeholder="YYYY-MM-DD" id="from_date" name="from_date" class="form-control">
+                        <input type="text" placeholder="YYYY-MM-DD" id="from_date" name="from_date"
+                          class="form-control">
                       </div>
                     </div>
                     <div class="form-group row">
@@ -128,7 +134,7 @@
                         <input type="text" placeholder="YYYY-MM-DD" id="to_date" name="to_date" class="form-control">
                       </div>
                     </div>
-                    <div class="form-group row">  
+                    <div class="form-group row">
                       <label for="status" class="col-sm-3 col-form-label">Status:</label>
                       <div class="col-sm-9">
                         <select name="status" id="status" form="form2" class="form-control">
@@ -141,14 +147,15 @@
                     <div class="form-group row">
                       <label for="number_of_orders" class="col-sm-3 col-form-label">Num of orders: </label>
                       <div class="col-sm-9">
-                        <input type="number" id="number_of_orders" name="number_of_orders" placeholder="20" form="form2" class="form-control">
+                        <input type="number" id="number_of_orders" name="number_of_orders" placeholder="20" form="form2"
+                          class="form-control">
                       </div>
                     </div>
                     <div class="form-group row">
                       <div class="col-sm-12" style="text-align: center;">
                         <button type="submit" class="btn btn-danger" form="form2">Submit</button>
                       </div>
-                    </div> 
+                    </div>
                   </form>
                 </div>
               </div>
@@ -156,7 +163,8 @@
           </div>
         </div>
       </div>
-      <div class="modal fade" id="SearchData" tabindex="-1" role="dialog" aria-labelledby="SearchDataLabel" aria-hidden="true">
+      <div class="modal fade" id="SearchData" tabindex="-1" role="dialog" aria-labelledby="SearchDataLabel"
+        aria-hidden="true">
         <!-- Renders Search Button -->
         <div class="modal-dialog" role="document" style="width: 400px;">
           <div class="modal-content">
@@ -177,7 +185,7 @@
                         <input type="text" placeholder="Order ID" id="order_id" name="order_id" class="form-control">
                       </div>
                       <div class="col-sm-2" style="margin-left: -1em;">
-                        <button type="submit" class="btn btn-danger" form="form3" >Go</button>
+                        <button type="submit" class="btn btn-danger" form="form3">Go</button>
                       </div>
                     </div>
                   </form>
@@ -188,10 +196,12 @@
         </div>
       </div>
       <!-- Modal Section ends-->
-      {% if messages %} <!-- Prints success message when a shipment is created -->
-        {% for message in messages %}
-          <div class="alert alert-success" role="alert" style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
-        {% endfor %}
+      {% if messages %}
+      <!-- Prints success message when a shipment is created -->
+      {% for message in messages %}
+      <div class="alert alert-success" role="alert"
+        style="width: fit-content; margin-bottom: 1% !important; margin:auto;" id="shipment_msg">{{ message }}</div>
+      {% endfor %}
       {% endif %}
       {% if flag %}
       <div class="content" style="width:80%; margin:auto;">
@@ -200,22 +210,22 @@
             <!-- Generated the main Magento Sales order table as received from homepage/views.py/index() -->
             <table class="table table-striped roundedTable" id="magento_orders">
               <tr style="background-color: #f1594a; color:#fff;">
-                <th>#</th>                
+                <th>#</th>
                 {% for ele in col_headers %}
-                  {% if ele == "Base Currency Code"%}
-                    <th>Base Curr</th>
-                  {% elif ele == "Increment Id"%}
-                    <th>Order ID</th>
-                  {% else %}
-                    <th>{{ele}}</th>
-                  {% endif %}
+                {% if ele == "Base Currency Code"%}
+                <th>Base Curr</th>
+                {% elif ele == "Increment Id"%}
+                <th>Order ID</th>
+                {% else %}
+                <th>{{ele}}</th>
+                {% endif %}
                 {% endfor %}
               </tr>
               {% for ele in response %}
               <tr>
                 <td><strong>{{ forloop.counter }}</strong></td>
                 {% for key, val in ele.items %}
-                  <td>{{val}}</td>
+                <td>{{val}}</td>
                 {% endfor %}
               </tr>
               {% endfor %}
@@ -247,11 +257,11 @@
     jQuery.moveColumn = function (table, from, to) {
       var rows = jQuery('tr', table);
       var cols;
-      rows.each(function() {
-          cols = jQuery(this).children('th, td');
-          cols.eq(from).detach().insertBefore(cols.eq(to));
+      rows.each(function () {
+        cols = jQuery(this).children('th, td');
+        cols.eq(from).detach().insertBefore(cols.eq(to));
       });
-  }
+    }
     var tbl = jQuery('table');
     jQuery.moveColumn(tbl, 4, 1);
     jQuery.moveColumn(tbl, 5, 2);
