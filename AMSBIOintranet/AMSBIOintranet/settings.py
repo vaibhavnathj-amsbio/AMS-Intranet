@@ -93,11 +93,16 @@ DATABASES = {
 
     'sysdb': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'AMS',
-        'USER': 'ams_intranet',
-        'PASSWORD': 'gt5DGe56_5',
+        # 'NAME': 'AMS',
+        # 'USER': 'ams_intranet',
+        # 'PASSWORD': 'gt5DGe56_5',
+        # 'PORT': '3306',
+        # 'HOST': '10.0.0.20',
+        'NAME': 'ams',
+        'USER': 'amsd',
+        'PASSWORD': 'amsd23sept2009',
         'PORT': '3306',
-        'HOST': '10.0.0.20',
+        'HOST': 'database.amsbio.com',
         # 'TEST': {
         #     'NAME': 'test_ams',
         # }
