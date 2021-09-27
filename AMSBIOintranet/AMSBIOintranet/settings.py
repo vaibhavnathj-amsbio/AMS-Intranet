@@ -53,8 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'django.contrib.auth.middleware.RemoteUserMiddleware',
+    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.RemoteUserMiddleware',
 ]
 
 ROOT_URLCONF = 'AMSBIOintranet.urls'
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'AMSBIOintranet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,18 +93,14 @@ DATABASES = {
 
     'sysdb': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ams',
-        # 'USER': 'vaibhav',
-        # 'PASSWORD': 'G4rageC4r',
-        # 'PORT': '3306',
-        # 'HOST': 'development.amsbio.com',
+        'NAME': 'AMS',
+        'USER': 'ams_intranet',
+        'PASSWORD': 'gt5DGe56_5',
+        'PORT': '3306',
+        'HOST': '10.0.0.20',
         # 'TEST': {
         #     'NAME': 'test_ams',
         # }
-        'USER': 'amsd',
-        'PASSWORD': 'amsd23sept2009',
-        'PORT': '3306',
-        'HOST': 'database.amsbio.com'
     }
 }
 
@@ -129,9 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#AUTHENTICATION_BACKENDS = [
+# AUTHENTICATION_BACKENDS = [
 #    'django.contrib.auth.backends.RemoteUserBackend',
-#]
+# ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

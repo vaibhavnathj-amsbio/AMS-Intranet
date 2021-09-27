@@ -131,3 +131,4 @@ dmypy.json
 run_DevServer.bat
 helper_files/
 intranet.log
+Extra db settings.txt
